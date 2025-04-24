@@ -17,9 +17,6 @@ interface FormData {
   message: string;
 }
 
-const inputClasses = "w-full rounded-lg border border-gray-300 px-4 py-3 text-[#1A1A1A] placeholder-gray-400 focus:border-[#00F6FF] focus:ring-1 focus:ring-[#00F6FF] transition-shadow";
-const labelClasses = "block text-sm font-medium text-[#0A0A0A] mb-2";
-
 export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -96,7 +93,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
 
           <form 
             onSubmit={handleSubmit}
-            className="bg-brand-card p-8 rounded-2xl shadow-brand"
+            className="bg-brand-card rounded-2xl shadow-brand p-10"
           >
             <div className="space-y-6">
               <div>
@@ -110,7 +107,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
                   placeholder="John Doe"
                 />
               </div>
@@ -126,7 +123,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
                   placeholder="john@example.com"
                 />
               </div>
@@ -142,7 +139,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
                   placeholder="(555) 123-4567"
                 />
               </div>
@@ -157,7 +154,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                   value={formData.insuranceType}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline"
                 >
                   <option value="auto">Auto Insurance</option>
                   <option value="home">Home Insurance</option>
@@ -175,7 +172,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                   value={formData.message}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
                   placeholder="Tell us more about your insurance needs..."
                 />
               </div>
@@ -183,10 +180,10 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-3 px-6 text-white font-semibold rounded-lg transition-all
+                className={`w-full py-4 px-8 text-black font-semibold rounded-xl transition-all
                   ${isSubmitting 
                     ? 'bg-brand-primary/70 cursor-not-allowed' 
-                    : 'bg-brand-primary hover:bg-brand-secondary shadow-brand hover:shadow-lg'
+                    : 'bg-brand-primary hover:bg-brand-secondary shadow-brand hover:shadow-lg transform hover:scale-105'
                   }`}
               >
                 {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}

@@ -2,19 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-brand-background text-brand-body;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  @apply text-brand-headline font-bold;
-}
-
 @layer base {
   body {
-    @apply bg-[#F9FBFC] text-[#1A1A1A];
+    @apply bg-brand-background text-brand-body;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply text-[#0A0A0A] font-bold;
+    @apply text-brand-headline font-bold;
   }
 } 
