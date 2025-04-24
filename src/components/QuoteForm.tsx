@@ -42,6 +42,15 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         throw new Error('Failed to submit form');
       }
 
+      // Track form submission in Google Analytics
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'form_submission', {
+          event_category: 'Quote',
+          event_label: insuranceType,
+          value: 1
+        });
+      }
+
       // Redirect to thank you page
       router.push(`/${insuranceType}/thank-you`);
     } catch (err) {
