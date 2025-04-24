@@ -2,10 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { InsuranceType } from '@/utils/insuranceCopy';
 
-interface QuoteFormProps {
-  insuranceType: InsuranceType;
+interface QuoteFormProps { 
+  insuranceType: string;
   className?: string;
 }
 
@@ -13,6 +12,7 @@ interface FormData {
   name: string;
   email: string;
   phone: string;
+  zip: string;
   insuranceType: string;
   message: string;
 }
@@ -23,7 +23,8 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     name: '',
     email: '',
     phone: '',
-    insuranceType: 'auto',
+    zip: '',
+    insuranceType: insuranceType || 'auto',
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -61,7 +62,8 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         name: '',
         email: '',
         phone: '',
-        insuranceType: 'auto',
+        zip: '',
+        insuranceType: insuranceType || 'auto',
         message: '',
       });
     } catch (err) {
@@ -78,132 +80,122 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   };
 
   return (
-    <section className="py-24 px-6 bg-gradient-to-b from-brand-background to-brand-card relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
-      <div className="container relative mx-auto">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-brand-headline mb-4">
-              Get Your Free Quote Today
-            </h2>
-            <p className="text-lg text-brand-body opacity-80">
-              Fill out the form below and we'll get back to you with a personalized quote
-            </p>
+    <form 
+      onSubmit={handleSubmit}
+      className={`bg-brand-card p-10 rounded-2xl shadow-brand ${className}`}
+    >
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-brand-headline mb-2">
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
+              placeholder="John Doe"
+            />
           </div>
-
-          <form 
-            onSubmit={handleSubmit}
-            className="bg-brand-card rounded-2xl shadow-brand p-10"
-          >
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-brand-headline mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
-                  placeholder="John Doe"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-brand-headline mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
-                  placeholder="john@example.com"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-brand-headline mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
-                  placeholder="(555) 123-4567"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="insuranceType" className="block text-sm font-medium text-brand-headline mb-2">
-                  Insurance Type
-                </label>
-                <select
-                  id="insuranceType"
-                  name="insuranceType"
-                  value={formData.insuranceType}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline"
-                >
-                  <option value="auto">Auto Insurance</option>
-                  <option value="home">Home Insurance</option>
-                  <option value="life">Life Insurance</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-brand-headline mb-2">
-                  Additional Details
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
-                  placeholder="Tell us more about your insurance needs..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full py-4 px-8 text-black font-semibold rounded-xl transition-all
-                  ${isSubmitting 
-                    ? 'bg-brand-primary/70 cursor-not-allowed' 
-                    : 'bg-brand-primary hover:bg-brand-secondary shadow-brand hover:shadow-lg transform hover:scale-105'
-                  }`}
-              >
-                {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
-              </button>
-
-              {submitStatus === 'success' && (
-                <div className="p-4 rounded-lg bg-green-50 text-green-700 text-sm">
-                  Thank you! We've received your request and will contact you soon.
-                </div>
-              )}
-
-              {submitStatus === 'error' && (
-                <div className="p-4 rounded-lg bg-red-50 text-red-700 text-sm">
-                  There was an error submitting your request. Please try again.
-                </div>
-              )}
-            </div>
-          </form>
+          
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-brand-headline mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
+              placeholder="john@example.com"
+            />
+          </div>
         </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-brand-headline mb-2">
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
+              placeholder="(555) 123-4567"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="zip" className="block text-sm font-medium text-brand-headline mb-2">
+              ZIP Code
+            </label>
+            <input
+              type="text"
+              id="zip"
+              name="zip"
+              value={formData.zip}
+              onChange={handleChange}
+              required
+              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
+              placeholder="12345"
+            />
+          </div>
+        </div>
+        
+        <div>
+          <label htmlFor="message" className="block text-sm font-medium text-brand-headline mb-2">
+            Additional Information (Optional)
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            rows={4}
+            className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
+            placeholder="Tell us about your specific insurance needs..."
+          />
+        </div>
+        
+        {submitStatus === 'success' && (
+          <div className="p-4 bg-green-50 text-green-800 rounded-lg">
+            <p className="font-medium">Thank you for your submission!</p>
+            <p className="text-sm mt-1">We'll be in touch with you shortly.</p>
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="p-4 bg-red-50 text-red-800 rounded-lg">
+            <p className="font-medium">There was an error submitting your form.</p>
+            <p className="text-sm mt-1">Please try again or contact us directly.</p>
+          </div>
+        )}
+        
+        <div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-brand-primary text-white font-semibold px-6 py-4 rounded-xl shadow-brand hover:bg-brand-secondary transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
+          </button>
+        </div>
+        
+        <p className="text-xs text-brand-body opacity-60 text-center">
+          By submitting this form, you agree to our <a href="/privacy" className="text-brand-primary hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
+        </p>
       </div>
-    </section>
+    </form>
   );
 } 
