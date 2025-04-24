@@ -56,7 +56,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   },
   life: {
     type: 'life',
-    title: 'Secure Your Family's Future',
+    title: "Secure Your Family's Future",
     subtitle: 'Find the right life insurance coverage for your loved ones',
     benefits: [
       'Financial security for your family',

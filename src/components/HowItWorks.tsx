@@ -12,7 +12,7 @@ const steps: Step[] = [
   },
   {
     title: 'Get matched',
-    description: 'We'll connect you with licensed agents who specialize in your needs.',
+    description: "We'll connect you with licensed agents who specialize in your needs.",
     icon: '🤝',
   },
   {
