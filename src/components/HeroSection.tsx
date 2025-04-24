@@ -4,10 +4,11 @@ interface HeroSectionProps {
   title: string;
   subtitle: string;
   ctaText: string;
-  ctaHref: string;
+  ctaHref?: string;
+  ctaLink?: string;
 }
 
-export default function HeroSection({ title, subtitle, ctaText, ctaHref }: HeroSectionProps) {
+export default function HeroSection({ title, subtitle, ctaText, ctaHref, ctaLink }: HeroSectionProps) {
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
@@ -20,7 +21,7 @@ export default function HeroSection({ title, subtitle, ctaText, ctaHref }: HeroS
           </p>
           <div className="mt-8">
             <a
-              href={ctaHref}
+              href={ctaLink || ctaHref || "#quote-form"}
               className="inline-flex items-center justify-center bg-brand-primary text-black font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 shadow-brand w-full sm:w-auto"
             >
               {ctaText}
