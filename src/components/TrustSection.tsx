@@ -1,77 +1,68 @@
-interface TrustItem {
-  title: string;
-  description: string;
-  icon: string;
-}
-
-const trustItems: TrustItem[] = [
-  {
-    title: 'Secure',
-    description: 'Your information is protected with bank-level security',
-    icon: '🔒',
-  },
-  {
-    title: 'No Spam',
-    description: 'We never share your information with third parties',
-    icon: '✉️',
-  },
-  {
-    title: 'Licensed Agents',
-    description: 'All agents are fully licensed and vetted',
-    icon: '📋',
-  },
-  {
-    title: 'Free to Use',
-    description: 'No hidden fees or obligations',
-    icon: '💰',
-  },
-];
+import React from 'react';
 
 export default function TrustSection() {
+  const trustPoints = [
+    {
+      title: "Licensed Professionals",
+      description: "Every agent in our network is fully licensed and vetted",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      )
+    },
+    {
+      title: "Fast & Free Quotes",
+      description: "Get multiple quotes quickly with no obligation",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      )
+    },
+    {
+      title: "Top Rated Carriers",
+      description: "We partner with only the most trusted insurance providers",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      )
+    }
+  ];
+
   return (
-    <div className="bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:text-center">
-          <h2 className="text-base text-blue-600 font-semibold tracking-wide uppercase">Trust & Security</h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Your Trust is Our Priority
+    <section className="py-24 px-6 bg-gradient-to-b from-brand-card to-brand-background relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
+      <div className="container relative mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-headline mb-6">
+            Why Trust QuoteLinker?
+          </h2>
+          <p className="text-xl text-brand-body opacity-80 max-w-2xl mx-auto">
+            We're committed to making insurance simple, transparent, and accessible
           </p>
         </div>
-
-        <div className="mt-10">
-          <div className="space-y-10 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-x-8 sm:gap-y-10 lg:grid-cols-4">
-            {trustItems.map((item) => (
-              <div key={item.title} className="relative">
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
-                  <span className="text-2xl">{item.icon}</span>
-                </div>
-                <div className="mt-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">{item.title}</h3>
-                  <p className="mt-2 text-base text-gray-500">{item.description}</p>
-                </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {trustPoints.map((point) => (
+            <div 
+              key={point.title}
+              className="bg-brand-card p-8 rounded-2xl shadow-brand transition hover:shadow-lg"
+            >
+              <div className="text-brand-primary mb-6">
+                {point.icon}
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-10 flex justify-center space-x-8">
-          <img
-            className="h-12"
-            src="https://www.vectorlogo.zone/logos/pcisecuritystandards/pcisecuritystandards-icon.svg"
-            alt="PCI Security Standards"
-          />
-          <img
-            className="h-12"
-            src="https://www.vectorlogo.zone/logos/ssl/ssl-icon.svg"
-            alt="SSL Secure"
-          />
-          <img
-            className="h-12"
-            src="https://www.vectorlogo.zone/logos/norton/norton-icon.svg"
-            alt="Norton Secured"
-          />
+              <h3 className="text-xl font-semibold text-brand-headline mb-3">
+                {point.title}
+              </h3>
+              <p className="text-brand-body opacity-75">
+                {point.description}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 } 
