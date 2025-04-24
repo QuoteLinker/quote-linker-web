@@ -10,16 +10,16 @@ interface ProductCardProps {
 const ProductCard = ({ title, description, icon, href }: ProductCardProps) => (
   <a 
     href={href}
-    className="block bg-brand-card shadow-brand p-6 rounded-xl text-center transform hover:scale-105 transition-all duration-200"
+    className="block bg-white shadow-md p-6 rounded-xl text-center transform hover:scale-105 transition-all duration-200"
   >
     <div className="flex justify-center mb-4">
-      <div className="text-brand-primary w-12 h-12">
+      <div className="text-[#00F6FF] w-12 h-12">
         {icon}
       </div>
     </div>
-    <h3 className="text-xl font-semibold text-brand-headline mb-2">{title}</h3>
-    <p className="text-brand-body opacity-80 mb-4">{description}</p>
-    <span className="inline-flex items-center text-brand-primary font-semibold group">
+    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2">{title}</h3>
+    <p className="text-[#1A1A1A] opacity-80 mb-4">{description}</p>
+    <span className="inline-flex items-center text-[#00F6FF] font-semibold group">
       Get a Quote
       <svg 
         className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" 
@@ -69,13 +69,13 @@ export default function ProductsSection() {
   ];
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8">
+    <section className="py-24 px-6">
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-brand-headline mb-4">
+          <h2 className="text-4xl font-bold text-[#0A0A0A] mb-4">
             Our Insurance Products
           </h2>
-          <p className="text-lg text-brand-body opacity-80 max-w-2xl mx-auto">
+          <p className="text-lg text-[#1A1A1A] opacity-80 max-w-2xl mx-auto">
             Find the perfect coverage for every aspect of your life
           </p>
         </div>
