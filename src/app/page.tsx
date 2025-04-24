@@ -28,7 +28,7 @@ export default function HomePage() {
                 Fill out the form below and we'll connect you with a licensed agent who can help.
               </p>
             </div>
-            <QuoteForm />
+            <QuoteForm insuranceType="auto" />
           </div>
         </div>
       </section>
