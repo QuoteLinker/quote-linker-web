@@ -24,31 +24,31 @@ export default function RootLayout({
         <GoogleAnalytics />
         <link rel="icon" href="/ql.png" />
       </head>
-      <body className="font-sans bg-brand-background min-h-screen">
+      <body className="font-sans bg-white min-h-screen">
         <div className="min-h-full flex flex-col">
           <header className="sticky top-0 z-50 bg-white shadow-md">
             <nav className="container mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
-                <a href="/" className="flex items-center">
+                <a href="/" className="flex items-center hover:opacity-90 transition-opacity">
                   <Logo />
                 </a>
                 <div className="hidden md:flex space-x-8">
-                  <a href="/auto" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                  <a href="/auto" className="text-gray-600 hover:text-[#00e8ff] transition-colors">
                     Auto Insurance
                   </a>
-                  <a href="/home" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                  <a href="/home" className="text-gray-600 hover:text-[#00e8ff] transition-colors">
                     Home Insurance
                   </a>
-                  <a href="/life" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                  <a href="/life" className="text-gray-600 hover:text-[#00e8ff] transition-colors">
                     Life Insurance
                   </a>
-                  <a href="/disability" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                  <a href="/disability" className="text-gray-600 hover:text-[#00e8ff] transition-colors">
                     Disability Insurance
                   </a>
                 </div>
                 <a
                   href="/#quote-form"
-                  className="inline-flex bg-[#00e8ff] hover:bg-[#00cce6] text-black font-semibold px-8 py-3 rounded-xl shadow-brand transition-all duration-200 transform hover:scale-105 w-auto"
+                  className="inline-flex bg-[#00e8ff] hover:bg-[#00cce6] text-black font-semibold px-8 py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105 w-auto"
                 >
                   Get a Quote
                 </a>
