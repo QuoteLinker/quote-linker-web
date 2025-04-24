@@ -5,6 +5,7 @@ interface HeroSectionProps {
   subtitle: string;
   ctaText: string;
   ctaHref?: string;
+  ctaLink?: string;
   insuranceType?: string;
 }
 
@@ -13,6 +14,7 @@ export default function HeroSection({
   subtitle, 
   ctaText, 
   ctaHref,
+  ctaLink,
   insuranceType 
 }: HeroSectionProps) {
   return (
@@ -28,7 +30,7 @@ export default function HeroSection({
           </p>
           <div className="mt-8">
             <a
-              href={ctaHref || "#quote-form"}
+              href={ctaLink || ctaHref || "#quote-form"}
               className="inline-block w-full sm:w-auto bg-brand-primary text-black font-semibold px-8 py-4 rounded-xl shadow-brand hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 group"
             >
               {ctaText}
