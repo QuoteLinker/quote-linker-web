@@ -30,7 +30,7 @@ export default function RootLayout({
           <header className="sticky top-0 z-50 bg-brand-card shadow-sm">
             <nav className="container mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
-                <a href="/" className="text-brand-headline font-bold text-xl">
+                <a href="/" className="text-brand-primary font-bold text-xl">
                   QuoteLinker
                 </a>
                 <div className="hidden md:flex space-x-8">
