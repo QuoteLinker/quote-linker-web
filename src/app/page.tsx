@@ -1,8 +1,8 @@
 import HeroSection from '@/components/HeroSection';
 import WhyChooseSection from '@/components/WhyChooseSection';
 import ProductsSection from '@/components/ProductsSection';
-import QuoteForm from '@/components/QuoteForm';
-import Footer from '@/components/Footer';
+import GeneralQuoteForm from '@/components/GeneralQuoteForm';
+import SocialProof from '@/components/SocialProof';
 
 export default function Page() {
   return (
@@ -14,6 +14,7 @@ export default function Page() {
         ctaLink="#quote-form"
       />
       <WhyChooseSection />
+      <SocialProof />
       <ProductsSection />
       <section id="quote-form" className="py-24 px-6 bg-gradient-to-b from-brand-background to-brand-card relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
@@ -27,11 +28,10 @@ export default function Page() {
                 Fill out the form below and we'll connect you with a licensed agent who can help.
               </p>
             </div>
-            <QuoteForm insuranceType="auto" />
+            <GeneralQuoteForm />
           </div>
         </div>
       </section>
-      <Footer />
     </main>
   );
 } 

@@ -1,16 +1,14 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 
-interface StickyCTAProps {
-  insuranceType: string;
-}
-
-export default function StickyCTA({ insuranceType }: StickyCTAProps) {
+export default function StickyCTA() {
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-brand-card shadow-lg z-50 md:hidden">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
       <a
         href="#quote-form"
-        className="block w-full bg-brand-primary hover:bg-brand-secondary text-black text-center font-semibold px-6 py-3 rounded-lg shadow-brand transition-all duration-200"
+        className="block bg-brand-primary p-4 text-center text-black font-semibold shadow-lg"
       >
         Get Your Free Quote
       </a>

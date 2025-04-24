@@ -8,17 +8,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          primary: '#00F6FF',    // Primary accent for CTAs and brand elements
-          secondary: '#4DF9FF',  // Hover state and secondary accents
-          headline: '#0A0A0A',   // Main headlines
-          body: '#1A1A1A',       // Body text
-          background: '#F9FBFC', // Site background
-          card: '#FFFFFF',       // Card/container background
-        },
+        'brand-background': '#F8F9FA',
+        'brand-primary': '#00F6FF',
+        'brand-primary-dark': '#00D8E0',
+        'brand-headline': '#1F2937',
+        'brand-body': '#4B5563',
+        'brand-card': '#FFFFFF',
+        'brand-card-hover': '#F3F4F6',
       },
       boxShadow: {
-        'brand': '0 8px 16px rgba(0, 246, 255, 0.25)',
+        'brand': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
       },
       container: {
         center: true,
@@ -33,22 +32,6 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            color: theme('colors.brand.body'),
-            h1: {
-              color: theme('colors.brand.headline'),
-            },
-            h2: {
-              color: theme('colors.brand.headline'),
-            },
-            h3: {
-              color: theme('colors.brand.headline'),
-            },
-          },
-        },
-      }),
     },
   },
   plugins: [

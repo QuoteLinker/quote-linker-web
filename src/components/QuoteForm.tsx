@@ -2,31 +2,88 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 
-interface QuoteFormProps { 
-  insuranceType: string;
+interface QuoteFormProps {
+  insuranceType: 'auto' | 'home' | 'life' | 'disability';
   className?: string;
 }
 
-interface FormData {
+interface FormField {
   name: string;
-  email: string;
-  phone: string;
-  zip: string;
-  insuranceType: string;
-  message: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  tooltip?: string;
+  options?: { value: string; label: string }[];
 }
+
+const formFields: Record<string, FormField[]> = {
+  life: [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'age', label: 'Age', type: 'number', required: true },
+    {
+      name: 'tobaccoUse',
+      label: 'Tobacco Use',
+      type: 'select',
+      required: true,
+      tooltip: 'This information helps us determine the most accurate rates for your life insurance policy.',
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
+      ],
+    },
+  ],
+  auto: [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'vehicleYear', label: 'Vehicle Year', type: 'number', required: true },
+    { name: 'vehicleMake', label: 'Vehicle Make', type: 'text', required: true },
+    { name: 'vehicleModel', label: 'Vehicle Model', type: 'text', required: true },
+  ],
+  home: [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'propertyType', label: 'Property Type', type: 'select', required: true, options: [
+      { value: 'single', label: 'Single Family Home' },
+      { value: 'multi', label: 'Multi-Family Home' },
+      { value: 'condo', label: 'Condo/Townhouse' },
+    ]},
+    { name: 'yearBuilt', label: 'Year Built', type: 'number', required: true },
+  ],
+  disability: [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'occupation', label: 'Occupation', type: 'text', required: true },
+    { name: 'income', label: 'Annual Income', type: 'number', required: true },
+    {
+      name: 'coverageType',
+      label: 'Coverage Type',
+      type: 'select',
+      required: true,
+      tooltip: 'Short-term disability provides coverage for a limited time, while long-term disability provides extended coverage.',
+      options: [
+        { value: 'short', label: 'Short-term Disability' },
+        { value: 'long', label: 'Long-term Disability' },
+        { value: 'both', label: 'Both' },
+      ],
+    },
+  ],
+};
 
 export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    zip: '',
-    insuranceType: insuranceType || 'auto',
-    message: '',
-  });
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -58,14 +115,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
       }
 
       setSubmitStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        zip: '',
-        insuranceType: insuranceType || 'auto',
-        message: '',
-      });
+      setFormData({});
     } catch (err) {
       setSubmitStatus('error');
       console.error('Form submission error:', err);
@@ -74,10 +124,11 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const fields = formFields[insuranceType] || [];
 
   return (
     <form 
@@ -86,86 +137,45 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     >
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-brand-headline mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
-              placeholder="John Doe"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-brand-headline mb-2">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
-              placeholder="john@example.com"
-            />
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-brand-headline mb-2">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
-              placeholder="(555) 123-4567"
-            />
-          </div>
-          
-          <div>
-            <label htmlFor="zip" className="block text-sm font-medium text-brand-headline mb-2">
-              ZIP Code
-            </label>
-            <input
-              type="text"
-              id="zip"
-              name="zip"
-              value={formData.zip}
-              onChange={handleChange}
-              required
-              className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
-              placeholder="12345"
-            />
-          </div>
-        </div>
-        
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-brand-headline mb-2">
-            Additional Information (Optional)
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            rows={4}
-            className="block w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary bg-white text-brand-body"
-            placeholder="Tell us about your specific insurance needs..."
-          />
+          {fields.map((field) => (
+            <div key={field.name} className={field.type === 'select' ? 'col-span-2' : undefined}>
+              <label className="block text-sm font-medium text-brand-body mb-2">
+                {field.label}
+                {field.required && <span className="text-red-500 ml-1">*</span>}
+                {field.tooltip && (
+                  <div className="inline-block ml-1 group relative">
+                    <QuestionMarkCircleIcon className="w-4 h-4 text-brand-body inline" />
+                    <div className="hidden group-hover:block absolute z-10 w-64 p-2 bg-black text-white text-xs rounded shadow-lg -right-1 transform translate-x-full">
+                      {field.tooltip}
+                    </div>
+                  </div>
+                )}
+              </label>
+              {field.type === 'select' ? (
+                <select
+                  required={field.required}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
+                  value={formData[field.name] || ''}
+                  onChange={(e) => handleChange(field.name, e.target.value)}
+                >
+                  <option value="">Select {field.label}</option>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={field.type}
+                  required={field.required}
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
+                  value={formData[field.name] || ''}
+                  onChange={(e) => handleChange(field.name, e.target.value)}
+                />
+              )}
+            </div>
+          ))}
         </div>
         
         {submitStatus === 'success' && (
