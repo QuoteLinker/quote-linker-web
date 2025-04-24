@@ -17,6 +17,9 @@ interface FormData {
   message: string;
 }
 
+const inputClasses = "w-full rounded-lg border border-gray-300 px-4 py-3 text-[#1A1A1A] placeholder-gray-400 focus:border-[#00F6FF] focus:ring-1 focus:ring-[#00F6FF] transition-shadow";
+const labelClasses = "block text-sm font-medium text-[#0A0A0A] mb-2";
+
 export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -73,14 +76,14 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
 
   if (isSubmitted) {
     return (
-      <div className="bg-white rounded-xl shadow-md p-6 sm:p-8 text-center">
-        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-          <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <div className="bg-white rounded-2xl shadow-xl p-10 text-center">
+        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6 animate-bounce">
+          <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl font-semibold text-[#0A0A0A] mb-2">Thank You!</h3>
-        <p className="text-sm sm:text-base text-[#1A1A1A]">
+        <h3 className="text-2xl font-semibold text-[#0A0A0A] mb-4">Thank You!</h3>
+        <p className="text-lg text-[#1A1A1A] opacity-80">
           We've received your request and will connect you with a licensed agent shortly.
         </p>
       </div>
@@ -88,10 +91,10 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6 sm:p-8">
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-10">
       <div className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-[#0A0A0A] mb-1">
+          <label htmlFor="name" className={labelClasses}>
             Full Name
           </label>
           <input
@@ -101,13 +104,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.name}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#00F6FF] focus:border-transparent transition-shadow text-[#1A1A1A]"
+            className={inputClasses}
             placeholder="John Doe"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-[#0A0A0A] mb-1">
+          <label htmlFor="email" className={labelClasses}>
             Email Address
           </label>
           <input
@@ -117,13 +120,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.email}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#00F6FF] focus:border-transparent transition-shadow text-[#1A1A1A]"
+            className={inputClasses}
             placeholder="john@example.com"
           />
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-[#0A0A0A] mb-1">
+          <label htmlFor="phone" className={labelClasses}>
             Phone Number
           </label>
           <input
@@ -133,13 +136,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#00F6FF] focus:border-transparent transition-shadow text-[#1A1A1A]"
+            className={inputClasses}
             placeholder="(555) 555-5555"
           />
         </div>
 
         <div>
-          <label htmlFor="insuranceType" className="block text-sm font-medium text-[#0A0A0A] mb-1">
+          <label htmlFor="insuranceType" className={labelClasses}>
             Insurance Type
           </label>
           <select
@@ -148,7 +151,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.insuranceType}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#00F6FF] focus:border-transparent transition-shadow text-[#1A1A1A]"
+            className={inputClasses}
           >
             <option value="auto">Auto Insurance</option>
             <option value="home">Home Insurance</option>
@@ -157,7 +160,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         </div>
 
         <div>
-          <label htmlFor="message" className="block text-sm font-medium text-[#0A0A0A] mb-1">
+          <label htmlFor="message" className={labelClasses}>
             Additional Information
           </label>
           <textarea
@@ -166,13 +169,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             rows={4}
             value={formData.message}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-[#00F6FF] focus:border-transparent transition-shadow text-[#1A1A1A]"
+            className={inputClasses}
             placeholder="Tell us about your insurance needs..."
           />
         </div>
 
         {error && (
-          <div className="text-red-600 text-sm" role="alert">
+          <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg" role="alert">
             {error}
           </div>
         )}
@@ -180,7 +183,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#00F6FF] text-black font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-[#4DF9FF] transform hover:scale-105 transition-all duration-200 shadow-[0_4px_16px_rgba(0,246,255,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`w-full bg-[#00F6FF] text-black font-semibold px-8 py-4 rounded-xl shadow-[0_8px_16px_rgba(0,246,255,0.25)] hover:bg-[#4DF9FF] transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitting ? 'animate-pulse' : ''}`}
         >
           {isSubmitting ? 'Submitting...' : 'Get My Quote'}
         </button>
