@@ -6,9 +6,17 @@ interface HeroSectionProps {
   ctaText: string;
   ctaHref?: string;
   ctaLink?: string;
+  insuranceType?: string;
 }
 
-export default function HeroSection({ title, subtitle, ctaText, ctaHref, ctaLink }: HeroSectionProps) {
+export default function HeroSection({ 
+  title, 
+  subtitle, 
+  ctaText, 
+  ctaHref, 
+  ctaLink,
+  insuranceType 
+}: HeroSectionProps) {
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
