@@ -9,7 +9,7 @@ export default function HomePage() {
       <HeroSection
         title="Find Your Perfect Insurance Match"
         subtitle="Get personalized quotes from licensed local agents—faster, easier, and tailored to you"
-        ctaText="Get Started"
+        ctaText="Get My Free Quote"
         ctaHref="#quote-form"
       />
 
@@ -21,10 +21,10 @@ export default function HomePage() {
         <div className="container mx-auto">
           <div className="max-w-2xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-brand-headline mb-4">
+              <h2 className="text-4xl font-bold text-brand-headline mb-4">
                 Get Your Free Quote Today
               </h2>
-              <p className="text-lg text-brand-body">
+              <p className="text-lg text-brand-body opacity-80">
                 Fill out the form below and we'll connect you with a licensed agent who can help.
               </p>
             </div>

@@ -10,16 +10,16 @@ interface ProductCardProps {
 const ProductCard = ({ title, description, icon, href }: ProductCardProps) => (
   <a 
     href={href}
-    className="block bg-white shadow-brand p-6 sm:p-8 rounded-xl text-center transform hover:scale-105 transition-all duration-200"
+    className="block bg-brand-card shadow-brand p-6 rounded-xl text-center transform hover:scale-105 transition-all duration-200"
   >
     <div className="flex justify-center mb-4">
       <div className="text-brand-primary w-12 h-12">
         {icon}
       </div>
     </div>
-    <h3 className="text-lg sm:text-xl font-semibold text-brand-headline mb-2">{title}</h3>
-    <p className="text-sm sm:text-base text-brand-body mb-4">{description}</p>
-    <span className="inline-flex items-center text-brand-primary font-semibold group text-sm sm:text-base">
+    <h3 className="text-xl font-semibold text-brand-headline mb-2">{title}</h3>
+    <p className="text-brand-body opacity-80 mb-4">{description}</p>
+    <span className="inline-flex items-center text-brand-primary font-semibold group">
       Get a Quote
       <svg 
         className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" 
@@ -71,15 +71,15 @@ export default function ProductsSection() {
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto">
-        <div className="text-center mb-12 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-brand-headline mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-brand-headline mb-4">
             Our Insurance Products
           </h2>
-          <p className="text-base sm:text-lg text-brand-body max-w-2xl mx-auto">
+          <p className="text-lg text-brand-body opacity-80 max-w-2xl mx-auto">
             Find the perfect coverage for every aspect of your life
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {products.map((product) => (
             <ProductCard
               key={product.title}
