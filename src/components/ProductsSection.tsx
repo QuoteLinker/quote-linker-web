@@ -1,0 +1,96 @@
+import React from 'react';
+
+interface ProductCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  href: string;
+}
+
+const ProductCard = ({ title, description, icon, href }: ProductCardProps) => (
+  <a 
+    href={href}
+    className="block bg-white shadow-brand p-6 sm:p-8 rounded-xl text-center transform hover:scale-105 transition-all duration-200"
+  >
+    <div className="flex justify-center mb-4">
+      <div className="text-brand-primary w-12 h-12">
+        {icon}
+      </div>
+    </div>
+    <h3 className="text-lg sm:text-xl font-semibold text-brand-headline mb-2">{title}</h3>
+    <p className="text-sm sm:text-base text-brand-body mb-4">{description}</p>
+    <span className="inline-flex items-center text-brand-primary font-semibold group text-sm sm:text-base">
+      Get a Quote
+      <svg 
+        className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </span>
+  </a>
+);
+
+export default function ProductsSection() {
+  const products = [
+    {
+      title: "Auto Insurance",
+      description: "Protect your vehicle with comprehensive coverage tailored to your needs.",
+      href: "/auto",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5h9a2 2 0 012 2v2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+      )
+    },
+    {
+      title: "Home Insurance",
+      description: "Safeguard your home and belongings with the right coverage for your property.",
+      href: "/home",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      )
+    },
+    {
+      title: "Life Insurance",
+      description: "Ensure your family's financial security with a life insurance policy that fits.",
+      href: "/life",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      )
+    }
+  ];
+
+  return (
+    <section className="py-24 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-brand-headline mb-4">
+            Our Insurance Products
+          </h2>
+          <p className="text-base sm:text-lg text-brand-body max-w-2xl mx-auto">
+            Find the perfect coverage for every aspect of your life
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {products.map((product) => (
+            <ProductCard
+              key={product.title}
+              title={product.title}
+              description={product.description}
+              icon={product.icon}
+              href={product.href}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+} 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { InsuranceType } from '@/utils/insuranceCopy';
 
@@ -9,16 +9,25 @@ interface QuoteFormProps {
   className?: string;
 }
 
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  insuranceType: string;
+  message: string;
+}
+
 export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     phone: '',
-    zip: '',
-    comments: '',
+    insuranceType: 'auto',
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,15 +36,12 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     setError('');
 
     try {
-      const response = await fetch('/api/submit', {
+      const response = await fetch('/api/submit-quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          insuranceType,
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -51,26 +57,41 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         });
       }
 
-      // Redirect to thank you page
-      router.push(`/${insuranceType}/thank-you`);
+      setIsSubmitted(true);
     } catch (err) {
-      setError('There was an error submitting your form. Please try again.');
+      setError('Something went wrong. Please try again.');
       console.error('Form submission error:', err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  if (isSubmitted) {
+    return (
+      <div className="bg-brand-card rounded-xl shadow-brand p-6 sm:p-8 text-center">
+        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+          <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-xl font-semibold text-brand-headline mb-2">Thank You!</h3>
+        <p className="text-sm sm:text-base text-brand-body">
+          We've received your request and will connect you with a licensed agent shortly.
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className={`w-full max-w-md mx-auto ${className}`}>
-      <div className="space-y-4">
+    <form onSubmit={handleSubmit} className="bg-brand-card rounded-xl shadow-brand p-6 sm:p-8">
+      <div className="space-y-6">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="block text-sm font-medium text-brand-headline mb-1">
             Full Name
           </label>
           <input
@@ -80,12 +101,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.name}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow text-brand-body"
+            placeholder="John Doe"
           />
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="email" className="block text-sm font-medium text-brand-headline mb-1">
             Email Address
           </label>
           <input
@@ -95,12 +117,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.email}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow text-brand-body"
+            placeholder="john@example.com"
           />
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="phone" className="block text-sm font-medium text-brand-headline mb-1">
             Phone Number
           </label>
           <input
@@ -110,41 +133,46 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             required
             value={formData.phone}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow text-brand-body"
+            placeholder="(555) 555-5555"
           />
         </div>
 
         <div>
-          <label htmlFor="zip" className="block text-sm font-medium text-gray-700">
-            ZIP Code
+          <label htmlFor="insuranceType" className="block text-sm font-medium text-brand-headline mb-1">
+            Insurance Type
           </label>
-          <input
-            type="text"
-            id="zip"
-            name="zip"
+          <select
+            id="insuranceType"
+            name="insuranceType"
             required
-            value={formData.zip}
+            value={formData.insuranceType}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow text-brand-body"
+          >
+            <option value="auto">Auto Insurance</option>
+            <option value="home">Home Insurance</option>
+            <option value="life">Life Insurance</option>
+          </select>
         </div>
 
         <div>
-          <label htmlFor="comments" className="block text-sm font-medium text-gray-700">
-            Additional Comments
+          <label htmlFor="message" className="block text-sm font-medium text-brand-headline mb-1">
+            Additional Information
           </label>
           <textarea
-            id="comments"
-            name="comments"
-            rows={3}
-            value={formData.comments}
+            id="message"
+            name="message"
+            rows={4}
+            value={formData.message}
             onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow text-brand-body"
+            placeholder="Tell us about your insurance needs..."
           />
         </div>
 
         {error && (
-          <div className="text-red-600 text-sm">
+          <div className="text-red-600 text-sm" role="alert">
             {error}
           </div>
         )}
@@ -152,9 +180,9 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-brand-primary text-black font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 shadow-brand disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
+          {isSubmitting ? 'Submitting...' : 'Get My Quote'}
         </button>
       </div>
     </form>

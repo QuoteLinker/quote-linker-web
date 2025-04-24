@@ -21,26 +21,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <GoogleAnalytics />
       </head>
-      <body className={`${inter.className} bg-brand-background text-brand-body min-h-screen`}>
-        <div className="flex flex-col min-h-screen">
-          <header className="bg-brand-card shadow-brand sticky top-0 z-50">
-            <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex justify-between h-16">
-                <div className="flex">
-                  <div className="flex-shrink-0 flex items-center">
-                    <a href="/" className="flex items-center">
-                      <Logo />
-                    </a>
-                  </div>
+      <body className={`${inter.className} bg-brand-background text-brand-body h-full`}>
+        <div className="min-h-full flex flex-col">
+          <header className="sticky top-0 z-50 bg-brand-card shadow-brand">
+            <nav className="container mx-auto">
+              <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                <div className="flex-shrink-0">
+                  <a href="/" className="flex items-center">
+                    <Logo />
+                  </a>
+                </div>
+                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                  <a href="/auto" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-brand-body hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition-colors">
+                    Auto Insurance
+                  </a>
+                  <a href="/home" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-brand-body hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition-colors">
+                    Home Insurance
+                  </a>
+                  <a href="/life" className="inline-flex items-center px-1 pt-1 text-sm font-medium text-brand-body hover:text-brand-primary border-b-2 border-transparent hover:border-brand-primary transition-colors">
+                    Life Insurance
+                  </a>
                 </div>
                 <div className="flex items-center">
                   <a
                     href="/agents"
-                    className="ml-8 inline-flex items-center justify-center px-6 py-2.5 border border-transparent rounded-xl text-sm font-semibold text-brand-headline bg-brand-primary hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 shadow-brand hover:shadow-brand-lg"
+                    className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl text-brand-headline bg-brand-primary hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 shadow-brand"
                   >
                     For Agents
                   </a>
