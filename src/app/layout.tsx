@@ -25,9 +25,9 @@ export default function RootLayout({
       <head>
         <GoogleAnalytics />
       </head>
-      <body className={inter.className}>
-        <div className="min-h-screen flex flex-col">
-          <header className="bg-white shadow-sm">
+      <body className={`${inter.className} bg-brand-background text-brand-body min-h-screen`}>
+        <div className="flex flex-col min-h-screen">
+          <header className="bg-brand-card shadow-brand sticky top-0 z-50">
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
                 <div className="flex">
@@ -40,7 +40,7 @@ export default function RootLayout({
                 <div className="flex items-center">
                   <a
                     href="/agents"
-                    className="ml-8 inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-xl text-sm font-semibold text-white bg-brand-primary hover:bg-brand-dark transition-all duration-200 shadow-glow hover:shadow-glow-lg"
+                    className="ml-8 inline-flex items-center justify-center px-6 py-2.5 border border-transparent rounded-xl text-sm font-semibold text-brand-headline bg-brand-primary hover:bg-brand-secondary transform hover:scale-105 transition-all duration-200 shadow-brand hover:shadow-brand-lg"
                   >
                     For Agents
                   </a>

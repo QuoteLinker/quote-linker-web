@@ -9,19 +9,40 @@ module.exports = {
     extend: {
       colors: {
         brand: {
-          primary: '#00FFFF', // Neon aqua/cyan
-          glow: 'rgba(0, 255, 255, 0.15)', // Glow effect color
-          dark: '#00CCCC', // Darker shade for hover states
+          primary: '#00F6FF',    // Primary accent
+          secondary: '#4DF9FF',  // Secondary accent/hover
+          headline: '#0A0A0A',   // Headline text
+          body: '#1A1A1A',       // Body text
+          background: '#F9FBFC', // Site background
+          card: '#FFFFFF',       // Card background
         },
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(0, 255, 255, 0.3)',
-        'glow-lg': '0 0 30px rgba(0, 255, 255, 0.4)',
+        'brand': '0 4px 12px rgba(0, 246, 255, 0.25)',
+        'brand-lg': '0 8px 24px rgba(0, 246, 255, 0.25)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            color: theme('colors.brand.body'),
+            h1: {
+              color: theme('colors.brand.headline'),
+            },
+            h2: {
+              color: theme('colors.brand.headline'),
+            },
+            h3: {
+              color: theme('colors.brand.headline'),
+            },
+          },
+        },
+      }),
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 } 
