@@ -1,119 +1,153 @@
 export type InsuranceType = 'auto' | 'home' | 'life' | 'disability' | 'health';
 
-export interface InsuranceProduct {
-  type: InsuranceType;
-  title: string;
-  subtitle: string;
-  benefits: string[];
-  faqs: {
-    question: string;
-    answer: string;
-  }[];
-}
-
-export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
+export const insuranceProducts = {
   auto: {
-    type: 'auto',
-    title: 'Find Your Perfect Auto Insurance Match',
-    subtitle: 'Compare rates from top providers and save on your car insurance',
+    title: 'Auto Insurance',
+    subtitle: 'Find the perfect auto insurance coverage for your needs',
     benefits: [
-      'Save up to 30% on your car insurance premiums',
       'Compare quotes from multiple providers',
-      'Coverage tailored to your driving habits',
-      '24/7 roadside assistance options'
+      'Save time and money on your auto insurance',
+      'Get personalized coverage recommendations',
+      'Easy online quote process',
+      'Expert guidance from licensed agents',
+      'Flexible payment options'
     ],
     faqs: [
       {
-        question: 'How much can I save on car insurance?',
-        answer: 'Most drivers save between 15-30% on their premiums by comparing quotes through our platform.'
+        question: 'What factors affect my auto insurance rates?',
+        answer: 'Several factors can affect your auto insurance rates, including your driving history, age, location, type of vehicle, and coverage options selected.'
       },
       {
-        question: 'What factors affect my auto insurance rates?',
-        answer: 'Key factors include your driving history, vehicle type, location, and coverage preferences.'
+        question: 'How much auto insurance coverage do I need?',
+        answer: 'The amount of coverage you need depends on your state\'s requirements, your assets, and your risk tolerance. We\'ll help you determine the right coverage for your situation.'
+      },
+      {
+        question: 'Can I get a quote without my driver\'s license?',
+        answer: 'While you can start the quote process without your license, you\'ll need it to finalize your policy. Have your license ready for the most accurate quote.'
+      },
+      {
+        question: 'How quickly can I get coverage?',
+        answer: 'Most policies can be activated within 24 hours of approval. Some providers even offer instant coverage options.'
       }
     ]
   },
   home: {
-    type: 'home',
-    title: 'Protect Your Home with the Right Coverage',
-    subtitle: 'Get comprehensive home insurance quotes from trusted providers',
+    title: 'Home Insurance',
+    subtitle: 'Protect your home with the right insurance coverage',
     benefits: [
-      'Customized coverage for your home',
-      'Protection against natural disasters',
-      'Liability coverage included',
-      'Quick claim processing'
+      'Comprehensive home protection',
+      'Competitive rates from top providers',
+      'Customizable coverage options',
+      'Quick and easy quote process',
+      'Expert guidance from licensed agents',
+      '24/7 claims support'
     ],
     faqs: [
       {
-        question: 'What does home insurance typically cover?',
-        answer: 'Standard coverage includes dwelling protection, personal property, liability, and additional living expenses.'
+        question: 'What does home insurance cover?',
+        answer: 'Home insurance typically covers damage to your home\'s structure, personal property, liability protection, and additional living expenses if your home becomes uninhabitable.'
       },
       {
-        question: 'How is my home insurance premium calculated?',
-        answer: 'Factors include home value, location, construction type, and coverage limits.'
+        question: 'How much home insurance do I need?',
+        answer: 'The amount of coverage you need depends on your home\'s value, location, and your personal property. We\'ll help you assess your needs accurately.'
+      },
+      {
+        question: 'What factors affect home insurance rates?',
+        answer: 'Factors include your home\'s age, location, construction type, claims history, and the coverage options you select.'
+      },
+      {
+        question: 'Can I bundle home and auto insurance?',
+        answer: 'Yes, many providers offer discounts for bundling multiple insurance policies together.'
       }
     ]
   },
   life: {
-    type: 'life',
-    title: "Secure Your Family's Future",
-    subtitle: 'Find the right life insurance coverage for your loved ones',
+    title: 'Life Insurance',
+    subtitle: 'Secure your family\'s future with the right life insurance',
     benefits: [
-      'Financial security for your family',
-      'Flexible coverage options',
-      'Competitive rates from top carriers',
-      'Easy application process'
+      'Financial protection for your loved ones',
+      'Flexible policy options',
+      'Competitive rates from top providers',
+      'Simple application process',
+      'Expert guidance from licensed agents',
+      'Peace of mind for your family'
     ],
     faqs: [
       {
         question: 'How much life insurance do I need?',
-        answer: 'A common rule of thumb is 10-15 times your annual income, but your specific needs may vary.'
+        answer: 'The amount depends on your income, debts, and your family\'s needs. We\'ll help you calculate the right coverage amount.'
       },
       {
         question: 'What types of life insurance are available?',
-        answer: 'Term life, whole life, and universal life insurance are the most common options.'
+        answer: 'Common types include term life, whole life, and universal life insurance. Each has different benefits and costs.'
+      },
+      {
+        question: 'How quickly can I get coverage?',
+        answer: 'Some policies offer instant coverage, while others may require a medical exam. We\'ll help you find the right option for your needs.'
+      },
+      {
+        question: 'What factors affect life insurance rates?',
+        answer: 'Factors include your age, health, lifestyle, and the type and amount of coverage you select.'
       }
     ]
   },
   disability: {
-    type: 'disability',
-    title: 'Protect Your Income with Disability Insurance',
-    subtitle: "Ensure financial stability if you're unable to work",
+    title: 'Disability Insurance',
+    subtitle: 'Protect your income with disability insurance',
     benefits: [
-      'Income protection during disability',
-      'Short and long-term coverage options',
-      'Customizable benefit periods',
-      'Coverage for self-employed individuals'
+      'Income protection if you can\'t work',
+      'Flexible coverage options',
+      'Competitive rates from top providers',
+      'Simple application process',
+      'Expert guidance from licensed agents',
+      'Peace of mind for your future'
     ],
     faqs: [
       {
-        question: 'What is disability insurance?',
+        question: 'What does disability insurance cover?',
         answer: 'Disability insurance provides income replacement if you become unable to work due to illness or injury.'
       },
       {
-        question: 'How much coverage should I get?',
-        answer: 'Typically 60-70% of your current income, but this can vary based on your specific needs.'
+        question: 'How much disability insurance do I need?',
+        answer: 'Typically, you should aim to replace 60-70% of your income. We\'ll help you determine the right amount for your situation.'
+      },
+      {
+        question: 'What\'s the difference between short-term and long-term disability?',
+        answer: 'Short-term disability covers shorter periods (typically 3-6 months), while long-term disability can cover extended periods or until retirement.'
+      },
+      {
+        question: 'How quickly can I get coverage?',
+        answer: 'Some policies offer quick approval, while others may require a medical review. We\'ll help you find the right option for your needs.'
       }
     ]
   },
   health: {
-    type: 'health',
-    title: 'Find Your Ideal Health Insurance Plan',
-    subtitle: 'Compare comprehensive health coverage options',
+    title: 'Health Insurance',
+    subtitle: 'Find the right health insurance coverage for you and your family',
     benefits: [
+      'Comprehensive health coverage',
       'Access to quality healthcare providers',
       'Prescription drug coverage',
       'Preventive care services',
-      'Mental health coverage'
+      'Expert guidance from licensed agents',
+      'Flexible plan options'
     ],
     faqs: [
       {
         question: 'What types of health insurance plans are available?',
-        answer: 'HMO, PPO, EPO, and POS plans are common options, each with different provider networks and costs.'
+        answer: 'Common types include HMO, PPO, EPO, and POS plans. Each has different networks and coverage options.'
       },
       {
         question: 'When can I enroll in health insurance?',
-        answer: 'During open enrollment periods or if you qualify for a special enrollment period due to life events.'
+        answer: 'You can enroll during the annual Open Enrollment period or if you qualify for a Special Enrollment Period due to life changes.'
+      },
+      {
+        question: 'What\'s the difference between individual and group health insurance?',
+        answer: 'Individual plans are purchased directly, while group plans are typically offered through employers or organizations.'
+      },
+      {
+        question: 'What factors affect health insurance rates?',
+        answer: 'Factors include your age, location, tobacco use, and the type of plan you select.'
       }
     ]
   }

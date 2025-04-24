@@ -12,6 +12,7 @@ export default function Page() {
         subtitle="Get personalized quotes from licensed local agents—faster, easier, and tailored to you."
         ctaText="Get My Free Quote"
         ctaLink="#quote-form"
+        insuranceType="auto"
       />
       <WhyChooseSection />
       <SocialProof />

@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 interface QuoteFormProps {
-  insuranceType: 'auto' | 'home' | 'life' | 'disability';
+  insuranceType: InsuranceType;
   className?: string;
 }
 
@@ -18,7 +19,7 @@ interface FormField {
   options?: { value: string; label: string }[];
 }
 
-const formFields: Record<string, FormField[]> = {
+const formFields: Record<InsuranceType, FormField[]> = {
   life: [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
@@ -76,6 +77,35 @@ const formFields: Record<string, FormField[]> = {
         { value: 'short', label: 'Short-term Disability' },
         { value: 'long', label: 'Long-term Disability' },
         { value: 'both', label: 'Both' },
+      ],
+    },
+  ],
+  health: [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'age', label: 'Age', type: 'number', required: true },
+    {
+      name: 'coverageType',
+      label: 'Coverage Type',
+      type: 'select',
+      required: true,
+      tooltip: 'Choose the type of health insurance coverage you\'re looking for.',
+      options: [
+        { value: 'individual', label: 'Individual' },
+        { value: 'family', label: 'Family' },
+        { value: 'medicare', label: 'Medicare' },
+      ],
+    },
+    {
+      name: 'preExistingConditions',
+      label: 'Pre-existing Conditions',
+      type: 'select',
+      required: true,
+      options: [
+        { value: 'yes', label: 'Yes' },
+        { value: 'no', label: 'No' },
       ],
     },
   ],
@@ -154,7 +184,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
               {field.type === 'select' ? (
                 <select
                   required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff]"
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
                 >
@@ -169,7 +199,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                 <input
                   type={field.type}
                   required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff]"
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
                 />
@@ -196,14 +226,14 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-brand-primary text-white font-semibold px-6 py-4 rounded-xl shadow-brand hover:bg-brand-secondary transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-[#00e8ff] text-black font-semibold px-6 py-4 rounded-xl shadow-brand hover:bg-[#00cce6] transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
           </button>
         </div>
         
         <p className="text-xs text-brand-body opacity-60 text-center">
-          By submitting this form, you agree to our <a href="/privacy" className="text-brand-primary hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
+          By submitting this form, you agree to our <a href="/privacy" className="text-[#00e8ff] hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
         </p>
       </div>
     </form>

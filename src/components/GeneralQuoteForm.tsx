@@ -17,28 +17,37 @@ export default function GeneralQuoteForm() {
     // Handle form submission
   };
 
+  const toggleInsuranceType = (id: string) => {
+    setSelectedTypes(prev => 
+      prev.includes(id) 
+        ? prev.filter(type => type !== id)
+        : [...prev, id]
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-brand-body mb-2">
-          Insurance Types*
+        <label className="block text-sm font-medium text-brand-body mb-4">
+          What type of insurance are you interested in?
           <span className="text-red-500 ml-1">*</span>
         </label>
-        <select
-          multiple
-          className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
-          value={selectedTypes}
-          onChange={(e) => {
-            const options = Array.from(e.target.selectedOptions, (option) => option.value);
-            setSelectedTypes(options);
-          }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {insuranceTypes.map((type) => (
-            <option key={type.id} value={type.id}>
-              {type.label}
-            </option>
+            <div key={type.id} className="flex items-center">
+              <input
+                type="checkbox"
+                id={type.id}
+                checked={selectedTypes.includes(type.id)}
+                onChange={() => toggleInsuranceType(type.id)}
+                className="w-4 h-4 text-brand-primary border-gray-300 rounded focus:ring-brand-primary"
+              />
+              <label htmlFor={type.id} className="ml-2 text-brand-body">
+                {type.label}
+              </label>
+            </div>
           ))}
-        </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -109,6 +118,9 @@ export default function GeneralQuoteForm() {
         >
           Get My Free Quote
         </button>
+        <p className="mt-3 text-xs text-brand-body text-center">
+          By submitting this form, you agree to our <a href="/privacy" className="text-brand-primary hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
+        </p>
       </div>
     </form>
   );
