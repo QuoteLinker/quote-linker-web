@@ -7,14 +7,14 @@ interface BenefitProps {
 }
 
 const Benefit = ({ title, description, icon }: BenefitProps) => (
-  <div className="bg-white p-8 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 group">
+  <div className="bg-brand-card p-6 rounded-2xl shadow-brand transition hover:shadow-2xl hover:scale-105 group">
     <div className="flex justify-center mb-6">
-      <div className="text-[#00F6FF] w-12 h-12 transform transition-transform group-hover:scale-110 group-hover:rotate-3">
+      <div className="w-10 h-10 text-brand-primary transform transition-transform group-hover:scale-110 group-hover:rotate-3">
         {icon}
       </div>
     </div>
-    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-3">{title}</h3>
-    <p className="text-[#1A1A1A] opacity-75 leading-relaxed">{description}</p>
+    <h3 className="text-lg font-semibold text-brand-headline mt-4">{title}</h3>
+    <p className="text-sm text-brand-body opacity-75 mt-2">{description}</p>
   </div>
 );
 
@@ -51,18 +51,18 @@ export default function WhyChooseSection() {
   ];
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#F9FBFC] to-white relative overflow-hidden">
+    <section className="py-24 px-6 bg-gradient-to-b from-brand-background to-brand-card relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
-      <div className="container relative mx-auto px-6">
+      <div className="container relative mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#0A0A0A] mb-6">
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-headline mb-6">
             Why Choose QuoteLinker?
           </h2>
-          <p className="text-xl text-[#1A1A1A] opacity-80 max-w-2xl mx-auto">
+          <p className="text-xl text-brand-body opacity-80 max-w-2xl mx-auto">
             We make insurance simple, personal, and hassle-free
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {benefits.map((benefit) => (
             <Benefit
               key={benefit.title}

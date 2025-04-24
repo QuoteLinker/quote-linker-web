@@ -18,7 +18,7 @@ module.exports = {
         },
       },
       boxShadow: {
-        'brand': '0 4px 16px rgba(0, 246, 255, 0.25)',
+        'brand': '0 8px 16px rgba(0, 246, 255, 0.25)',
       },
       container: {
         center: true,

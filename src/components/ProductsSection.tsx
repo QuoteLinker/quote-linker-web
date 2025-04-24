@@ -10,16 +10,16 @@ interface ProductCardProps {
 const ProductCard = ({ title, description, icon, href }: ProductCardProps) => (
   <a 
     href={href}
-    className="block bg-white p-8 rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105 group"
+    className="block bg-brand-card p-6 rounded-2xl shadow-brand transition hover:shadow-2xl hover:scale-105 group"
   >
     <div className="flex justify-center mb-6">
-      <div className="text-[#00F6FF] w-14 h-14 transform transition-transform group-hover:scale-110 group-hover:rotate-3">
+      <div className="w-10 h-10 text-brand-primary transform transition-transform group-hover:scale-110 group-hover:rotate-3">
         {icon}
       </div>
     </div>
-    <h3 className="text-xl font-semibold text-[#0A0A0A] mb-3">{title}</h3>
-    <p className="text-[#1A1A1A] opacity-75 leading-relaxed mb-6">{description}</p>
-    <div className="flex items-center justify-center text-[#00F6FF] font-semibold group/link">
+    <h3 className="text-lg font-semibold text-brand-headline mt-4">{title}</h3>
+    <p className="text-sm text-brand-body opacity-75 mt-2 mb-6">{description}</p>
+    <div className="flex items-center justify-center text-brand-primary font-semibold group/link">
       Get a Quote
       <svg 
         className="w-5 h-5 ml-2 transform group-hover/link:translate-x-1 transition-transform" 
@@ -69,18 +69,18 @@ export default function ProductsSection() {
   ];
 
   return (
-    <section className="py-32 bg-gradient-to-b from-white to-[#F9FBFC] relative overflow-hidden">
+    <section className="py-24 px-6 bg-gradient-to-b from-brand-card to-brand-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
-      <div className="container relative mx-auto px-6">
+      <div className="container relative mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#0A0A0A] mb-6">
+          <h2 className="text-4xl sm:text-5xl font-bold text-brand-headline mb-6">
             Our Insurance Products
           </h2>
-          <p className="text-xl text-[#1A1A1A] opacity-80 max-w-2xl mx-auto">
+          <p className="text-xl text-brand-body opacity-80 max-w-2xl mx-auto">
             Find the perfect coverage for every aspect of your life
           </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {products.map((product) => (
             <ProductCard
               key={product.title}

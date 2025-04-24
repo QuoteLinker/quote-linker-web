@@ -30,13 +30,12 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setSubmitStatus('idle');
 
     try {
       const response = await fetch('/api/submit-quote', {
@@ -60,9 +59,16 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         });
       }
 
-      setIsSubmitted(true);
+      setSubmitStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        insuranceType: 'auto',
+        message: '',
+      });
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setSubmitStatus('error');
       console.error('Form submission error:', err);
     } finally {
       setIsSubmitting(false);
@@ -74,120 +80,133 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  if (isSubmitted) {
-    return (
-      <div className="bg-white rounded-2xl shadow-xl p-10 text-center">
-        <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6 animate-bounce">
-          <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-semibold text-[#0A0A0A] mb-4">Thank You!</h3>
-        <p className="text-lg text-[#1A1A1A] opacity-80">
-          We've received your request and will connect you with a licensed agent shortly.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-10">
-      <div className="space-y-6">
-        <div>
-          <label htmlFor="name" className={labelClasses}>
-            Full Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            value={formData.name}
-            onChange={handleChange}
-            className={inputClasses}
-            placeholder="John Doe"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email" className={labelClasses}>
-            Email Address
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            value={formData.email}
-            onChange={handleChange}
-            className={inputClasses}
-            placeholder="john@example.com"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="phone" className={labelClasses}>
-            Phone Number
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            required
-            value={formData.phone}
-            onChange={handleChange}
-            className={inputClasses}
-            placeholder="(555) 555-5555"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="insuranceType" className={labelClasses}>
-            Insurance Type
-          </label>
-          <select
-            id="insuranceType"
-            name="insuranceType"
-            required
-            value={formData.insuranceType}
-            onChange={handleChange}
-            className={inputClasses}
-          >
-            <option value="auto">Auto Insurance</option>
-            <option value="home">Home Insurance</option>
-            <option value="life">Life Insurance</option>
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="message" className={labelClasses}>
-            Additional Information
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows={4}
-            value={formData.message}
-            onChange={handleChange}
-            className={inputClasses}
-            placeholder="Tell us about your insurance needs..."
-          />
-        </div>
-
-        {error && (
-          <div className="text-red-600 text-sm bg-red-50 p-3 rounded-lg" role="alert">
-            {error}
+    <section className="py-24 px-6 bg-gradient-to-b from-brand-background to-brand-card relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
+      <div className="container relative mx-auto">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-brand-headline mb-4">
+              Get Your Free Quote Today
+            </h2>
+            <p className="text-lg text-brand-body opacity-80">
+              Fill out the form below and we'll get back to you with a personalized quote
+            </p>
           </div>
-        )}
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full bg-[#00F6FF] text-black font-semibold px-8 py-4 rounded-xl shadow-[0_8px_16px_rgba(0,246,255,0.25)] hover:bg-[#4DF9FF] transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${isSubmitting ? 'animate-pulse' : ''}`}
-        >
-          {isSubmitting ? 'Submitting...' : 'Get My Quote'}
-        </button>
+          <form 
+            onSubmit={handleSubmit}
+            className="bg-brand-card p-8 rounded-2xl shadow-brand"
+          >
+            <div className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-brand-headline mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  placeholder="John Doe"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-brand-headline mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  placeholder="john@example.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-brand-headline mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="insuranceType" className="block text-sm font-medium text-brand-headline mb-2">
+                  Insurance Type
+                </label>
+                <select
+                  id="insuranceType"
+                  name="insuranceType"
+                  value={formData.insuranceType}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline"
+                >
+                  <option value="auto">Auto Insurance</option>
+                  <option value="home">Home Insurance</option>
+                  <option value="life">Life Insurance</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-brand-headline mb-2">
+                  Additional Details
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg bg-white border border-brand-card focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 transition-all text-brand-headline placeholder-brand-body/50"
+                  placeholder="Tell us more about your insurance needs..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full py-3 px-6 text-white font-semibold rounded-lg transition-all
+                  ${isSubmitting 
+                    ? 'bg-brand-primary/70 cursor-not-allowed' 
+                    : 'bg-brand-primary hover:bg-brand-secondary shadow-brand hover:shadow-lg'
+                  }`}
+              >
+                {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
+              </button>
+
+              {submitStatus === 'success' && (
+                <div className="p-4 rounded-lg bg-green-50 text-green-700 text-sm">
+                  Thank you! We've received your request and will contact you soon.
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="p-4 rounded-lg bg-red-50 text-red-700 text-sm">
+                  There was an error submitting your request. Please try again.
+                </div>
+              )}
+            </div>
+          </form>
+        </div>
       </div>
-    </form>
+    </section>
   );
 } 
