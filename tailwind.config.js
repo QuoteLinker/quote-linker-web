@@ -1,23 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
       colors: {
-        'brand-background': '#F8F9FA',
-        'brand-primary': '#00F6FF',
-        'brand-primary-dark': '#00D8E0',
-        'brand-headline': '#1F2937',
-        'brand-body': '#4B5563',
-        'brand-card': '#FFFFFF',
-        'brand-card-hover': '#F3F4F6',
+        'brand-primary': '#00e8ff',
+        'brand-primary-dark': '#00cce6',
+        'brand-secondary': '#0070f3',
+        'brand-background': '#ffffff',
+        'brand-card': '#ffffff',
+        'brand-headline': '#1a1a1a',
+        'brand-body': '#4a5568',
       },
       boxShadow: {
-        'brand': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'brand': '0 4px 14px 0 rgba(0, 118, 255, 0.1)',
       },
       container: {
         center: true,
@@ -35,7 +34,6 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),
   ],
 } 

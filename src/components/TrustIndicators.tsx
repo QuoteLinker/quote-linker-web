@@ -32,9 +32,9 @@ export default function TrustIndicators() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {indicators.map((indicator, index) => (
             <div key={index} className="flex flex-col items-center text-center">
-              <indicator.icon className="w-12 h-12 text-[#00e8ff] mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{indicator.text}</h3>
-              <p className="text-gray-600">{indicator.description}</p>
+              <indicator.icon className="w-12 h-12 text-brand-primary mb-4" />
+              <h3 className="text-xl font-semibold text-brand-headline mb-2">{indicator.text}</h3>
+              <p className="text-brand-body">{indicator.description}</p>
             </div>
           ))}
         </div>

@@ -57,6 +57,19 @@ QuoteLinker is a modern insurance quote platform that helps users find the right
 
 This project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
 
+## Vercel Setup
+
+1. Go to Vercel > Settings > Environment Variables and add:
+   ```
+   NEXT_PUBLIC_GA_ID = G-GKS41G7PYZ
+   ```
+
+## Build
+
+```bash
+npm run build
+```
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
