@@ -78,7 +78,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   disability: {
     type: 'disability',
     title: 'Protect Your Income with Disability Insurance',
-    subtitle: 'Ensure financial stability if you're unable to work',
+    subtitle: "Ensure financial stability if you're unable to work",
     benefits: [
       'Income protection during disability',
       'Short and long-term coverage options',

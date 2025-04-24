@@ -17,7 +17,7 @@ const steps: Step[] = [
   },
   {
     title: 'Review your quote',
-    description: 'Compare quotes and choose the coverage that's right for you.',
+    description: "Compare quotes and choose the coverage that's right for you.",
     icon: '✅',
   },
 ];
