@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/Footer';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
-import Logo from '@/components/Logo';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +26,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} bg-brand-background min-h-screen`}>
         <div className="min-h-full flex flex-col">
-          <header className="sticky top-0 z-50 bg-brand-card shadow-sm">
+          <header className="sticky top-0 z-50 bg-brand-card shadow-brand">
             <nav className="container mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <a href="/" className="text-brand-primary font-bold text-xl">
@@ -46,7 +45,7 @@ export default function RootLayout({
                 </div>
                 <a
                   href="#quote-form"
-                  className="bg-brand-primary hover:bg-brand-secondary text-black px-6 py-2 rounded-lg shadow-brand transition-all duration-200 transform hover:scale-105"
+                  className="inline-flex bg-brand-primary hover:bg-brand-secondary text-black font-semibold px-8 py-3 rounded-xl shadow-brand transition-all duration-200 transform hover:scale-105 w-auto"
                 >
                   Get a Quote
                 </a>

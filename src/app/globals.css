@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-brand-background text-brand-body;
+    @apply bg-brand-background text-brand-body font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply text-brand-headline font-bold;
