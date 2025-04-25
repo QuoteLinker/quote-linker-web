@@ -1,8 +1,8 @@
-# Allow all crawlers
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemaps
 Sitemap: https://quotelinker.com/sitemap.xml
 
 # Disallow admin and api routes

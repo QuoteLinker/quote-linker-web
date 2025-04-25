@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { InsuranceType } from '@/utils/insuranceCopy';
+import { validatePhone, validateZip } from '@/utils/validation';
+import { trackQuoteSubmission } from '@/utils/gtm';
 
 interface FormData {
   name: string;
@@ -15,66 +17,53 @@ const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^\+?1?\d{10}$/;
-  return phoneRegex.test(phone.replace(/\D/g, ''));
-};
-
-const validateZip = (zip: string): boolean => {
-  const zipRegex = /^\d{5}(-\d{4})?$/;
-  return zipRegex.test(zip);
-};
-
 export async function POST(request: Request) {
   try {
-    const data: FormData = await request.json();
-    
-    // Log non-sensitive form data
-    console.log(`[Quote Submission] Type: ${data.insuranceType}, ZIP: ${data.zip}, Timestamp: ${new Date().toISOString()}`);
+    const data = await request.json();
+    const { insuranceType, name, email, phone, zip } = data;
 
     // Validate required fields
-    if (!data.name?.trim()) {
-      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+    const phoneError = validatePhone(phone);
+    const zipError = validateZip(zip);
+
+    if (phoneError || zipError) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          errors: {
+            ...(phoneError && { phone: phoneError }),
+            ...(zipError && { zip: zipError })
+          }
+        },
+        { status: 400 }
+      );
     }
-    if (!data.email?.trim() || !validateEmail(data.email)) {
-      return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
-    }
-    if (!data.phone?.trim() || !validatePhone(data.phone)) {
-      return NextResponse.json({ error: 'Valid phone number is required' }, { status: 400 });
-    }
-    if (!data.zip?.trim() || !validateZip(data.zip)) {
-      return NextResponse.json({ error: 'Valid ZIP code is required' }, { status: 400 });
-    }
-    if (!data.insuranceType) {
-      return NextResponse.json({ error: 'Insurance type is required' }, { status: 400 });
-    }
+
+    // Track successful submission
+    trackQuoteSubmission(insuranceType, zip);
 
     // Send to Zapier webhook
-    const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error('[Quote Submission Error] Zapier webhook URL not configured');
-      throw new Error('Zapier webhook URL not configured');
-    }
-
-    const response = await fetch(webhookUrl, {
+    const zapierResponse = await fetch(process.env.ZAPIER_WEBHOOK_URL!, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        insuranceType,
+        name,
+        email,
+        phone,
+        zip,
+        timestamp: new Date().toISOString(),
+      }),
     });
 
-    if (!response.ok) {
-      console.error(`[Quote Submission Error] Zapier response status: ${response.status}`);
-      throw new Error('Failed to submit to Zapier');
+    if (!zapierResponse.ok) {
+      throw new Error('Failed to send data to Zapier');
     }
 
-    console.log(`[Quote Submission Success] Type: ${data.insuranceType}, ZIP: ${data.zip}`);
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error(`[Quote Submission Error] ${error instanceof Error ? error.message : 'Unknown error'}`);
     return NextResponse.json(
-      { error: 'Failed to process quote request' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }

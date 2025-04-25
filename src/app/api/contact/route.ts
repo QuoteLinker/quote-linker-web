@@ -1,31 +1,55 @@
 import { NextResponse } from 'next/server';
+import { validateName, validateEmail, validateMessage } from '@/utils/validation';
+import { trackContactSubmission } from '@/utils/gtm';
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { name, email, subject, message } = body;
+    const data = await request.json();
+    const { name, email, subject, message } = data;
 
     // Validate required fields
-    if (!name || !email || !subject || !message) {
+    const nameError = validateName(name);
+    const emailError = validateEmail(email);
+    const messageError = validateMessage(message);
+
+    if (nameError || emailError || messageError) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        {
+          success: false,
+          errors: {
+            ...(nameError && { name: nameError }),
+            ...(emailError && { email: emailError }),
+            ...(messageError && { message: messageError }),
+          },
+        },
         { status: 400 }
       );
     }
 
-    // TODO: Add your email service integration here
-    // For now, we'll just log the submission
-    console.log('Contact form submission:', { name, email, subject, message });
+    // Track successful submission
+    trackContactSubmission(subject);
 
-    // Return success response
-    return NextResponse.json(
-      { message: 'Message sent successfully' },
-      { status: 200 }
-    );
+    // Send to Zapier webhook
+    const zapierResponse = await fetch(process.env.ZAPIER_CONTACT_WEBHOOK_URL!, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email,
+        subject,
+        message,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+
+    if (!zapierResponse.ok) {
+      throw new Error('Failed to send data to Zapier');
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Contact form error:', error);
     return NextResponse.json(
-      { error: 'Failed to send message' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }
