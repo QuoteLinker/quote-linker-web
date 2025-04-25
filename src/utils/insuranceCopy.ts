@@ -1,4 +1,4 @@
-export type InsuranceType = 'auto' | 'home' | 'life' | 'disability' | 'health';
+export type InsuranceType = 'auto' | 'home' | 'life' | 'disability' | 'health' | 'term';
 
 export const insuranceProducts = {
   auto: {

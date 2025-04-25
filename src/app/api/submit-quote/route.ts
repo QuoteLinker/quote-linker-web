@@ -8,10 +8,12 @@ const formSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  insuranceType: z.enum(['auto', 'home', 'life', 'health', 'disability'] as const),
+  insuranceType: z.enum(['auto', 'home', 'life', 'health', 'disability', 'term'] as const),
   // Add other fields based on insurance type
   age: z.string().optional(),
   tobaccoUse: z.string().optional(),
+  termLength: z.string().optional(),
+  coverageAmount: z.string().optional(),
   vehicleYear: z.string().optional(),
   vehicleMake: z.string().optional(),
   vehicleModel: z.string().optional(),
