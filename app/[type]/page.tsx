@@ -30,7 +30,7 @@ const productInfo = {
   },
   life: {
     title: 'Life Insurance',
-    description: 'Secure your family's future with our life insurance plans.',
+    description: 'Secure your family\'s future with our life insurance plans.',
     benefits: [
       'Flexible coverage options',
       'Cash value accumulation',
@@ -40,7 +40,7 @@ const productInfo = {
   },
   term: {
     title: 'Term Life Insurance',
-    description: 'Affordable term life insurance for your family's protection.',
+    description: 'Affordable term life insurance for your family\'s protection.',
     benefits: [
       'Fixed premium rates',
       'Simple coverage options',
