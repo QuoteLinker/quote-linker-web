@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Logo from './Logo';
+import Link from 'next/link';
 
 const socialLinks = [
   {
@@ -55,29 +55,29 @@ export default function Footer() {
             <h3 className="text-brand-headline font-semibold mb-4">Insurance</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/auto" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/auto" className="text-brand-body hover:text-brand-primary transition-colors">
                   Auto Insurance
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/home" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/home" className="text-brand-body hover:text-brand-primary transition-colors">
                   Home Insurance
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/life" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/life" className="text-brand-body hover:text-brand-primary transition-colors">
                   Life Insurance
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/health" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/health" className="text-brand-body hover:text-brand-primary transition-colors">
                   Health Insurance
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/disability" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/disability" className="text-brand-body hover:text-brand-primary transition-colors">
                   Disability Insurance
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -86,24 +86,14 @@ export default function Footer() {
             <h3 className="text-brand-headline font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/about" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/about" className="text-brand-body hover:text-brand-primary transition-colors">
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/careers" className="text-brand-body hover:text-[#00e8ff] transition-colors">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="/blog" className="text-brand-body hover:text-[#00e8ff] transition-colors">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/contact" className="text-brand-body hover:text-brand-primary transition-colors">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -112,24 +102,14 @@ export default function Footer() {
             <h3 className="text-brand-headline font-semibold mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/privacy" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/privacy" className="text-brand-body hover:text-brand-primary transition-colors">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/terms" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                <Link href="/terms" className="text-brand-body hover:text-brand-primary transition-colors">
                   Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="/licenses" className="text-brand-body hover:text-[#00e8ff] transition-colors">
-                  Licenses
-                </a>
-              </li>
-              <li>
-                <a href="/accessibility" className="text-brand-body hover:text-[#00e8ff] transition-colors">
-                  Accessibility
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -141,7 +121,7 @@ export default function Footer() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-brand-body hover:text-[#00e8ff] transition-colors"
+                  className="text-brand-body hover:text-brand-primary transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
