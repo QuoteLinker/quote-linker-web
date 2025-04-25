@@ -26,7 +26,7 @@ export default function QuoteForm({ type }: QuoteFormProps) {
     setErrors({});
 
     try {
-      const response = await fetch('/api/quote', {
+      const response = await fetch('/api/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

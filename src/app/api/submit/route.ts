@@ -28,6 +28,9 @@ const validateZip = (zip: string): boolean => {
 export async function POST(request: Request) {
   try {
     const data: FormData = await request.json();
+    
+    // Log non-sensitive form data
+    console.log(`[Quote Submission] Type: ${data.insuranceType}, ZIP: ${data.zip}, Timestamp: ${new Date().toISOString()}`);
 
     // Validate required fields
     if (!data.name?.trim()) {
@@ -49,6 +52,7 @@ export async function POST(request: Request) {
     // Send to Zapier webhook
     const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
     if (!webhookUrl) {
+      console.error('[Quote Submission Error] Zapier webhook URL not configured');
       throw new Error('Zapier webhook URL not configured');
     }
 
@@ -61,11 +65,14 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
+      console.error(`[Quote Submission Error] Zapier response status: ${response.status}`);
       throw new Error('Failed to submit to Zapier');
     }
 
+    console.log(`[Quote Submission Success] Type: ${data.insuranceType}, ZIP: ${data.zip}`);
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.error(`[Quote Submission Error] ${error instanceof Error ? error.message : 'Unknown error'}`);
     return NextResponse.json(
       { error: 'Failed to process quote request' },
       { status: 500 }
