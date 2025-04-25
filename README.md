@@ -1,6 +1,6 @@
-# QuoteLinker Web
+# QuoteLinker
 
-A Next.js 14 application for QuoteLinker, a lead generation platform for a licensed State Farm agent in Minnesota.
+A Next.js 14 application for QuoteLinker, a lead generation platform for licensed agents to connect with consumers seeking insurance solutions.
 
 ## Features
 
