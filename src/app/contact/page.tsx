@@ -2,11 +2,6 @@
 
 import { useState } from 'react';
 
-export const metadata = {
-  title: 'Contact Us - QuoteLinker',
-  description: 'Get in touch with QuoteLinker for any questions about insurance quotes or our services.',
-};
-
 export default function ContactPage() {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
