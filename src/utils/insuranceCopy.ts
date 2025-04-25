@@ -150,5 +150,35 @@ export const insuranceProducts = {
         answer: 'Factors include your age, location, tobacco use, and the type of plan you select.'
       }
     ]
+  },
+  term: {
+    title: 'Term Life Insurance',
+    subtitle: 'Affordable term life insurance for your family\'s protection',
+    benefits: [
+      'Fixed premium rates',
+      'Simple coverage options',
+      'Convertible policies',
+      'Family protection',
+      'Flexible term lengths',
+      'Competitive rates'
+    ],
+    faqs: [
+      {
+        question: 'What is term life insurance?',
+        answer: 'Term life insurance provides coverage for a specific period (term) in exchange for regular premium payments. If you pass away during the term, your beneficiaries receive a death benefit.'
+      },
+      {
+        question: 'How long should my term be?',
+        answer: 'The length of your term should align with your financial obligations and goals. Common terms are 10, 20, or 30 years, depending on your needs.'
+      },
+      {
+        question: 'Can I convert my term policy later?',
+        answer: 'Many term policies offer conversion options to permanent life insurance without requiring a new medical exam, though this varies by provider.'
+      },
+      {
+        question: 'How quickly can I get coverage?',
+        answer: 'Some policies offer instant approval and coverage within 24 hours. Traditional policies typically take 4-6 weeks for full underwriting. We can help you find the fastest option for your needs.'
+      }
+    ]
   }
 }; 
