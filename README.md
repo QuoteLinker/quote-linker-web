@@ -1,106 +1,87 @@
 # QuoteLinker Web
 
-QuoteLinker is a modern insurance quote platform that helps users find the right insurance coverage for their needs. The platform provides quotes for various insurance types including auto, home, life, health, and disability insurance.
+A Next.js 14 application for QuoteLinker, a lead generation platform for a licensed State Farm agent in Minnesota.
 
 ## Features
 
-- **Multiple Insurance Types**: Support for auto, home, life, health, and disability insurance
-- **Streamlined Quote Process**: Simple form to collect user information and insurance needs
-- **Mobile-Friendly Design**: Responsive layout with sticky CTAs for better mobile conversion
-- **Modern UI**: Clean, professional design with improved spacing and visual elements
+- Dynamic product pages for different insurance types
+- Mobile-optimized responsive design
+- Secure form handling with validation
+- Google Tag Manager integration
+- Anti-spam protection with honeypot
+- Zapier integration for lead management
 
-## Tech Stack
-
-- **Framework**: Next.js 14 with App Router
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel
-- **Form Handling**: Client-side form submission with API routes
-
-## Getting Started
-
-### Prerequisites
+## Prerequisites
 
 - Node.js 18.17 or later
 - npm or yarn
+- Vercel account for deployment
 
-### Installation
+## Environment Variables
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/yourusername/quotelinker-web.git
-   cd quotelinker-web
-   ```
+Create a `.env.local` file with the following variables:
 
-2. Install dependencies
+```bash
+NEXT_PUBLIC_GTM_ID=your-gtm-id
+ZAPIER_WEBHOOK_URL=your-zapier-webhook-url
+```
+
+## Development
+
+1. Install dependencies:
    ```bash
    npm install
    # or
    yarn install
    ```
 
-3. Set up environment variables
-   ```bash
-   # Create a .env.local file and add the following variables:
-   NEXT_PUBLIC_GTM_ID=your-gtm-id
-   NEXT_PUBLIC_GA_ID=your-ga-id
-   ZAPIER_WEBHOOK_URL=your-zapier-webhook-url
-   ```
-
-   ⚠️ **IMPORTANT: Security Warning**
-   - Never commit sensitive keys to version control
-   - Keep your .env.local file private
-   - Only use NEXT_PUBLIC_ prefix for variables needed on the client side
-   - Store sensitive API keys and webhooks securely
-   - Regularly rotate production keys
-
-4. Run the development server
+2. Run the development server:
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
-
-## Project Structure
-
-- `/src/app`: Next.js App Router pages and API routes
-- `/src/components`: Reusable UI components
-- `/src/utils`: Utility functions and data
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Deployment
 
-This project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
+The site is automatically deployed to Vercel when changes are pushed to the main branch.
 
-### Environment Variables on Vercel
+To deploy manually:
 
-1. Go to Vercel > Project Settings > Environment Variables
-2. Add the required environment variables:
-   - `NEXT_PUBLIC_GTM_ID`: Your Google Tag Manager container ID
-   - `NEXT_PUBLIC_GA_ID`: Your Google Analytics measurement ID
-   - `ZAPIER_WEBHOOK_URL`: Your Zapier webhook URL for form submissions
+1. Install Vercel CLI:
+   ```bash
+   npm i -g vercel
+   ```
 
-### Security Best Practices
+2. Deploy:
+   ```bash
+   vercel
+   ```
 
-- Use environment variables for all sensitive data
-- Implement rate limiting on API routes
-- Validate form submissions server-side
-- Keep dependencies updated
-- Follow security advisories
-- Monitor for unusual activity
+## Project Structure
 
-## Build
+- `/app` - Next.js 14 app directory
+  - `/api` - API routes
+  - `/components` - Reusable React components
+  - `/[type]` - Dynamic product pages
+- `/public` - Static assets
 
-```bash
-npm run build
-```
+## Security
+
+- Form validation using Zod
+- Honeypot field for spam prevention
+- Environment variables for sensitive data
+- Secure API routes
+
+## Analytics
+
+Google Tag Manager is integrated for:
+- Page views
+- Form submissions
+- User interactions
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contact
-
-For any questions or support, please contact:
-- Email: support@quotelinker.com
-- Phone: 1-800-555-0123 
+Proprietary - All rights reserved 
