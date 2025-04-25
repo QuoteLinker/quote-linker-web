@@ -3,8 +3,14 @@ interface GTMEvent {
   [key: string]: any;
 }
 
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}
+
 export function pushGTMEvent(eventData: GTMEvent): void {
-  if (typeof window !== 'undefined' && window.dataLayer) {
+  if (typeof window !== 'undefined' && Array.isArray(window.dataLayer)) {
     window.dataLayer.push(eventData);
   }
 }

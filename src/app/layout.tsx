@@ -1,19 +1,32 @@
-import Script from 'next/script';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
+import Script from 'next/script';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
-export const metadata = {
-  title: 'QuoteLinker - Minnesota Insurance Quotes',
-  description: 'Get personalized insurance quotes from licensed agents in Minnesota.',
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-    ],
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | QuoteLinker',
+    default: 'QuoteLinker - Compare Insurance Quotes Online',
   },
+  description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
   metadataBase: new URL('https://quotelinker.com'),
+  openGraph: {
+    title: 'QuoteLinker - Compare Insurance Quotes Online',
+    description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
+    url: 'https://quotelinker.com',
+    siteName: 'QuoteLinker',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'QuoteLinker - Compare Insurance Quotes Online',
+    description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
+  },
 };
 
 export default function RootLayout({
@@ -47,10 +60,11 @@ export default function RootLayout({
             height="0"
             width="0"
             style={{ display: 'none', visibility: 'hidden' }}
+            title="GTM"
           />
         </noscript>
       </head>
-      <body className="font-sans">
+      <body className={inter.className}>
         <Header />
         <main>{children}</main>
         <Footer />
