@@ -80,6 +80,7 @@ export default function Home() {
         subtitle="Connect with licensed insurance agents in Minnesota and get personalized quotes for your needs."
         ctaText="Get Started"
         ctaLink="#quote-form"
+        insuranceType="auto"
       />
       
       <TrustIndicators />
