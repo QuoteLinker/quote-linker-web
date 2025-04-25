@@ -15,7 +15,7 @@ export default function Hero() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/quote"
+                href="#quote-form"
                 className="inline-flex justify-center items-center px-8 py-4 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-primary-dark transition-colors"
               >
                 Get Your Free Quote

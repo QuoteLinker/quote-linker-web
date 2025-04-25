@@ -9,8 +9,8 @@ export const metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
     ],
+    shortcut: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
   metadataBase: new URL('https://quotelinker.com'),
@@ -25,9 +25,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
