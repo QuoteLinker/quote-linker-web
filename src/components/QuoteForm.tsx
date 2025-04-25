@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { InsuranceType } from '@/utils/insuranceCopy';
@@ -162,6 +162,18 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
+  useEffect(() => {
+    // Scroll to form when component mounts if it's in the URL hash
+    if (window.location.hash === '#quote-form') {
+      const element = document.getElementById('quote-form');
+      if (element) {
+        const yOffset = -80; // Account for fixed header
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -218,12 +230,8 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   const fields = formFields[insuranceType] || [];
 
   return (
-    <form 
-      onSubmit={handleSubmit}
-      className={`bg-white p-4 sm:p-6 md:p-10 rounded-2xl shadow-brand ${className}`}
-      data-gtm-form="quote_form"
-    >
-      <div className="space-y-4 sm:space-y-6">
+    <div className={`bg-white rounded-xl shadow-xl p-6 sm:p-8 ${className}`} id="quote-form">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Honeypot field - hidden from real users */}
         <div className="hidden">
           <input
@@ -320,7 +328,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         <p className="text-xs text-gray-500 text-center">
           By submitting this form, you agree to our <a href="/privacy" className="text-[#00e8ff] hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
         </p>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 } 
