@@ -73,6 +73,24 @@ export default function RootLayout({
                 <a href="/" className="flex items-center hover:opacity-90 transition-opacity">
                   <Logo />
                 </a>
+                {/* Mobile menu button */}
+                <button
+                  type="button"
+                  className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
+                  aria-controls="mobile-menu"
+                  aria-expanded="false"
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (mobileMenu) {
+                      mobileMenu.classList.toggle('hidden');
+                    }
+                  }}
+                >
+                  <span className="sr-only">Open main menu</span>
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
                 <div className="hidden md:flex space-x-8">
                   <a href="/auto" className="text-gray-600 hover:text-[#00e8ff] transition-colors">
                     Auto Insurance
@@ -89,11 +107,35 @@ export default function RootLayout({
                 </div>
                 <a
                   href="/#quote-form"
-                  className="inline-flex bg-[#00e8ff] hover:bg-[#00cce6] text-black font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
+                  className="hidden md:inline-flex bg-[#00e8ff] hover:bg-[#00cce6] text-black font-semibold px-6 sm:px-8 py-2 sm:py-3 rounded-xl shadow-lg transition-all duration-200 transform hover:scale-105"
                   data-gtm-event="header_cta_click"
                 >
                   Get a Quote
                 </a>
+              </div>
+              {/* Mobile menu */}
+              <div className="hidden md:hidden" id="mobile-menu">
+                <div className="px-2 pt-2 pb-3 space-y-1">
+                  <a href="/auto" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00e8ff] hover:bg-gray-50">
+                    Auto Insurance
+                  </a>
+                  <a href="/home" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00e8ff] hover:bg-gray-50">
+                    Home Insurance
+                  </a>
+                  <a href="/life" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00e8ff] hover:bg-gray-50">
+                    Life Insurance
+                  </a>
+                  <a href="/disability" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00e8ff] hover:bg-gray-50">
+                    Disability Insurance
+                  </a>
+                  <a
+                    href="/#quote-form"
+                    className="block px-3 py-2 rounded-md text-base font-medium bg-[#00e8ff] text-black hover:bg-[#00cce6]"
+                    data-gtm-event="mobile_header_cta_click"
+                  >
+                    Get a Quote
+                  </a>
+                </div>
               </div>
             </nav>
           </header>

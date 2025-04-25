@@ -160,11 +160,16 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    setErrorMessage('');
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
 
     try {
       const response = await fetch('/api/submit-quote', {
@@ -173,13 +178,15 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          ...data,
           insuranceType,
         }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error(result.error || 'Failed to submit form');
       }
 
       // Track form submission in Google Analytics
@@ -192,13 +199,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
       }
 
       setSubmitStatus('success');
-      setFormData({});
+      e.currentTarget.reset();
       
       // Redirect to thank you page after successful submission
       router.push(`/${insuranceType}/thank-you`);
-    } catch (err) {
+    } catch (error) {
       setSubmitStatus('error');
-      console.error('Form submission error:', err);
+      setErrorMessage(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -284,8 +291,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         
         {submitStatus === 'error' && (
           <div className="p-4 bg-red-50 text-red-800 rounded-lg">
-            <p className="font-medium">There was an error submitting your form.</p>
-            <p className="text-sm mt-1">Please try again or contact us directly.</p>
+            <p className="font-medium">{errorMessage}</p>
           </div>
         )}
         
@@ -295,8 +301,19 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
             disabled={isSubmitting}
             className="w-full bg-[#00e8ff] text-black font-semibold px-6 py-3 sm:py-4 rounded-xl shadow-brand hover:bg-[#00cce6] transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed text-base sm:text-lg"
             data-gtm-event="quote_submission"
+            aria-busy={isSubmitting}
           >
-            {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              'Get My Free Quote'
+            )}
           </button>
         </div>
         

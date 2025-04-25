@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { InsuranceType } from '@/utils/insuranceCopy';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 
 // Form validation schema
 const formSchema = z.object({
@@ -28,8 +29,36 @@ const formSchema = z.object({
   website: z.string().optional(),
 });
 
+// Rate limiting map (in production, use Redis or similar)
+const rateLimit = new Map<string, { count: number; timestamp: number }>();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const MAX_REQUESTS = 5; // 5 requests per minute
+
 export async function POST(request: Request) {
   try {
+    const headersList = headers();
+    const ip = headersList.get('x-forwarded-for') || 'unknown';
+    
+    // Rate limiting check
+    const now = Date.now();
+    const userRateLimit = rateLimit.get(ip);
+    
+    if (userRateLimit) {
+      if (now - userRateLimit.timestamp < RATE_LIMIT_WINDOW) {
+        if (userRateLimit.count >= MAX_REQUESTS) {
+          return NextResponse.json(
+            { error: 'Too many requests. Please try again later.' },
+            { status: 429 }
+          );
+        }
+        userRateLimit.count++;
+      } else {
+        rateLimit.set(ip, { count: 1, timestamp: now });
+      }
+    } else {
+      rateLimit.set(ip, { count: 1, timestamp: now });
+    }
+
     const data = await request.json();
 
     // Check honeypot field
@@ -44,29 +73,52 @@ export async function POST(request: Request) {
     // Get Zapier webhook URL from environment variable
     const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
     if (!zapierWebhookUrl) {
-      throw new Error('Zapier webhook URL not configured');
+      console.error('Zapier webhook URL not configured');
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable' },
+        { status: 503 }
+      );
     }
 
-    // Send data to Zapier
-    const response = await fetch(zapierWebhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...validatedData,
-        source: 'quotelinker.com',
-        timestamp: new Date().toISOString(),
-      }),
-    });
+    // Send data to Zapier with timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-    if (!response.ok) {
-      throw new Error('Failed to send data to Zapier');
+    try {
+      const response = await fetch(zapierWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...validatedData,
+          source: 'quotelinker.com',
+          timestamp: new Date().toISOString(),
+          ip: ip,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        throw new Error(`Zapier responded with status: ${response.status}`);
+      }
+
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      clearTimeout(timeout);
+      throw error;
     }
-
-    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Form submission error:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid form data', details: error.errors },
+        { status: 400 }
+      );
+    }
     
     // Return generic error message to prevent information leakage
     return NextResponse.json(

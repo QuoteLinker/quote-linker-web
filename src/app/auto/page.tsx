@@ -2,12 +2,48 @@ import HeroSection from '@/components/HeroSection';
 import QuoteForm from '@/components/QuoteForm';
 import TrustSection from '@/components/TrustSection';
 import { insuranceProducts } from '@/utils/insuranceCopy';
+import { Metadata } from 'next';
+import Script from 'next/script';
+
+export const metadata: Metadata = {
+  title: 'Auto Insurance Quotes | QuoteLinker',
+  description: 'Get personalized auto insurance quotes from licensed agents in Minnesota. Compare coverage options and find the best rates for your vehicle.',
+  keywords: ['auto insurance', 'car insurance', 'vehicle insurance', 'Minnesota auto insurance', 'insurance quotes'],
+  openGraph: {
+    title: 'Auto Insurance Quotes | QuoteLinker',
+    description: 'Get personalized auto insurance quotes from licensed agents in Minnesota. Compare coverage options and find the best rates for your vehicle.',
+    type: 'website',
+    url: 'https://quotelinker.com/auto',
+  },
+};
 
 export default function AutoInsurancePage() {
   const product = insuranceProducts.auto;
 
   return (
     <div className="bg-white">
+      <Script id="structured-data" type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "InsuranceAgency",
+          "name": "QuoteLinker",
+          "description": "Connect with licensed insurance agents in Minnesota and get personalized quotes for auto insurance.",
+          "url": "https://quotelinker.com/auto",
+          "areaServed": {
+            "@type": "State",
+            "name": "Minnesota"
+          },
+          "offers": {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "InsuranceAgency",
+              "name": "Auto Insurance",
+              "description": "Comprehensive auto insurance coverage options"
+            }
+          }
+        })}
+      </Script>
+
       <HeroSection
         title={product.title}
         subtitle={product.subtitle}
