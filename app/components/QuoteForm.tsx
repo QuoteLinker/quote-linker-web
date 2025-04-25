@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface QuoteFormProps {
-  type: 'auto' | 'home' | 'life' | 'term';
+  type: 'auto' | 'home' | 'life' | 'term' | 'whole' | 'disability' | 'supplemental';
 }
 
 export default function QuoteForm({ type }: QuoteFormProps) {
@@ -61,7 +61,7 @@ export default function QuoteForm({ type }: QuoteFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-4">
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 space-y-5">
       {/* Honeypot field - hidden from real users */}
       <div className="hidden">
         <input
@@ -76,7 +76,7 @@ export default function QuoteForm({ type }: QuoteFormProps) {
       </div>
 
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
           Full Name
         </label>
         <input
@@ -86,14 +86,14 @@ export default function QuoteForm({ type }: QuoteFormProps) {
           value={formData.name}
           onChange={handleChange}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3"
           placeholder="John Doe"
         />
         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
           Email
         </label>
         <input
@@ -103,14 +103,14 @@ export default function QuoteForm({ type }: QuoteFormProps) {
           value={formData.email}
           onChange={handleChange}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3"
           placeholder="john@example.com"
         />
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
           Phone
         </label>
         <input
@@ -120,14 +120,14 @@ export default function QuoteForm({ type }: QuoteFormProps) {
           value={formData.phone}
           onChange={handleChange}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3"
           placeholder="(555) 555-5555"
         />
         {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
       </div>
 
       <div>
-        <label htmlFor="zip" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-1">
           ZIP Code
         </label>
         <input
@@ -137,7 +137,7 @@ export default function QuoteForm({ type }: QuoteFormProps) {
           value={formData.zip}
           onChange={handleChange}
           required
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-base p-3"
           placeholder="55401"
         />
         {errors.zip && <p className="mt-1 text-sm text-red-600">{errors.zip}</p>}
@@ -147,7 +147,7 @@ export default function QuoteForm({ type }: QuoteFormProps) {
         type="submit"
         disabled={isSubmitting}
         data-gtm-event="quote_submission"
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
       >
         {isSubmitting ? 'Submitting...' : 'Get Your Quote'}
       </button>

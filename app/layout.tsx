@@ -5,8 +5,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'QuoteLinker - Minnesota State Farm Insurance',
-  description: 'Get personalized insurance quotes from a licensed State Farm agent in Minnesota.',
+  title: 'QuoteLinker - Minnesota Insurance Quotes',
+  description: 'Get personalized insurance quotes from licensed agents in Minnesota.',
 };
 
 export default function RootLayout({

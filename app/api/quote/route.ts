@@ -7,7 +7,7 @@ const quoteSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().regex(/^\+?1?\d{10,}$/, 'Invalid phone number'),
   zip: z.string().regex(/^\d{5}(-\d{4})?$/, 'Invalid ZIP code'),
-  type: z.enum(['auto', 'home', 'life', 'term']),
+  type: z.enum(['auto', 'home', 'life', 'term', 'whole', 'disability', 'supplemental']),
   _honeypot: z.string().optional(), // Honeypot field
 });
 
@@ -20,7 +20,8 @@ export async function POST(request: Request) {
     
     // Check honeypot
     if (validatedData._honeypot) {
-      return NextResponse.json({ success: true }); // Silently reject spam
+      // Silently reject spam submissions
+      return NextResponse.json({ success: true });
     }
 
     // Remove honeypot field before sending to Zapier
