@@ -38,14 +38,29 @@ QuoteLinker is a modern insurance quote platform that helps users find the right
    yarn install
    ```
 
-3. Run the development server
+3. Set up environment variables
+   ```bash
+   # Create a .env.local file and add the following variables:
+   NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+   NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+   ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/xxx
+   ```
+
+   ⚠️ **IMPORTANT: Security Warning**
+   - Never commit sensitive keys to version control
+   - Keep your .env.local file private
+   - Only use NEXT_PUBLIC_ prefix for variables needed on the client side
+   - Store sensitive API keys and webhooks securely
+   - Regularly rotate production keys
+
+4. Run the development server
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
 ## Project Structure
 
@@ -57,12 +72,22 @@ QuoteLinker is a modern insurance quote platform that helps users find the right
 
 This project is configured for deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
 
-## Vercel Setup
+### Environment Variables on Vercel
 
-1. Go to Vercel > Settings > Environment Variables and add:
-   ```
-   NEXT_PUBLIC_GA_ID = G-GKS41G7PYZ
-   ```
+1. Go to Vercel > Project Settings > Environment Variables
+2. Add the required environment variables:
+   - `NEXT_PUBLIC_GTM_ID`: Your Google Tag Manager container ID
+   - `NEXT_PUBLIC_GA_ID`: Your Google Analytics measurement ID
+   - `ZAPIER_WEBHOOK_URL`: Your Zapier webhook URL for form submissions
+
+### Security Best Practices
+
+- Use environment variables for all sensitive data
+- Implement rate limiting on API routes
+- Validate form submissions server-side
+- Keep dependencies updated
+- Follow security advisories
+- Monitor for unusual activity
 
 ## Build
 

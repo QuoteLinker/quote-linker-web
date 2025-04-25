@@ -128,7 +128,10 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          insuranceType,
+        }),
       });
 
       if (!response.ok) {
@@ -146,6 +149,9 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
 
       setSubmitStatus('success');
       setFormData({});
+      
+      // Redirect to thank you page after successful submission
+      router.push(`/${insuranceType}/thank-you`);
     } catch (err) {
       setSubmitStatus('error');
       console.error('Form submission error:', err);
@@ -163,19 +169,34 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   return (
     <form 
       onSubmit={handleSubmit}
-      className={`bg-brand-card p-10 rounded-2xl shadow-brand ${className}`}
+      className={`bg-white p-4 sm:p-6 md:p-10 rounded-2xl shadow-brand ${className}`}
+      data-gtm-form="quote_form"
     >
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-4 sm:space-y-6">
+        {/* Honeypot field - hidden from real users */}
+        <div className="hidden">
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            onChange={(e) => handleChange('website', e.target.value)}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {fields.map((field) => (
-            <div key={field.name} className={field.type === 'select' ? 'col-span-2' : undefined}>
-              <label className="block text-sm font-medium text-brand-body mb-2">
+            <div 
+              key={field.name} 
+              className={field.type === 'select' ? 'col-span-1 sm:col-span-2' : undefined}
+            >
+              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 {field.label}
                 {field.required && <span className="text-red-500 ml-1">*</span>}
                 {field.tooltip && (
                   <div className="inline-block ml-1 group relative">
-                    <QuestionMarkCircleIcon className="w-4 h-4 text-brand-body inline" />
-                    <div className="hidden group-hover:block absolute z-10 w-64 p-2 bg-black text-white text-xs rounded shadow-lg -right-1 transform translate-x-full">
+                    <QuestionMarkCircleIcon className="w-4 h-4 text-gray-400 inline" />
+                    <div className="hidden group-hover:block absolute z-10 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg -right-1 transform translate-x-full">
                       {field.tooltip}
                     </div>
                   </div>
@@ -184,9 +205,10 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
               {field.type === 'select' ? (
                 <select
                   required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff]"
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff] text-base"
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
+                  data-gtm-field={field.name}
                 >
                   <option value="">Select {field.label}</option>
                   {field.options?.map((option) => (
@@ -199,9 +221,10 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
                 <input
                   type={field.type}
                   required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff]"
+                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff] text-base"
                   value={formData[field.name] || ''}
                   onChange={(e) => handleChange(field.name, e.target.value)}
+                  data-gtm-field={field.name}
                 />
               )}
             </div>
@@ -226,13 +249,14 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-[#00e8ff] text-black font-semibold px-6 py-4 rounded-xl shadow-brand hover:bg-[#00cce6] transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-[#00e8ff] text-black font-semibold px-6 py-3 sm:py-4 rounded-xl shadow-brand hover:bg-[#00cce6] transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed text-base sm:text-lg"
+            data-gtm-event="quote_submission"
           >
             {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
           </button>
         </div>
         
-        <p className="text-xs text-brand-body opacity-60 text-center">
+        <p className="text-xs text-gray-500 text-center">
           By submitting this form, you agree to our <a href="/privacy" className="text-[#00e8ff] hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
         </p>
       </div>
