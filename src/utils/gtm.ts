@@ -3,16 +3,19 @@ interface GTMEvent {
   [key: string]: any;
 }
 
-declare global {
-  interface Window {
-    dataLayer: any[];
+type GTMDataLayer = Array<GTMEvent>;
+
+function getDataLayer(): GTMDataLayer {
+  if (typeof window !== 'undefined') {
+    window.dataLayer = window.dataLayer || [];
+    return window.dataLayer;
   }
+  return [];
 }
 
 export function pushGTMEvent(eventData: GTMEvent): void {
-  if (typeof window !== 'undefined' && Array.isArray(window.dataLayer)) {
-    window.dataLayer.push(eventData);
-  }
+  const dataLayer = getDataLayer();
+  dataLayer.push(eventData);
 }
 
 export const GTMEvents = {

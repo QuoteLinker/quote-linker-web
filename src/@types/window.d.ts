@@ -1,6 +1,4 @@
-interface Window {
-  dataLayer: any[];
-}
+export {};
 
 declare global {
   interface Window {
