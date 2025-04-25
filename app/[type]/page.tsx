@@ -60,7 +60,7 @@ const productInfo = {
   },
   disability: {
     title: 'Disability Insurance',
-    description: 'Protect your income if you're unable to work.',
+    description: 'Protect your income if you\'re unable to work.',
     benefits: [
       'Income replacement',
       'Flexible coverage options',
