@@ -1,11 +1,18 @@
+import HeroSection from '@/components/HeroSection';
+import QuoteForm from '@/components/QuoteForm';
+import TrustSection from '@/components/TrustSection';
+import { insuranceProducts } from '@/utils/insuranceCopy';
 import { Metadata } from 'next';
+import Script from 'next/script';
+import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
 import ProductPage from '@/components/ProductPage';
 
-export const metadata: Metadata = {
-  title: 'Term Life Insurance Quotes | Minnesota Licensed Agent',
-  description: 'Get affordable term life insurance quotes from a licensed Minnesota agent. Compare rates from top providers and find the perfect coverage for your needs.',
-  keywords: ['term life insurance', 'life insurance quotes', 'Minnesota life insurance', 'affordable life insurance', 'life insurance rates'],
-};
+export const metadata: Metadata = generateInsuranceMetadata(
+  'term',
+  'Term Life Insurance Quotes | QuoteLinker',
+  'Get personalized term life insurance quotes from licensed agents in Minnesota. Affordable coverage for a specific period to protect your loved ones.',
+  ['term life insurance', 'temporary life insurance', 'affordable life insurance', 'Minnesota term insurance', 'insurance quotes']
+);
 
 const termLifeProduct = {
   title: 'Affordable Term Life Insurance for Your Family',
@@ -48,6 +55,27 @@ const termLifeProduct = {
   ]
 };
 
-export default function TermLifePage() {
-  return <ProductPage insuranceType="term" product={termLifeProduct} />;
+export default function TermInsurancePage() {
+  const product = insuranceProducts.term;
+
+  return (
+    <div className="bg-white">
+      <Script id="structured-data" type="application/ld+json">
+        {generateInsuranceStructuredData(
+          'term',
+          'Comprehensive term life insurance coverage options'
+        )}
+      </Script>
+
+      <HeroSection
+        title={product.title}
+        subtitle={product.subtitle}
+        ctaText="Get My Term Quote"
+        ctaLink="#quote-form"
+        insuranceType="term"
+      />
+
+      <ProductPage insuranceType="term" product={termLifeProduct} />
+    </div>
+  );
 } 

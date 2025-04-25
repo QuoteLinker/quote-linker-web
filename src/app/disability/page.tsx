@@ -3,12 +3,29 @@ import QuoteForm from '@/components/QuoteForm';
 import TrustSection from '@/components/TrustSection';
 import StickyCTA from '@/components/StickyCTA';
 import { insuranceProducts } from '@/utils/insuranceCopy';
+import { Metadata } from 'next';
+import Script from 'next/script';
+import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
+
+export const metadata: Metadata = generateInsuranceMetadata(
+  'disability',
+  'Disability Insurance Quotes | QuoteLinker',
+  'Get personalized disability insurance quotes from licensed agents in Minnesota. Protect your income if you become unable to work due to illness or injury.',
+  ['disability insurance', 'income protection', 'short-term disability', 'long-term disability', 'Minnesota disability insurance', 'insurance quotes']
+);
 
 export default function DisabilityInsurancePage() {
   const product = insuranceProducts.disability;
 
   return (
     <div className="bg-white">
+      <Script id="structured-data" type="application/ld+json">
+        {generateInsuranceStructuredData(
+          'disability',
+          'Comprehensive disability insurance coverage options'
+        )}
+      </Script>
+
       <HeroSection
         title={product.title}
         subtitle={product.subtitle}

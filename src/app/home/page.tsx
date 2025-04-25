@@ -3,12 +3,29 @@ import QuoteForm from '@/components/QuoteForm';
 import TrustSection from '@/components/TrustSection';
 import StickyCTA from '@/components/StickyCTA';
 import { insuranceProducts } from '@/utils/insuranceCopy';
+import { Metadata } from 'next';
+import Script from 'next/script';
+import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
+
+export const metadata: Metadata = generateInsuranceMetadata(
+  'home',
+  'Home Insurance Quotes | QuoteLinker',
+  'Get personalized home insurance quotes from licensed agents in Minnesota. Protect your home with comprehensive coverage tailored to your needs.',
+  ['home insurance', 'property insurance', 'house insurance', 'Minnesota home insurance', 'insurance quotes']
+);
 
 export default function HomeInsurancePage() {
   const product = insuranceProducts.home;
 
   return (
     <div className="bg-white">
+      <Script id="structured-data" type="application/ld+json">
+        {generateInsuranceStructuredData(
+          'home',
+          'Comprehensive home insurance coverage options'
+        )}
+      </Script>
+
       <HeroSection
         title={product.title}
         subtitle={product.subtitle}
