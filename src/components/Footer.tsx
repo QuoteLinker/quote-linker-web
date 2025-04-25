@@ -49,8 +49,8 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="bg-brand-background">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-brand-headline font-semibold mb-4">Insurance</h3>
             <ul className="space-y-2">
@@ -67,6 +67,11 @@ export default function Footer() {
               <li>
                 <a href="/life" className="text-brand-body hover:text-[#00e8ff] transition-colors">
                   Life Insurance
+                </a>
+              </li>
+              <li>
+                <a href="/health" className="text-brand-body hover:text-[#00e8ff] transition-colors">
+                  Health Insurance
                 </a>
               </li>
               <li>
