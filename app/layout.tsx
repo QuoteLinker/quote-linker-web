@@ -1,12 +1,19 @@
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'QuoteLinker - Minnesota Insurance Quotes',
   description: 'Get personalized insurance quotes from licensed agents in Minnesota.',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  metadataBase: new URL('https://quotelinker.com'),
 };
 
 export default function RootLayout({
@@ -40,7 +47,11 @@ export default function RootLayout({
           />
         </noscript>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 } 
