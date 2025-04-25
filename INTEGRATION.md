@@ -102,47 +102,16 @@ This guide provides instructions for integrating Salesforce and Google Analytics
 ### Prerequisites
 
 - A Google Analytics 4 account
-- A Google Tag Manager account (optional but recommended)
+- A Google Tag Manager account
 
 ### Implementation Steps
 
-1. **Add Google Analytics Script**
+1. **Add Google Tag Manager Script**
 
-   Create a new component for Google Analytics:
+   Add the following script to your `src/app/layout.tsx` file:
 
-   ```typescript
-   // src/components/GoogleAnalytics.tsx
-   'use client';
-
+   ```tsx
    import Script from 'next/script';
-
-   export default function GoogleAnalytics() {
-     return (
-       <>
-         <Script
-           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-           strategy="afterInteractive"
-         />
-         <Script id="google-analytics" strategy="afterInteractive">
-           {`
-             window.dataLayer = window.dataLayer || [];
-             function gtag(){dataLayer.push(arguments);}
-             gtag('js', new Date());
-             gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-           `}
-         </Script>
-       </>
-     );
-   }
-   ```
-
-2. **Add to Layout**
-
-   Update your root layout file to include the Google Analytics component:
-
-   ```typescript
-   // src/app/layout.tsx
-   import GoogleAnalytics from '@/components/GoogleAnalytics';
 
    export default function RootLayout({
      children,
@@ -152,9 +121,29 @@ This guide provides instructions for integrating Salesforce and Google Analytics
      return (
        <html lang="en">
          <head>
-           <GoogleAnalytics />
+           <Script
+             id="gtm-script"
+             strategy="afterInteractive"
+             dangerouslySetInnerHTML={{
+               __html: `
+                 (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                 })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');
+               `,
+             }}
+           />
          </head>
          <body>
+           <noscript>
+             <iframe
+               src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+               height="0"
+               width="0"
+               style={{ display: 'none', visibility: 'hidden' }}
+             />
+           </noscript>
            {children}
          </body>
        </html>
@@ -162,75 +151,59 @@ This guide provides instructions for integrating Salesforce and Google Analytics
    }
    ```
 
-3. **Add Environment Variable**
+2. **Add Google Analytics Event Tracking**
 
-   In your Vercel project settings, add the following environment variable:
-
-   - `NEXT_PUBLIC_GA_ID`: Your Google Analytics measurement ID (e.g., G-XXXXXXXXXX)
-
-4. **Track Form Submissions**
-
-   Update the QuoteForm component to track form submissions:
+   Create a utility function to track events:
 
    ```typescript
-   // In the handleSubmit function of QuoteForm.tsx
-   const handleSubmit = async (e: React.FormEvent) => {
-     e.preventDefault();
-     setIsSubmitting(true);
-     setError('');
-
-     try {
-       const response = await fetch('/api/submit', {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-           ...formData,
-           insuranceType,
-         }),
-       });
-
-       if (!response.ok) {
-         throw new Error('Failed to submit form');
-       }
-
-       // Track form submission in Google Analytics
-       if (typeof window !== 'undefined' && window.gtag) {
-         window.gtag('event', 'form_submission', {
-           event_category: 'Quote',
-           event_label: insuranceType,
-           value: 1
-         });
-       }
-
-       // Redirect to thank you page
-       router.push(`/${insuranceType}/thank-you`);
-     } catch (err) {
-       setError('There was an error submitting your form. Please try again.');
-       console.error('Form submission error:', err);
-     } finally {
-       setIsSubmitting(false);
+   // src/utils/analytics.ts
+   export const trackEvent = (eventName: string, eventParams?: Record<string, any>) => {
+     if (typeof window !== 'undefined' && window.gtag) {
+       window.gtag('event', eventName, eventParams);
      }
    };
    ```
 
-5. **Google Tag Manager (Optional)**
+3. **Track Form Submissions**
 
-   If you want to use Google Tag Manager for more advanced tracking:
+   Update your form submission handler to track events:
 
-   - Create a GTM container
-   - Add the GTM script to your layout file
-   - Configure tags, triggers, and variables in the GTM interface
+   ```typescript
+   import { trackEvent } from '@/utils/analytics';
 
-## Testing Integrations
+   // In your form submission handler
+   const handleSubmit = async (e: React.FormEvent) => {
+     e.preventDefault();
+     
+     // ... existing form submission code ...
+     
+     // Track form submission
+     trackEvent('form_submission', {
+       form_name: 'quote_form',
+       insurance_type: insuranceType,
+     });
+   };
+   ```
 
-1. **Salesforce**
-   - Submit a test form
-   - Check your Salesforce account for the new Lead
-   - Verify all fields are correctly mapped
+4. **Add Environment Variables**
 
-2. **Google Analytics**
-   - Use the Google Analytics Real-Time reports to verify tracking
-   - Check that form submissions are being tracked
-   - Verify that page views are being tracked correctly 
+   In your Vercel project settings, add the following environment variables:
+
+   - `NEXT_PUBLIC_GTM_ID`: Your Google Tag Manager container ID
+   - `NEXT_PUBLIC_GA_ID`: Your Google Analytics measurement ID
+
+5. **Test the Integration**
+
+   - Submit a test form on your deployed site
+   - Verify that events are being tracked in your Google Analytics account
+
+## Security Best Practices
+
+- Never commit sensitive credentials to version control
+- Use environment variables for all sensitive data
+- Regularly rotate API keys and credentials
+- Implement rate limiting on API routes
+- Validate form submissions server-side
+- Keep dependencies updated
+- Follow security advisories
+- Monitor for unusual activity 

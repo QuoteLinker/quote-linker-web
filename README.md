@@ -41,9 +41,9 @@ QuoteLinker is a modern insurance quote platform that helps users find the right
 3. Set up environment variables
    ```bash
    # Create a .env.local file and add the following variables:
-   NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
-   NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-   ZAPIER_WEBHOOK_URL=https://hooks.zapier.com/xxx
+   NEXT_PUBLIC_GTM_ID=your-gtm-id
+   NEXT_PUBLIC_GA_ID=your-ga-id
+   ZAPIER_WEBHOOK_URL=your-zapier-webhook-url
    ```
 
    ⚠️ **IMPORTANT: Security Warning**
