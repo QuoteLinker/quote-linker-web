@@ -12,9 +12,4 @@ export default function AutoInsurancePage() {
       </div>
     </div>
   );
-}
-
-export const metadata = {
-  title: 'Auto Insurance - QuoteLinker',
-  description: 'Get competitive auto insurance quotes tailored to your needs.',
-}; 
+} 

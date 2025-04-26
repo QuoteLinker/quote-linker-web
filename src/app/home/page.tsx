@@ -12,9 +12,4 @@ export default function HomeInsurancePage() {
       </div>
     </div>
   );
-}
-
-export const metadata = {
-  title: 'Home Insurance - QuoteLinker',
-  description: 'Protect your home with comprehensive coverage from QuoteLinker.',
-}; 
+} 
