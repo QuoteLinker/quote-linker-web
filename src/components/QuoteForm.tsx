@@ -135,9 +135,6 @@ const formFields: Record<InsuranceType, FormField[]> = {
 
 export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const router = useRouter();
-  const [selectedSubType, setSelectedSubType] = useState<SubType>(
-    subType || getDefaultSubType(productType)
-  );
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
@@ -148,35 +145,19 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Get the default subType based on productType
-  function getDefaultSubType(type: ProductType): SubType {
-    switch (type) {
-      case 'life':
-        return 'term';
-      case 'health':
-        return 'std';
-      case 'auto':
-        return 'auto';
-      case 'home':
-        return 'home';
-      default:
-        return 'auto';
-    }
-  }
-
   // Get form title based on product and subType
   function getFormTitle(): string {
     switch (productType) {
       case 'life':
-        return `Get Your ${selectedSubType === 'term' ? 'Term' : 'Permanent'} Life Insurance Quote`;
+        return `${subType === 'term' ? 'Term' : 'Permanent'} Life Insurance Quote`;
       case 'health':
-        return `Get Your ${selectedSubType === 'std' ? 'Short-Term Disability' : 'Supplemental Health'} Insurance Quote`;
+        return `${subType === 'std' ? 'Short-Term Disability' : 'Supplemental Health'} Insurance Quote`;
       case 'auto':
-        return 'Get Your Auto Insurance Quote';
+        return 'Auto Insurance Quote';
       case 'home':
-        return 'Get Your Home Insurance Quote';
+        return 'Home Insurance Quote';
       default:
-        return 'Get Your Insurance Quote';
+        return 'Insurance Quote';
     }
   }
 
@@ -184,11 +165,11 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   function getFormDescription(): string {
     switch (productType) {
       case 'life':
-        return selectedSubType === 'term' 
+        return subType === 'term' 
           ? 'Protect your loved ones with affordable term life coverage.'
           : 'Secure lifelong protection and build cash value with permanent life insurance.';
       case 'health':
-        return selectedSubType === 'std'
+        return subType === 'std'
           ? "Protect your income when you're unable to work due to illness or injury."
           : 'Add extra protection to your primary health insurance coverage.';
       case 'auto':
@@ -197,6 +178,25 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
         return 'Protect your home and belongings with comprehensive coverage.';
       default:
         return 'Get the coverage you need at a price you can afford.';
+    }
+  }
+
+  // Get CTA text based on product and subType
+  function getCTAText(): string {
+    if (isSubmitting) return 'Submitting...';
+    
+    const baseText = 'Get My';
+    switch (productType) {
+      case 'life':
+        return `${baseText} ${subType === 'term' ? 'Term' : 'Permanent'} Life Quote`;
+      case 'health':
+        return `${baseText} ${subType === 'std' ? 'Short-Term Disability' : 'Supplemental Health'} Quote`;
+      case 'auto':
+        return `${baseText} Auto Insurance Quote`;
+      case 'home':
+        return `${baseText} Home Insurance Quote`;
+      default:
+        return `${baseText} Insurance Quote`;
     }
   }
 
@@ -215,7 +215,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
         body: JSON.stringify({
           ...formData,
           productType,
-          subType: selectedSubType,
+          subType,
         }),
       });
 
@@ -228,7 +228,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
         window.dataLayer.push({
           event: 'leadSubmit',
           productType,
-          subType: selectedSubType,
+          subType,
         });
       }
 
@@ -247,7 +247,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const insuranceType = getInsuranceType(productType, selectedSubType);
+  const insuranceType = getInsuranceType(productType, subType);
   const fields = formFields[insuranceType] || [];
 
   return (
@@ -260,64 +260,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
 
         {/* Hidden inputs for productType and subType */}
         <input type="hidden" name="productType" value={productType} />
-        <input type="hidden" name="subType" value={selectedSubType} />
-
-        {/* SubType Toggle for Life and Health */}
-        {(productType === 'life' || productType === 'health') && (
-          <div className="flex justify-center space-x-4 mb-6">
-            {productType === 'life' ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setSelectedSubType('term')}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    selectedSubType === 'term'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Term Life
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedSubType('permanent')}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    selectedSubType === 'permanent'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Permanent Life
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setSelectedSubType('std')}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    selectedSubType === 'std'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Short-Term Disability
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedSubType('supplemental')}
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    selectedSubType === 'supplemental'
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Supplemental Health
-                </button>
-              </>
-            )}
-          </div>
-        )}
+        <input type="hidden" name="subType" value={subType} />
 
         {/* Form Fields */}
         <div className="space-y-4">
@@ -409,7 +352,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
           disabled={isSubmitting}
           className="w-full bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
         >
-          {isSubmitting ? 'Submitting...' : 'Get Your Quote'}
+          {getCTAText()}
         </button>
       </form>
     </div>
