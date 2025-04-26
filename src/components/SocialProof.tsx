@@ -6,15 +6,15 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 const testimonials = [
   {
     id: 1,
-    quote: "QuoteLinker made finding the right insurance policy incredibly easy. Their agents were knowledgeable and helped me save over $500 annually!",
+    quote: "QuoteLinker made finding the right insurance policy incredibly easy. The licensed agent was knowledgeable and helped me save over $500 annually!",
     author: "Sarah M.",
     role: "Homeowner",
   },
   {
     id: 2,
-    quote: "I was impressed by how quickly I received quotes from multiple reputable insurance providers. The process was seamless and transparent.",
+    quote: "I was impressed by how quickly I received quotes. The process was seamless and transparent.",
     author: "Michael R.",
-    role: "Business Owner",
+    role: "Father of 3",
   },
   {
     id: 3,

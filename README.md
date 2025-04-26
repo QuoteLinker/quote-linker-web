@@ -2,6 +2,10 @@
 
 A Next.js 14 application for managing insurance quote requests.
 
+# What is QuoteLinker?
+
+QuoteLinker is the first AI-Optimized InsurTech Marketplace, revolutionizing insurance lead generation through real-time auctions, CRM integrations, and predictive nurturing — connecting licensed agents with high-intent consumers at the speed of trust.
+
 ## Features
 
 - Lead form for insurance quote requests

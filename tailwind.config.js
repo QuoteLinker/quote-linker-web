@@ -7,16 +7,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'brand-primary': '#00e8ff',
-        'brand-primary-dark': '#00cce6',
-        'brand-secondary': '#0070f3',
-        'brand-background': '#ffffff',
-        'brand-card': '#ffffff',
-        'brand-headline': '#1a1a1a',
-        'brand-body': '#4a5568',
+        'electric-blue': '#00EEFD',
+        'deep-navy': '#0B0B45',
+        'cool-gray': '#F5F7FA',
+        'dark-gray': '#333333',
+        'white': '#FFFFFF',
       },
       boxShadow: {
-        'brand': '0 4px 14px 0 rgba(0, 118, 255, 0.1)',
+        'brand': '0 4px 14px 0 rgba(0, 238, 253, 0.2)',
       },
       container: {
         center: true,

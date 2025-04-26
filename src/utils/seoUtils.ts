@@ -32,7 +32,7 @@ export function generateInsuranceStructuredData(
     "@context": "https://schema.org",
     "@type": "InsuranceAgency",
     "name": "QuoteLinker",
-    "description": `Connect with licensed insurance agents in Minnesota and get personalized quotes for ${insuranceType} insurance.`,
+    "description": `Connect with licensed insurance agents in your area and get personalized quotes for ${insuranceType} insurance.`,
     "url": `https://quotelinker.com/${insuranceType}`,
     "areaServed": {
       "@type": "State",

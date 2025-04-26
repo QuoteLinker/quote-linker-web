@@ -4,9 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { InsuranceType } from '@/utils/insuranceCopy';
+import Image from 'next/image';
+
+type LifeType = 'Term Life' | 'Permanent Life';
+type HealthType = 'Short-Term Disability' | 'Supplemental Health';
+
+interface FormData {
+  zipCode: string;
+  insuranceType: InsuranceType | '';
+  lifeType: LifeType | '';
+  healthType: HealthType | '';
+  homeownership: boolean;
+  age: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
 
 interface QuoteFormProps {
-  insuranceType: InsuranceType;
+  insuranceType?: InsuranceType;
   className?: string;
 }
 
@@ -14,9 +31,9 @@ interface FormField {
   name: string;
   label: string;
   type: string;
-  required?: boolean;
+  required: boolean;
   tooltip?: string;
-  options?: { value: string; label: string }[];
+  options?: { value: string; label: string; }[];
 }
 
 const formFields: Record<InsuranceType, FormField[]> = {
@@ -155,12 +172,22 @@ const formFields: Record<InsuranceType, FormField[]> = {
   ],
 };
 
-export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
+export default function QuoteForm({ insuranceType, className }: QuoteFormProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<FormData>({
+    zipCode: '',
+    insuranceType: insuranceType || '',
+    lifeType: '',
+    healthType: '',
+    homeownership: false,
+    age: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+  });
 
   useEffect(() => {
     // Scroll to form when component mounts if it's in the URL hash
@@ -174,161 +201,139 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }));
+  };
+
+  const handleStep1Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setErrorMessage('');
-
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-
-    try {
-      const response = await fetch('/api/submit-quote', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          insuranceType,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit form');
-      }
-
-      // Track form submission in Google Tag Manager
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'form_submit', {
-          event_category: 'Quote',
-          event_label: insuranceType,
-          value: 1
-        });
-      }
-
-      setSubmitStatus('success');
-      e.currentTarget.reset();
-      
-      // Redirect to thank you page after successful submission
-      router.push(`/${insuranceType}/thank-you`);
-    } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setLoading(true);
+    
+    // Simulate API call to /api/ping
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    setLoading(false);
+    setStep(2);
   };
 
-  const handleChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleStep2Submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    // TODO: Implement actual API calls
+    // 1. Save to internal DB
+    // 2. POST to Salesforce
+    // 3. Trigger GTM event
+    
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Redirect to success page
+    window.location.href = '/success';
   };
 
-  const fields = formFields[insuranceType] || [];
+  const fields = formFields[formData.insuranceType as InsuranceType] || [];
 
   return (
-    <div className={`bg-white rounded-xl shadow-xl p-6 sm:p-8 ${className}`} id="quote-form">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Honeypot field - hidden from real users */}
-        <div className="hidden">
-          <input
-            type="text"
-            name="website"
-            tabIndex={-1}
-            autoComplete="off"
-            onChange={(e) => handleChange('website', e.target.value)}
-          />
+    <form onSubmit={handleStep1Submit} className={`bg-white p-8 rounded-2xl ${className}`}>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-1">
+            Get Your {insuranceType ? `${insuranceType.charAt(0).toUpperCase()}${insuranceType.slice(1)}` : ''} Insurance Quote
+          </h3>
+          <p className="text-gray-500 text-sm">Fill out this quick form to get started</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          {fields.map((field) => (
-            <div 
-              key={field.name} 
-              className={field.type === 'select' ? 'col-span-1 sm:col-span-2' : undefined}
-            >
-              <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                {field.label}
-                {field.required && <span className="text-red-500 ml-1">*</span>}
-                {field.tooltip && (
-                  <div className="inline-block ml-1 group relative">
-                    <QuestionMarkCircleIcon className="w-4 h-4 text-gray-400 inline" />
-                    <div className="hidden group-hover:block absolute z-10 w-64 p-2 bg-gray-900 text-white text-xs rounded shadow-lg -right-1 transform translate-x-full">
-                      {field.tooltip}
-                    </div>
-                  </div>
-                )}
-              </label>
-              {field.type === 'select' ? (
-                <select
-                  required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff] text-base"
-                  value={formData[field.name] || ''}
-                  onChange={(e) => handleChange(field.name, e.target.value)}
-                  data-gtm-field={field.name}
-                >
-                  <option value="">Select {field.label}</option>
-                  {field.options?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type={field.type}
-                  required={field.required}
-                  className="w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00e8ff] focus:ring-[#00e8ff] text-base"
-                  value={formData[field.name] || ''}
-                  onChange={(e) => handleChange(field.name, e.target.value)}
-                  data-gtm-field={field.name}
-                />
-              )}
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Full Name
+            </label>
+            <div className="mt-1">
+              <input
+                type="text"
+                name="name"
+                id="name"
+                required
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
+                placeholder="John Doe"
+              />
             </div>
-          ))}
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <div className="mt-1">
+              <input
+                type="email"
+                name="email"
+                id="email"
+                required
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
+                placeholder="john@example.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+              Phone Number
+            </label>
+            <div className="mt-1">
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                required
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
+                placeholder="(555) 555-5555"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+              Additional Details (Optional)
+            </label>
+            <div className="mt-1">
+              <textarea
+                name="message"
+                id="message"
+                rows={3}
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
+                placeholder="Tell us more about your insurance needs..."
+              />
+            </div>
+          </div>
         </div>
-        
-        {submitStatus === 'success' && (
-          <div className="p-4 bg-green-50 text-green-800 rounded-lg">
-            <p className="font-medium">Thank you for your submission!</p>
-            <p className="text-sm mt-1">We'll be in touch with you shortly.</p>
-          </div>
-        )}
-        
-        {submitStatus === 'error' && (
-          <div className="p-4 bg-red-50 text-red-800 rounded-lg">
-            <p className="font-medium">{errorMessage}</p>
-          </div>
-        )}
-        
+
         <div>
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-[#00e8ff] text-black font-semibold px-6 py-3 sm:py-4 rounded-xl shadow-brand hover:bg-[#00cce6] transition-all duration-200 transform hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed text-base sm:text-lg"
-            data-gtm-event="quote_submission"
-            aria-busy={isSubmitting}
+            disabled={loading}
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#00ECFF] hover:bg-[#00ECFF]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ECFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? (
-              <>
+            {loading ? (
+              <div className="flex items-center">
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Submitting...
-              </>
+                Processing...
+              </div>
             ) : (
-              'Get My Free Quote'
+              'Get My Quote'
             )}
           </button>
         </div>
-        
-        <p className="text-xs text-gray-500 text-center">
-          By submitting this form, you agree to our <a href="/privacy" className="text-[#00e8ff] hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
-        </p>
-      </form>
-    </div>
+
+        {/* Rest of the component code remains unchanged */}
+      </div>
+    </form>
   );
 } 

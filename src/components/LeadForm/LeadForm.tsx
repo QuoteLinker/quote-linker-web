@@ -61,7 +61,7 @@ const LeadForm = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold mb-6 text-center text-[#00ECFF]">Request Your Insurance Quote</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-[#00ECFF]">Get My Free Quote</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* First Name */}
         <div>
@@ -222,7 +222,7 @@ const LeadForm = () => {
           disabled={loading}
           className="w-full bg-[#00ECFF] text-white font-semibold py-2 px-4 rounded hover:bg-[#00d6e8]"
         >
-          {loading ? 'Submitting...' : 'Request My Quote'}
+          {loading ? 'Submitting...' : 'Get My Free Quote'}
         </button>
       </form>
     </div>

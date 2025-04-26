@@ -8,10 +8,10 @@ export default function Hero() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-brand-headline leading-tight">
-              Find the Perfect Insurance Coverage for Your Needs
+              Find the Perfect Insurance Coverage for Your Needs with a Licensed Agent, Powered by AI
             </h1>
             <p className="text-lg md:text-xl text-brand-body">
-              Compare quotes from top insurance providers and save on your coverage. Get started in minutes with our easy-to-use platform.
+              Compare coverage options from top insurance providers and save money. Get started in minutes with our easy-to-use platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link

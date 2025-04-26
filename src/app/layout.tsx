@@ -15,8 +15,8 @@ if (!GTM_ID) {
 }
 
 export const metadata: Metadata = {
-  title: 'Quote Linker',
-  description: 'Connect with trusted insurance providers',
+  title: 'QuoteLinker',
+  description: 'Connect with a local and licensed insurance agent',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
@@ -33,8 +33,8 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
-    title: 'QuoteLinker - Compare Insurance Quotes Online',
-    description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
+    title: 'QuoteLinker - Fast Insurance Quotes Online',
+    description: 'Get fast insurance quotes from local licensed agents. Get the best rates on auto, home, life, and disability insurance.',
     url: 'https://quotelinker.com',
     siteName: 'QuoteLinker',
     locale: 'en_US',
@@ -50,8 +50,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'QuoteLinker - Compare Insurance Quotes Online',
-    description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
+    title: 'QuoteLinker - Fast Insurance Quotes Online',
+    description: 'Get fast insurance quotes from local licensed agents. Get the best rates on auto, home, life, and disability insurance.',
     images: ['/twitter-image.png'],
   },
 };

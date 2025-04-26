@@ -17,14 +17,14 @@ export default function AgentsPage() {
             Join Our Agent Network
           </h1>
           <p className="mt-6 text-xl text-blue-100 max-w-3xl">
-            Partner with QuoteLinker to grow your business and reach more clients. Our platform connects you with qualified leads who are ready to buy insurance.
+            Partner with QuoteLinker to grow your business using AI and reach more clients. Our platform connects you with qualified leads who are ready to buy insurance.
           </p>
           <div className="mt-10">
             <Link
               href="#join-form"
               className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-blue-700 bg-white hover:bg-blue-50"
             >
-              Apply Now
+              Sign Up Now
             </Link>
           </div>
         </div>
@@ -60,7 +60,7 @@ export default function AgentsPage() {
                 <div className="ml-16">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Higher Conversion</h3>
                   <p className="mt-2 text-base text-gray-500">
-                    Our platform helps you convert more leads into customers with our proven process.
+                    Our platform helps you convert more leads into customers with our proven process enhanced by AI.
                   </p>
                 </div>
               </div>
@@ -72,7 +72,7 @@ export default function AgentsPage() {
                 <div className="ml-16">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">Easy Management</h3>
                   <p className="mt-2 text-base text-gray-500">
-                    Manage your leads and track your success through our intuitive dashboard.
+                    Manage your leads and track your success through our intuitive dashboard and predictive analytics.
                   </p>
                 </div>
               </div>
@@ -98,7 +98,7 @@ export default function AgentsPage() {
           <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
             <div>
               <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                Ready to grow your business?
+                Ready to grow your insurance business?
               </h2>
               <p className="mt-3 max-w-3xl text-lg text-gray-500">
                 Fill out the form below to get started. Our team will review your application and get back to you within 24 hours.
@@ -147,7 +147,7 @@ export default function AgentsPage() {
 
                 <div>
                   <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-                    Company Name
+                    Agency/Carrier Name
                   </label>
                   <input
                     type="text"

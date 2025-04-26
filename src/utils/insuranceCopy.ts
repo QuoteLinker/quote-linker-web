@@ -5,11 +5,10 @@ export const insuranceProducts = {
     title: 'Auto Insurance',
     subtitle: 'Find the perfect auto insurance coverage for your needs',
     benefits: [
-      'Compare quotes from multiple providers',
+      'Compare quotes and coverage options provided by licensed agents',
       'Save time and money on your auto insurance',
       'Get personalized coverage recommendations',
       'Easy online quote process',
-      'Expert guidance from licensed agents',
       'Flexible payment options'
     ],
     faqs: [
@@ -27,7 +26,7 @@ export const insuranceProducts = {
       },
       {
         question: 'How quickly can I get coverage?',
-        answer: 'Most policies can be activated within 24 hours of approval. Some providers even offer instant coverage options.'
+        answer: 'Most policies can be bound within a few hours of working with a licensed agent. Some providers even offer instant coverage options.'
       }
     ]
   },
@@ -36,11 +35,10 @@ export const insuranceProducts = {
     subtitle: 'Protect your home with the right insurance coverage',
     benefits: [
       'Comprehensive home protection',
-      'Competitive rates from top providers',
+      'Competitive rates from licensed agents',
       'Customizable coverage options',
       'Quick and easy quote process',
-      'Expert guidance from licensed agents',
-      '24/7 claims support'
+      'Expert guidance from licensed agents'
     ],
     faqs: [
       {
@@ -67,7 +65,7 @@ export const insuranceProducts = {
     benefits: [
       'Financial protection for your loved ones',
       'Flexible policy options',
-      'Competitive rates from top providers',
+      'Competitive rates that are tailored to your needs',
       'Simple application process',
       'Expert guidance from licensed agents',
       'Peace of mind for your family'
@@ -83,7 +81,7 @@ export const insuranceProducts = {
       },
       {
         question: 'How quickly can I get coverage?',
-        answer: 'Some policies offer instant coverage, while others may require a medical exam. We\'ll help you find the right option for your needs.'
+        answer: 'Some policies offer instant coverage, while others may require a simple questionaire and sometimes a basic medical exam. We\'ll help you find the right option for your needs.'
       },
       {
         question: 'What factors affect life insurance rates?',
@@ -97,9 +95,9 @@ export const insuranceProducts = {
     benefits: [
       'Income protection if you can\'t work',
       'Flexible coverage options',
-      'Competitive rates from top providers',
+      'Cash benefits to help you cover living expenses',
       'Simple application process',
-      'Expert guidance from licensed agents',
+      'Benefits paid directly to you',
       'Peace of mind for your future'
     ],
     faqs: [
@@ -113,11 +111,11 @@ export const insuranceProducts = {
       },
       {
         question: 'What\'s the difference between short-term and long-term disability?',
-        answer: 'Short-term disability covers shorter periods (typically 3-6 months), while long-term disability can cover extended periods or until retirement.'
+        answer: 'Short-term disability covers shorter periods (typically 1-3 years), while long-term disability can cover extended periods or until retirement.'
       },
       {
         question: 'How quickly can I get coverage?',
-        answer: 'Some policies offer quick approval, while others may require a medical review. We\'ll help you find the right option for your needs.'
+        answer: 'Some policies, such as short-term disability, offer quick approval, while long-term disability may require a medical review. We\'ll help you find the right option for your needs.'
       }
     ]
   },
@@ -125,29 +123,27 @@ export const insuranceProducts = {
     title: 'Health Insurance',
     subtitle: 'Find the right health insurance coverage for you and your family',
     benefits: [
-      'Comprehensive health coverage',
-      'Access to quality healthcare providers',
-      'Prescription drug coverage',
-      'Preventive care services',
-      'Expert guidance from licensed agents',
-      'Flexible plan options'
+      'Supplemental health coverage',
+      'Prepare for unexpected medical expenses',
+      'Benefits paid directly to you',
+      'Coverage for unexpected stays in the hospital',
     ],
     faqs: [
       {
-        question: 'What types of health insurance plans are available?',
-        answer: 'Common types include HMO, PPO, EPO, and POS plans. Each has different networks and coverage options.'
+        question: 'What types of supplemental health insurance are available?',
+        answer: 'The supplemental health insurance includes coverage for unexpected medical expenses, hospital stays, and other gaps that arise from medical costs.'
       },
       {
-        question: 'When can I enroll in health insurance?',
-        answer: 'You can enroll during the annual Open Enrollment period or if you qualify for a Special Enrollment Period due to life changes.'
+        question: 'When can I sign up for supplental health insurance?',
+        answer: 'You can apply anytime, given you are between the ages of 16 and 64.'
       },
       {
-        question: 'What\'s the difference between individual and group health insurance?',
-        answer: 'Individual plans are purchased directly, while group plans are typically offered through employers or organizations.'
+        question: 'What\'s the difference between supplemental health insurance and group health insurance?',
+        answer: 'Supplemental health insurance plans are purchased directly and owned by you, while group plans are typically offered through employers or organizations.'
       },
       {
-        question: 'What factors affect health insurance rates?',
-        answer: 'Factors include your age, location, tobacco use, and the type of plan you select.'
+        question: 'What factors affect supplemental health insurance rates?',
+        answer: 'Factors include your age, location, overall health, and the type of plan you select.'
       }
     ]
   },
@@ -155,7 +151,7 @@ export const insuranceProducts = {
     title: 'Term Life Insurance',
     subtitle: 'Affordable term life insurance for your family\'s protection',
     benefits: [
-      'Fixed premium rates',
+      'Fixed rates that are affordable',
       'Simple coverage options',
       'Convertible policies',
       'Family protection',
@@ -173,7 +169,7 @@ export const insuranceProducts = {
       },
       {
         question: 'Can I convert my term policy later?',
-        answer: 'Many term policies offer conversion options to permanent life insurance without requiring a new medical exam, though this varies by provider.'
+        answer: 'Many term policies offer conversion options to permanent life insurance without requiring a new medical exam, though this varies by provider. This is a great way to lock in a low rate and protect your family.'
       },
       {
         question: 'How quickly can I get coverage?',

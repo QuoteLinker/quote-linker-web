@@ -49,7 +49,7 @@ export default function TermsOfService() {
 
           <h2 className="text-2xl font-semibold mt-8 mb-4">7. Contact Information</h2>
           <p>For questions about these Terms of Service, please contact us at:</p>
-          <p>Email: legal@quotelinker.com</p>
+          <p>Email: support@@quotelinker.com</p>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import ProductPage from '@/components/ProductPage';
 export const metadata: Metadata = generateInsuranceMetadata(
   'home',
   'Home Insurance Quotes | QuoteLinker',
-  'Get personalized home insurance quotes from licensed agents in Minnesota. Protect your home with comprehensive coverage tailored to your needs.',
+  'Get personalized home insurance quotes from a licensed agent. Protect your home with comprehensive coverage tailored to your needs.',
   ['home insurance', 'property insurance', 'house insurance', 'Minnesota home insurance', 'insurance quotes']
 );
 

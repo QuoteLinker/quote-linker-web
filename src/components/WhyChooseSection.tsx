@@ -26,7 +26,7 @@ const features = [
   {
     icon: CurrencyDollarIcon,
     title: 'Save Money',
-    description: 'Compare rates from multiple providers to find the best value.',
+    description: 'Compare rates and get all the discounts available to you to find the best value.',
   },
   {
     icon: StarIcon,
@@ -49,7 +49,7 @@ export default function WhyChooseSection() {
             Why Choose QuoteLinker?
           </h2>
           <p className="text-xl text-brand-body max-w-2xl mx-auto">
-            We make finding the right insurance coverage simple, fast, and hassle-free.
+            We make finding the right insurance coverage simple, fast, and hassle-free and are leading InsurTech powered by AI.
           </p>
         </div>
 

@@ -7,7 +7,7 @@ import ProductPage from '@/components/ProductPage';
 export const metadata: Metadata = generateInsuranceMetadata(
   'health',
   'Health Insurance Quotes | QuoteLinker',
-  'Get personalized health insurance quotes from licensed agents in Minnesota. Find the right coverage for your medical needs and budget.',
+  'Get personalized health insurance quotes from a licensed agent. Find the right coverage for your medical needs and budget.',
   ['health insurance', 'medical insurance', 'healthcare coverage', 'Minnesota health insurance', 'insurance quotes']
 );
 

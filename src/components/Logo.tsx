@@ -1,5 +1,8 @@
 'use client';
 
+import React from 'react';
+import Image from 'next/image';
+
 interface LogoProps {
   className?: string;
   showText?: boolean;
@@ -9,9 +12,9 @@ interface LogoProps {
 export default function Logo({ className = '', showText = true, iconOnly = false }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
-      <img src="/ql.png" alt="QuoteLinker" className="w-8 h-8 object-contain" />
+      <Image src="/ql.png" alt="QuoteLinker" width={32} height={32} className="object-contain" />
       {!iconOnly && showText && (
-        <span className="ml-2 text-brand-primary font-bold text-xl tracking-tight hover:text-brand-primary-dark transition-colors">
+        <span className="ml-2 text-[#00ECFF] font-bold text-xl tracking-tight hover:text-[#00D4E5] transition-colors">
           QuoteLinker
         </span>
       )}

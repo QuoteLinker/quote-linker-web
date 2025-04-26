@@ -10,7 +10,7 @@ import ProductPage from '@/components/ProductPage';
 export const metadata: Metadata = generateInsuranceMetadata(
   'term',
   'Term Life Insurance Quotes | QuoteLinker',
-  'Get personalized term life insurance quotes from licensed agents in Minnesota. Affordable coverage for a specific period to protect your loved ones.',
+  'Get personalized term life insurance quotes from a licensed agent. Affordable coverage for a specific period to protect your loved ones.',
   ['term life insurance', 'temporary life insurance', 'affordable life insurance', 'Minnesota term insurance', 'insurance quotes']
 );
 

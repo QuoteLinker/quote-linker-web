@@ -12,14 +12,14 @@ export default function AboutPage() {
           
           <div className="prose max-w-none">
             <p className="text-lg mb-8">
-              QuoteLinker is Minnesota's trusted platform for connecting individuals and businesses 
+              QuoteLinker is a the first and only AI-first InsurTech platform for connecting individuals and businesses 
               with licensed insurance agents. We simplify the insurance shopping process by providing 
               a seamless way to compare quotes and find the right coverage.
             </p>
 
             <h2 className="text-2xl font-semibold mt-12 mb-4">Our Mission</h2>
             <p className="mb-8">
-              Our mission is to make insurance shopping transparent, efficient, and hassle-free. 
+              Our vision is to make the process of getting insurance quotes transparent, efficient, and hassle-free. 
               We believe everyone deserves access to quality insurance coverage at competitive rates, 
               backed by professional guidance from licensed agents.
             </p>
@@ -28,10 +28,10 @@ export default function AboutPage() {
             <ul className="list-disc pl-6 mb-8 space-y-4">
               <li>
                 <strong>Licensed Professionals:</strong> We partner exclusively with licensed insurance 
-                agents in Minnesota who understand local needs and regulations.
+                agents who understand local needs and regulations.
               </li>
               <li>
-                <strong>Multiple Options:</strong> Compare quotes from various providers to find the 
+                <strong>Multiple Options:</strong> Compare quotes from licensed agents to find the 
                 best coverage for your needs and budget.
               </li>
               <li>
@@ -39,7 +39,7 @@ export default function AboutPage() {
                 specific situation and requirements.
               </li>
               <li>
-                <strong>No Obligation:</strong> Get free quotes and expert advice without any 
+                <strong>No Obligation:</strong> Get free quotes and expert guidance without any 
                 commitment to purchase.
               </li>
             </ul>
@@ -51,7 +51,6 @@ export default function AboutPage() {
               <li>Home Insurance</li>
               <li>Life Insurance</li>
               <li>Health Insurance</li>
-              <li>Disability Insurance</li>
             </ul>
 
             <h2 className="text-2xl font-semibold mt-12 mb-4">Contact Us</h2>

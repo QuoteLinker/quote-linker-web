@@ -7,7 +7,7 @@ import ProductPage from '@/components/ProductPage';
 export const metadata: Metadata = generateInsuranceMetadata(
   'disability',
   'Disability Insurance Quotes | QuoteLinker',
-  'Get personalized disability insurance quotes from licensed agents in Minnesota. Protect your income if you become unable to work due to illness or injury.',
+  'Get personalized disability insurance quotes from a licensed agent. Protect your income if you become unable to work due to illness or injury.',
   ['disability insurance', 'income protection', 'short-term disability', 'long-term disability', 'Minnesota disability insurance', 'insurance quotes']
 );
 

@@ -49,7 +49,7 @@ export default function PrivacyPolicy() {
 
           <h2 className="text-2xl font-semibold mt-8 mb-4">5. Contact Us</h2>
           <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-          <p>Email: privacy@quotelinker.com</p>
+          <p>Email: support@quotelinker.com</p>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { ShieldCheckIcon, ClockIcon, CurrencyDollarIcon, StarIcon } from '@heroi
 const trustFeatures = [
   {
     name: 'Trusted Partners',
-    description: 'We work with A-rated insurance carriers',
+    description: 'We work with top rated insurance carriers',
     icon: ShieldCheckIcon,
   },
   {
@@ -16,7 +16,7 @@ const trustFeatures = [
   },
   {
     name: 'Save Money',
-    description: 'Compare rates from multiple providers',
+    description: 'Compare rates from licensed agents who know how to get you the right discounts',
     icon: CurrencyDollarIcon,
   },
   {

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 const socialLinks = [
   {
@@ -48,86 +49,37 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4">
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Insurance</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/auto" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Auto Insurance
-                </Link>
-              </li>
-              <li>
-                <Link href="/home" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Home Insurance
-                </Link>
-              </li>
-              <li>
-                <Link href="/life" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Life Insurance
-                </Link>
-              </li>
-              <li>
-                <Link href="/health" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Health Insurance
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Company</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/about" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Legal</h3>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/privacy" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="col-span-2 sm:col-span-1">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Connect</h3>
-            <div className="flex space-x-4">
-              {socialLinks.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-600 hover:text-[#00ECFF] transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="sr-only">{item.name}</span>
-                  <item.icon className="h-6 w-6" aria-hidden="true" />
-                </a>
-              ))}
-            </div>
-            <p className="mt-8 text-sm text-gray-600">
-              © {new Date().getFullYear()} QuoteLinker. All rights reserved.
+    <footer className="bg-white border-t border-gray-200 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <div className="flex flex-col md:flex-row justify-center items-center text-center text-sm space-y-2 md:space-y-0 md:space-x-6">
+          <div className="flex flex-col items-center space-y-2">
+            <p className="text-gray-600">
+              © 2025 QuoteLinker LLC. All rights reserved.
             </p>
+            <div className="flex space-x-4">
+              <Link href="/terms" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                Terms
+              </Link>
+              <span className="text-gray-400">|</span>
+              <Link href="/privacy" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                Privacy
+              </Link>
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-center space-y-2">
+            <a 
+              href="mailto:support@quotelinker.com" 
+              className="flex items-center gap-2 text-gray-600 hover:text-[#00ECFF] transition-colors"
+            >
+              <EnvelopeIcon className="h-5 w-5" />
+              <span>support@quotelinker.com</span>
+            </a>
+            
+            <div className="flex items-center gap-2 text-gray-600">
+              <MapPinIcon className="h-5 w-5" />
+              <span>400 S 4th St, Ste 410, Minneapolis, MN 55415</span>
+            </div>
           </div>
         </div>
       </div>

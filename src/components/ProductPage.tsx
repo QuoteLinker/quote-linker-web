@@ -30,10 +30,10 @@ export default function ProductPage({ insuranceType, product }: ProductPageProps
       />
 
       {/* Benefits Section */}
-      <div className="py-12 sm:py-16 bg-gray-50">
+      <div className="py-16 sm:py-24 bg-gradient-to-b from-white to-[#00ECFF]/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-base text-[#00e8ff] font-semibold tracking-wide uppercase">Benefits</h2>
+            <h2 className="text-base text-[#00ECFF] font-semibold tracking-wide uppercase">Benefits</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               Why Choose {insuranceType.charAt(0).toUpperCase() + insuranceType.slice(1)} Insurance Through QuoteLinker
             </p>
@@ -42,14 +42,18 @@ export default function ProductPage({ insuranceType, product }: ProductPageProps
           <div className="mt-10">
             <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
               {product.benefits.map((benefit, index) => (
-                <div key={index} className="relative">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-[#00e8ff] text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <div className="ml-16">
-                    <p className="text-lg leading-6 font-medium text-gray-900">{benefit}</p>
+                <div key={index} className="relative bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all transform hover:scale-[1.02]">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="bg-[#00ECFF]/10 rounded-full p-3">
+                        <svg className="h-6 w-6 text-[#00ECFF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-lg leading-6 font-medium text-gray-900">{benefit}</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -62,9 +66,9 @@ export default function ProductPage({ insuranceType, product }: ProductPageProps
       <TrustSection />
 
       {/* Quote Form Section */}
-      <div id="quote-form" className="bg-blue-50 py-12 sm:py-16 -mt-20 pt-32">
+      <div id="quote-form" className="bg-gradient-to-b from-[#00ECFF]/10 to-white py-12 sm:py-16 -mt-20 pt-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-start">
+          <div className="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start">
             <div className="relative mb-8 lg:mb-0">
               <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
                 Ready to find your perfect {insuranceType} insurance match?
@@ -72,21 +76,25 @@ export default function ProductPage({ insuranceType, product }: ProductPageProps
               <p className="mt-3 max-w-3xl text-lg text-gray-500">
                 Get started with our simple quote form. It only takes a few minutes to find the coverage you need.
               </p>
-              <div className="mt-6 flex items-center">
+              <div className="mt-6 flex items-center bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex-shrink-0">
-                  <svg className="h-8 w-8 text-brand-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
+                  <div className="bg-[#00ECFF]/10 rounded-full p-3">
+                    <svg className="h-6 w-6 text-[#00ECFF]" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="ml-3">
+                <div className="ml-4">
                   <p className="text-sm font-medium text-gray-900">
-                    Powered by a licensed insurance agent based in Minnesota
+                    Powered by a licensed insurance agents and AI
                   </p>
                 </div>
               </div>
             </div>
             <div className="relative">
-              <QuoteForm insuranceType={insuranceType} className="transform translate-y-0" />
+              <div className="transform hover:scale-[1.01] transition-transform">
+                <QuoteForm insuranceType={insuranceType} className="shadow-xl rounded-2xl" />
+              </div>
             </div>
           </div>
         </div>
