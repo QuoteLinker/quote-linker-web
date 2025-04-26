@@ -1,15 +1,12 @@
 'use client';
 
 import QuoteForm from '@/components/QuoteForm';
+import ProductPageLayout from '@/components/ProductPageLayout';
 
 export default function HomeInsurancePage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Home Insurance Quotes</h1>
-      
-      <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
-        <QuoteForm productType="home" subType="home" />
-      </div>
-    </div>
+    <ProductPageLayout productType="home">
+      <QuoteForm productType="home" subType="home" />
+    </ProductPageLayout>
   );
 } 

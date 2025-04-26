@@ -203,6 +203,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
     try {
       // Submit form data to API
@@ -256,6 +257,10 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
           <p className="text-gray-600">{getFormDescription()}</p>
         </div>
+
+        {/* Hidden inputs for productType and subType */}
+        <input type="hidden" name="productType" value={productType} />
+        <input type="hidden" name="subType" value={selectedSubType} />
 
         {/* SubType Toggle for Life and Health */}
         {(productType === 'life' || productType === 'health') && (
@@ -395,11 +400,16 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
           </div>
         </div>
 
+        {error && (
+          <div className="text-red-500 text-sm text-center">{error}</div>
+        )}
+
         <button
           type="submit"
+          disabled={isSubmitting}
           className="w-full bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
         >
-          Get Your Quote
+          {isSubmitting ? 'Submitting...' : 'Get Your Quote'}
         </button>
       </form>
     </div>
