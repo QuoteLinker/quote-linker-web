@@ -1,11 +1,12 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import Script from 'next/script';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import Header from '@/components/Header'
+import Footer from '@/components/Footer'
+import type { ReactNode } from 'react'
+import Script from 'next/script'
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] })
 
 // GTM ID validation
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
@@ -14,11 +15,8 @@ if (!GTM_ID) {
 }
 
 export const metadata: Metadata = {
-  title: {
-    template: '%s | QuoteLinker',
-    default: 'QuoteLinker - Compare Insurance Quotes Online',
-  },
-  description: 'Compare insurance quotes from top providers. Get the best rates on auto, home, life, and disability insurance.',
+  title: 'Quote Linker',
+  description: 'Connect with trusted insurance providers',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
@@ -61,10 +59,10 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         {/* Google Tag Manager */}
         {GTM_ID && (
@@ -94,11 +92,11 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-full flex flex-col`}>
         <Header />
-        <main>{children}</main>
+        <main className="flex-grow">{children}</main>
         <Footer />
       </body>
     </html>
-  );
+  )
 } 

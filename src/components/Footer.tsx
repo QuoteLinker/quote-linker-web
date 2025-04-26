@@ -48,69 +48,69 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-gray-900 font-semibold mb-4">Insurance</h3>
-            <ul className="space-y-2">
+    <footer className="bg-white border-t border-gray-200 mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4">
+          <div className="col-span-1">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Insurance</h3>
+            <ul className="space-y-3">
               <li>
-                <Link href="/auto" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/auto" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Auto Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/home" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/home" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Home Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/life" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/life" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Life Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/health" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/health" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Health Insurance
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-gray-900 font-semibold mb-4">Company</h3>
-            <ul className="space-y-2">
+          <div className="col-span-1">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Company</h3>
+            <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/about" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/contact" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Contact
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-gray-900 font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2">
+          <div className="col-span-1">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Legal</h3>
+            <ul className="space-y-3">
               <li>
-                <Link href="/privacy" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/privacy" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
+                <Link href="/terms" className="text-base text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Terms of Service
                 </Link>
               </li>
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-gray-900 font-semibold mb-4">Connect</h3>
+          <div className="col-span-2 sm:col-span-1">
+            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Connect</h3>
             <div className="flex space-x-4">
               {socialLinks.map((item) => (
                 <a
@@ -125,7 +125,7 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className="mt-8 text-gray-600 text-sm">
+            <p className="mt-8 text-sm text-gray-600">
               © {new Date().getFullYear()} QuoteLinker. All rights reserved.
             </p>
           </div>

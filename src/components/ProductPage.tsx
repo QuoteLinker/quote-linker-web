@@ -122,7 +122,7 @@ export default function ProductPage({ insuranceType, product }: ProductPageProps
         </div>
       </div>
 
-      <StickyCTA insuranceType={insuranceType} />
+      <StickyCTA />
     </div>
   );
 } 

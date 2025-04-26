@@ -1,40 +1,50 @@
 'use client';
 
-import { ShieldCheckIcon, StarIcon, UserGroupIcon, LockClosedIcon } from '@heroicons/react/24/solid';
+import React from 'react';
+import { ShieldCheckIcon, ClockIcon, CurrencyDollarIcon, StarIcon } from '@heroicons/react/24/outline';
+
+const trustFeatures = [
+  {
+    name: 'Trusted Partners',
+    description: 'We work with A-rated insurance carriers',
+    icon: ShieldCheckIcon,
+  },
+  {
+    name: 'Fast & Easy',
+    description: 'Get quotes in minutes, not hours',
+    icon: ClockIcon,
+  },
+  {
+    name: 'Save Money',
+    description: 'Compare rates from multiple providers',
+    icon: CurrencyDollarIcon,
+  },
+  {
+    name: 'Top Rated',
+    description: '4.8/5 average customer rating',
+    icon: StarIcon,
+  },
+];
 
 export default function TrustIndicators() {
-  const indicators = [
-    {
-      icon: ShieldCheckIcon,
-      text: 'Vetted Licensed Agents',
-      description: 'Expert guidance from certified professionals'
-    },
-    {
-      icon: UserGroupIcon,
-      text: '1000+ Satisfied Clients',
-      description: 'Trusted by families and individuals'
-    },
-    {
-      icon: LockClosedIcon,
-      text: 'Secure Form',
-      description: 'Your information is protected'
-    },
-    {
-      icon: StarIcon,
-      text: '5-Star Service',
-      description: 'Highly rated customer satisfaction'
-    }
-  ];
-
   return (
-    <div className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {indicators.map((indicator, index) => (
-            <div key={index} className="flex flex-col items-center text-center">
-              <indicator.icon className="w-12 h-12 text-brand-primary mb-4" />
-              <h3 className="text-xl font-semibold text-brand-headline mb-2">{indicator.text}</h3>
-              <p className="text-brand-body">{indicator.description}</p>
+    <div className="bg-gray-50 py-12 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {trustFeatures.map((feature) => (
+            <div
+              key={feature.name}
+              className="relative bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="flex-shrink-0">
+                  <feature.icon className="h-8 w-8 text-[#00ECFF]" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{feature.name}</h3>
+                  <p className="mt-1 text-sm text-gray-500">{feature.description}</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
