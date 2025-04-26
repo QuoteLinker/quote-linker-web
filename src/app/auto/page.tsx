@@ -1,29 +1,20 @@
-import { insuranceProducts } from '@/utils/insuranceCopy';
-import { Metadata } from 'next';
-import Script from 'next/script';
-import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
-import ProductPage from '@/components/ProductPage';
+'use client';
 
-export const metadata: Metadata = generateInsuranceMetadata(
-  'auto',
-  'Auto Insurance Quotes | QuoteLinker',
-  'Get personalized auto insurance quotes from licensed agents in Minnesota. Compare coverage options and find the best rates for your vehicle.',
-  ['auto insurance', 'car insurance', 'vehicle insurance', 'Minnesota auto insurance', 'insurance quotes']
-);
+import QuoteForm from '@/components/QuoteForm';
 
 export default function AutoInsurancePage() {
-  const product = insuranceProducts.auto;
-
   return (
-    <div className="bg-white">
-      <Script id="structured-data" type="application/ld+json">
-        {generateInsuranceStructuredData(
-          'auto',
-          'Comprehensive auto insurance coverage options'
-        )}
-      </Script>
-
-      <ProductPage insuranceType="auto" product={product} />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8">Auto Insurance Quotes</h1>
+      
+      <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
+        <QuoteForm productType="auto" subType="auto" />
+      </div>
     </div>
   );
-} 
+}
+
+export const metadata = {
+  title: 'Auto Insurance - QuoteLinker',
+  description: 'Get competitive auto insurance quotes tailored to your needs.',
+}; 

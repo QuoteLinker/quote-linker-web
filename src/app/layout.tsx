@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import type { ReactNode } from 'react'
 import Script from 'next/script'
+import { Navigation } from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,9 +15,18 @@ if (!GTM_ID) {
   console.warn('Google Tag Manager ID is not set. Analytics will not be tracked.');
 }
 
+const navigation = [
+  { name: 'Auto Insurance', href: '/products/auto' },
+  { name: 'Home Insurance', href: '/products/home' },
+  { name: 'Life Insurance', href: '/products/life' },
+  { name: 'Health Insurance', href: '/products/health' },
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+];
+
 export const metadata: Metadata = {
-  title: 'QuoteLinker',
-  description: 'Connect with a local and licensed insurance agent',
+  title: 'QuoteLinker - Insurance Quotes Made Simple',
+  description: 'Get instant insurance quotes for auto, home, life, and health insurance. Compare rates from top providers and save.',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
@@ -65,37 +75,30 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <head>
         {/* Google Tag Manager */}
-        {GTM_ID && (
-          <>
-            <Script
-              id="gtm-script"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                  })(window,document,'script','dataLayer','${GTM_ID}');
-                `,
-              }}
-            />
-            <noscript>
-              <iframe
-                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
-                height="0"
-                width="0"
-                style={{ display: 'none', visibility: 'hidden' }}
-                title="Google Tag Manager"
-              />
-            </noscript>
-          </>
-        )}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');`,
+          }}
+        />
       </head>
       <body className={`${inter.className} min-h-full flex flex-col`}>
+        <Navigation />
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
       </body>
     </html>
   )

@@ -3,8 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { trackNavClick } from '@/utils/gtm';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
-export default function StickyCTA() {
+interface StickyCTAProps {
+  insuranceType: InsuranceType;
+}
+
+export default function StickyCTA({ insuranceType }: StickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -40,9 +45,9 @@ export default function StickyCTA() {
       <div className="container mx-auto px-4 py-3">
         <button
           onClick={handleClick}
-          className="w-full bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 transition-colors duration-200"
+          className="w-full bg-electric-blue text-deep-navy font-semibold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 shadow-brand"
         >
-          Get Your Quote
+          Get Your {insuranceType} Quote
         </button>
       </div>
     </div>

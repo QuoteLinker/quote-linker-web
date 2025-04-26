@@ -30,7 +30,7 @@ export function generateInsuranceStructuredData(
   
   return JSON.stringify({
     "@context": "https://schema.org",
-    "@type": "InsuranceAgency",
+    "@type": "InsuranceLeadGenerator",
     "name": "QuoteLinker",
     "description": `Connect with licensed insurance agents in your area and get personalized quotes for ${insuranceType} insurance.`,
     "url": `https://quotelinker.com/${insuranceType}`,
@@ -41,7 +41,7 @@ export function generateInsuranceStructuredData(
     "offers": {
       "@type": "Offer",
       "itemOffered": {
-        "@type": "InsuranceAgency",
+        "@type": "InsuranceLeadGenerator",
         "name": `${formattedType} Insurance`,
         "description": description
       }

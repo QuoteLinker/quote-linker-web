@@ -1,29 +1,20 @@
-import { insuranceProducts } from '@/utils/insuranceCopy';
-import { Metadata } from 'next';
-import Script from 'next/script';
-import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
-import ProductPage from '@/components/ProductPage';
+'use client';
 
-export const metadata: Metadata = generateInsuranceMetadata(
-  'home',
-  'Home Insurance Quotes | QuoteLinker',
-  'Get personalized home insurance quotes from a licensed agent. Protect your home with comprehensive coverage tailored to your needs.',
-  ['home insurance', 'property insurance', 'house insurance', 'Minnesota home insurance', 'insurance quotes']
-);
+import QuoteForm from '@/components/QuoteForm';
 
 export default function HomeInsurancePage() {
-  const product = insuranceProducts.home;
-
   return (
-    <div className="bg-white">
-      <Script id="structured-data" type="application/ld+json">
-        {generateInsuranceStructuredData(
-          'home',
-          'Comprehensive home insurance coverage options'
-        )}
-      </Script>
-
-      <ProductPage insuranceType="home" product={product} />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8">Home Insurance Quotes</h1>
+      
+      <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
+        <QuoteForm productType="home" subType="home" />
+      </div>
     </div>
   );
-} 
+}
+
+export const metadata = {
+  title: 'Home Insurance - QuoteLinker',
+  description: 'Protect your home with comprehensive coverage from QuoteLinker.',
+}; 

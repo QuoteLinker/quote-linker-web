@@ -1,30 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { InsuranceType } from '@/utils/insuranceCopy';
 import Image from 'next/image';
 
-type LifeType = 'Term Life' | 'Permanent Life';
-type HealthType = 'Short-Term Disability' | 'Supplemental Health';
-
-interface FormData {
-  zipCode: string;
-  insuranceType: InsuranceType | '';
-  lifeType: LifeType | '';
-  healthType: HealthType | '';
-  homeownership: boolean;
-  age: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-}
+type ProductType = 'auto' | 'home' | 'life' | 'health';
+type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
 interface QuoteFormProps {
-  insuranceType?: InsuranceType;
-  className?: string;
+  productType: ProductType;
+  subType?: SubType;
+}
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  zipCode: string;
+  [key: string]: any; // Allow for dynamic fields
 }
 
 interface FormField {
@@ -36,79 +32,33 @@ interface FormField {
   options?: { value: string; label: string; }[];
 }
 
+// Helper function to convert ProductType to InsuranceType
+function getInsuranceType(productType: ProductType, subType?: SubType): InsuranceType {
+  switch (productType) {
+    case 'auto':
+      return 'AUTO';
+    case 'home':
+      return 'HOME';
+    case 'life':
+      return subType === 'permanent' ? 'PERMANENT_LIFE' : 'TERM_LIFE';
+    case 'health':
+      return subType === 'supplemental' ? 'SUPPLEMENTAL_HEALTH' : 'SHORT_TERM_DISABILITY';
+    default:
+      return 'AUTO';
+  }
+}
+
 const formFields: Record<InsuranceType, FormField[]> = {
-  life: [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'age', label: 'Age', type: 'number', required: true },
-    {
-      name: 'tobaccoUse',
-      label: 'Tobacco Use',
-      type: 'select',
-      required: true,
-      tooltip: 'This information helps us determine the most accurate rates for your life insurance policy.',
-      options: [
-        { value: 'yes', label: 'Yes' },
-        { value: 'no', label: 'No' },
-      ],
-    },
-  ],
-  term: [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'age', label: 'Age', type: 'number', required: true },
-    {
-      name: 'tobaccoUse',
-      label: 'Tobacco Use',
-      type: 'select',
-      required: true,
-      tooltip: 'This information helps us determine the most accurate rates for your term life insurance policy.',
-      options: [
-        { value: 'yes', label: 'Yes' },
-        { value: 'no', label: 'No' },
-      ],
-    },
-    {
-      name: 'termLength',
-      label: 'Term Length',
-      type: 'select',
-      required: true,
-      tooltip: 'Choose the length of coverage you need.',
-      options: [
-        { value: '10', label: '10 Years' },
-        { value: '20', label: '20 Years' },
-        { value: '30', label: '30 Years' },
-      ],
-    },
-    {
-      name: 'coverageAmount',
-      label: 'Coverage Amount',
-      type: 'select',
-      required: true,
-      tooltip: 'Select your desired coverage amount.',
-      options: [
-        { value: '100000', label: '$100,000' },
-        { value: '250000', label: '$250,000' },
-        { value: '500000', label: '$500,000' },
-        { value: '1000000', label: '$1,000,000' },
-        { value: '2000000', label: '$2,000,000' },
-      ],
-    },
-  ],
-  auto: [
+  'AUTO': [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
     { name: 'vehicleYear', label: 'Vehicle Year', type: 'number', required: true },
     { name: 'vehicleMake', label: 'Vehicle Make', type: 'text', required: true },
-    { name: 'vehicleModel', label: 'Vehicle Model', type: 'text', required: true },
+    { name: 'vehicleModel', label: 'Vehicle Model', type: 'text', required: true }
   ],
-  home: [
+  'HOME': [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
@@ -117,223 +67,341 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'propertyType', label: 'Property Type', type: 'select', required: true, options: [
       { value: 'single', label: 'Single Family Home' },
       { value: 'multi', label: 'Multi-Family Home' },
-      { value: 'condo', label: 'Condo/Townhouse' },
+      { value: 'condo', label: 'Condo/Townhouse' }
     ]},
-    { name: 'yearBuilt', label: 'Year Built', type: 'number', required: true },
+    { name: 'yearBuilt', label: 'Year Built', type: 'number', required: true }
   ],
-  disability: [
+  'TERM_LIFE': [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'age', label: 'Age', type: 'number', required: true },
+    { name: 'termLength', label: 'Term Length', type: 'select', required: true, options: [
+      { value: '10', label: '10 Years' },
+      { value: '20', label: '20 Years' },
+      { value: '30', label: '30 Years' }
+    ]},
+    { name: 'coverageAmount', label: 'Coverage Amount', type: 'select', required: true, options: [
+      { value: '100000', label: '$100,000' },
+      { value: '250000', label: '$250,000' },
+      { value: '500000', label: '$500,000' },
+      { value: '1000000', label: '$1,000,000' }
+    ]}
+  ],
+  'PERMANENT_LIFE': [
+    { name: 'firstName', label: 'First Name', type: 'text', required: true },
+    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'age', label: 'Age', type: 'number', required: true },
+    { name: 'coverageAmount', label: 'Coverage Amount', type: 'select', required: true, options: [
+      { value: '100000', label: '$100,000' },
+      { value: '250000', label: '$250,000' },
+      { value: '500000', label: '$500,000' },
+      { value: '1000000', label: '$1,000,000' }
+    ]}
+  ],
+  'SHORT_TERM_DISABILITY': [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
     { name: 'occupation', label: 'Occupation', type: 'text', required: true },
     { name: 'income', label: 'Annual Income', type: 'number', required: true },
-    {
-      name: 'coverageType',
-      label: 'Coverage Type',
-      type: 'select',
-      required: true,
-      tooltip: 'Short-term disability provides coverage for a limited time, while long-term disability provides extended coverage.',
-      options: [
-        { value: 'short', label: 'Short-term Disability' },
-        { value: 'long', label: 'Long-term Disability' },
-        { value: 'both', label: 'Both' },
-      ],
-    },
+    { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
+      { value: 'short', label: 'Short-term Disability' },
+      { value: 'long', label: 'Long-term Disability' },
+      { value: 'both', label: 'Both' }
+    ]}
   ],
-  health: [
+  'SUPPLEMENTAL_HEALTH': [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
     { name: 'age', label: 'Age', type: 'number', required: true },
-    {
-      name: 'coverageType',
-      label: 'Coverage Type',
-      type: 'select',
-      required: true,
-      tooltip: 'Choose the type of health insurance coverage you\'re looking for.',
-      options: [
-        { value: 'individual', label: 'Individual' },
-        { value: 'family', label: 'Family' },
-        { value: 'medicare', label: 'Medicare' },
-      ],
-    },
-    {
-      name: 'preExistingConditions',
-      label: 'Pre-existing Conditions',
-      type: 'select',
-      required: true,
-      options: [
-        { value: 'yes', label: 'Yes' },
-        { value: 'no', label: 'No' },
-      ],
-    },
-  ],
+    { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
+      { value: 'individual', label: 'Individual' },
+      { value: 'family', label: 'Family' },
+      { value: 'medicare', label: 'Medicare' }
+    ]},
+    { name: 'preExistingConditions', label: 'Pre-existing Conditions', type: 'select', required: true, options: [
+      { value: 'yes', label: 'Yes' },
+      { value: 'no', label: 'No' }
+    ]}
+  ]
 };
 
-export default function QuoteForm({ insuranceType, className }: QuoteFormProps) {
+export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [selectedSubType, setSelectedSubType] = useState<SubType>(
+    subType || getDefaultSubType(productType)
+  );
   const [formData, setFormData] = useState<FormData>({
-    zipCode: '',
-    insuranceType: insuranceType || '',
-    lifeType: '',
-    healthType: '',
-    homeownership: false,
-    age: '',
     firstName: '',
     lastName: '',
-    phone: '',
     email: '',
+    phone: '',
+    zipCode: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Scroll to form when component mounts if it's in the URL hash
-    if (window.location.hash === '#quote-form') {
-      const element = document.getElementById('quote-form');
-      if (element) {
-        const yOffset = -80; // Account for fixed header
-        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }
+  // Get the default subType based on productType
+  function getDefaultSubType(type: ProductType): SubType {
+    switch (type) {
+      case 'life':
+        return 'term';
+      case 'health':
+        return 'std';
+      case 'auto':
+        return 'auto';
+      case 'home':
+        return 'home';
+      default:
+        return 'auto';
     }
-  }, []);
+  }
+
+  // Get form title based on product and subType
+  function getFormTitle(): string {
+    switch (productType) {
+      case 'life':
+        return `Get Your ${selectedSubType === 'term' ? 'Term' : 'Permanent'} Life Insurance Quote`;
+      case 'health':
+        return `Get Your ${selectedSubType === 'std' ? 'Short-Term Disability' : 'Supplemental Health'} Insurance Quote`;
+      case 'auto':
+        return 'Get Your Auto Insurance Quote';
+      case 'home':
+        return 'Get Your Home Insurance Quote';
+      default:
+        return 'Get Your Insurance Quote';
+    }
+  }
+
+  // Get form description based on product and subType
+  function getFormDescription(): string {
+    switch (productType) {
+      case 'life':
+        return selectedSubType === 'term' 
+          ? 'Protect your loved ones with affordable term life coverage.'
+          : 'Secure lifelong protection and build cash value with permanent life insurance.';
+      case 'health':
+        return selectedSubType === 'std'
+          ? "Protect your income when you're unable to work due to illness or injury."
+          : 'Add extra protection to your primary health insurance coverage.';
+      case 'auto':
+        return 'Protect your vehicle with comprehensive coverage tailored to your needs.';
+      case 'home':
+        return 'Protect your home and belongings with comprehensive coverage.';
+      default:
+        return 'Get the coverage you need at a price you can afford.';
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Submit form data to API
+      const response = await fetch('/api/submitLead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          productType,
+          subType: selectedSubType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      // Push GTM event
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'leadSubmit',
+          productType,
+          subType: selectedSubType,
+        });
+      }
+
+      // Redirect to success page
+      router.push('/success');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setError('Failed to submit form. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStep1Submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    // Simulate API call to /api/ping
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setLoading(false);
-    setStep(2);
-  };
-
-  const handleStep2Submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    
-    // TODO: Implement actual API calls
-    // 1. Save to internal DB
-    // 2. POST to Salesforce
-    // 3. Trigger GTM event
-    
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Redirect to success page
-    window.location.href = '/success';
-  };
-
-  const fields = formFields[formData.insuranceType as InsuranceType] || [];
+  const insuranceType = getInsuranceType(productType, selectedSubType);
+  const fields = formFields[insuranceType] || [];
 
   return (
-    <form onSubmit={handleStep1Submit} className={`bg-white p-8 rounded-2xl ${className}`}>
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-1">
-            Get Your {insuranceType ? `${insuranceType.charAt(0).toUpperCase()}${insuranceType.slice(1)}` : ''} Insurance Quote
-          </h3>
-          <p className="text-gray-500 text-sm">Fill out this quick form to get started</p>
+    <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
+      <form onSubmit={handleSubmit} className="w-full space-y-6 bg-white p-8 rounded-lg shadow-lg">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
+          <p className="text-gray-600">{getFormDescription()}</p>
         </div>
 
+        {/* SubType Toggle for Life and Health */}
+        {(productType === 'life' || productType === 'health') && (
+          <div className="flex justify-center space-x-4 mb-6">
+            {productType === 'life' ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubType('term')}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    selectedSubType === 'term'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Term Life
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubType('permanent')}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    selectedSubType === 'permanent'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Permanent Life
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubType('std')}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    selectedSubType === 'std'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Short-Term Disability
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSubType('supplemental')}
+                  className={`px-4 py-2 rounded-lg font-medium ${
+                    selectedSubType === 'supplemental'
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Supplemental Health
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Form Fields */}
         <div className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <div className="mt-1">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
               <input
                 type="text"
-                name="name"
-                id="name"
+                id="firstName"
+                name="firstName"
                 required
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
-                placeholder="John Doe"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                value={formData.firstName}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                value={formData.lastName}
+                onChange={handleInputChange}
               />
             </div>
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <div className="mt-1">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
-                name="email"
                 id="email"
+                name="email"
                 required
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
-                placeholder="john@example.com"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                value={formData.email}
+                onChange={handleInputChange}
               />
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <div className="mt-1">
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
               <input
                 type="tel"
-                name="phone"
                 id="phone"
+                name="phone"
                 required
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
-                placeholder="(555) 555-5555"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                value={formData.phone}
+                onChange={handleInputChange}
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-              Additional Details (Optional)
+            <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
+              ZIP Code
             </label>
-            <div className="mt-1">
-              <textarea
-                name="message"
-                id="message"
-                rows={3}
-                className="block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00ECFF] focus:ring-[#00ECFF] transition-colors"
-                placeholder="Tell us more about your insurance needs..."
-              />
-            </div>
+            <input
+              type="text"
+              id="zipCode"
+              name="zipCode"
+              required
+              pattern="[0-9]{5}"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              value={formData.zipCode}
+              onChange={handleInputChange}
+            />
           </div>
         </div>
 
-        <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#00ECFF] hover:bg-[#00ECFF]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00ECFF] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <div className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Processing...
-              </div>
-            ) : (
-              'Get My Quote'
-            )}
-          </button>
-        </div>
-
-        {/* Rest of the component code remains unchanged */}
-      </div>
-    </form>
+        <button
+          type="submit"
+          className="w-full bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+        >
+          Get Your Quote
+        </button>
+      </form>
+    </div>
   );
 } 

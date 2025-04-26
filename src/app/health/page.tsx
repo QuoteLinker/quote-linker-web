@@ -1,29 +1,45 @@
-import { insuranceProducts } from '@/utils/insuranceCopy';
-import { Metadata } from 'next';
-import Script from 'next/script';
-import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
-import ProductPage from '@/components/ProductPage';
+'use client';
 
-export const metadata: Metadata = generateInsuranceMetadata(
-  'health',
-  'Health Insurance Quotes | QuoteLinker',
-  'Get personalized health insurance quotes from a licensed agent. Find the right coverage for your medical needs and budget.',
-  ['health insurance', 'medical insurance', 'healthcare coverage', 'Minnesota health insurance', 'insurance quotes']
-);
+import { useState } from 'react';
+import QuoteForm from '@/components/QuoteForm';
 
 export default function HealthInsurancePage() {
-  const product = insuranceProducts.health;
+  const [subType, setSubType] = useState<'std' | 'supplemental'>('std');
 
   return (
-    <div className="bg-white">
-      <Script id="structured-data" type="application/ld+json">
-        {generateInsuranceStructuredData(
-          'health',
-          'Comprehensive health insurance coverage options'
-        )}
-      </Script>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8">Health Insurance Quotes</h1>
+      
+      <div className="flex justify-center mb-8">
+        <div className="inline-flex rounded-md shadow-sm" role="group">
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+              subType === 'std'
+                ? 'bg-[#00EEFD] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setSubType('std')}
+          >
+            Short-Term Disability
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+              subType === 'supplemental'
+                ? 'bg-[#00EEFD] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setSubType('supplemental')}
+          >
+            Supplemental Health
+          </button>
+        </div>
+      </div>
 
-      <ProductPage insuranceType="health" product={product} />
+      <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
+        <QuoteForm productType="health" subType={subType} />
+      </div>
     </div>
   );
 } 

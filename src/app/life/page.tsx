@@ -1,29 +1,45 @@
-import { insuranceProducts } from '@/utils/insuranceCopy';
-import { Metadata } from 'next';
-import Script from 'next/script';
-import { generateInsuranceMetadata, generateInsuranceStructuredData } from '@/utils/seoUtils';
-import ProductPage from '@/components/ProductPage';
+'use client';
 
-export const metadata: Metadata = generateInsuranceMetadata(
-  'life',
-  'Life Insurance Quotes | QuoteLinker',
-  'Get personalized life insurance quotes from a licensed agent. Secure your family\'s future with the right coverage for your needs.',
-  ['life insurance', 'term life insurance', 'whole life insurance', 'Minnesota life insurance', 'insurance quotes']
-);
+import { useState } from 'react';
+import QuoteForm from '@/components/QuoteForm';
 
 export default function LifeInsurancePage() {
-  const product = insuranceProducts.life;
+  const [subType, setSubType] = useState<'term' | 'permanent'>('term');
 
   return (
-    <div className="bg-white">
-      <Script id="structured-data" type="application/ld+json">
-        {generateInsuranceStructuredData(
-          'life',
-          'Comprehensive life insurance coverage options'
-        )}
-      </Script>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8">Life Insurance Quotes</h1>
+      
+      <div className="flex justify-center mb-8">
+        <div className="inline-flex rounded-md shadow-sm" role="group">
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium rounded-l-lg ${
+              subType === 'term'
+                ? 'bg-[#00EEFD] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setSubType('term')}
+          >
+            Term Life
+          </button>
+          <button
+            type="button"
+            className={`px-4 py-2 text-sm font-medium rounded-r-lg ${
+              subType === 'permanent'
+                ? 'bg-[#00EEFD] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-100'
+            }`}
+            onClick={() => setSubType('permanent')}
+          >
+            Permanent Life
+          </button>
+        </div>
+      </div>
 
-      <ProductPage insuranceType="life" product={product} />
+      <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
+        <QuoteForm productType="life" subType={subType} />
+      </div>
     </div>
   );
 } 

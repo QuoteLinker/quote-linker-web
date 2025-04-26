@@ -12,7 +12,7 @@ export default function AboutPage() {
           
           <div className="prose max-w-none">
             <p className="text-lg mb-8">
-              QuoteLinker is a the first and only AI-first InsurTech platform for connecting individuals and businesses 
+              QuoteLinker is  the first and only AI-first InsurTech platform for connecting individuals and businesses 
               with licensed insurance agents. We simplify the insurance shopping process by providing 
               a seamless way to compare quotes and find the right coverage.
             </p>

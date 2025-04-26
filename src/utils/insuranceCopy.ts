@@ -1,15 +1,47 @@
-export type InsuranceType = 'auto' | 'home' | 'life' | 'disability' | 'health' | 'term';
+export type InsuranceType = 'AUTO' | 'HOME' | 'TERM_LIFE' | 'PERMANENT_LIFE' | 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL_HEALTH';
 
-export const insuranceProducts = {
-  auto: {
+interface Benefit {
+  title: string;
+  description: string;
+}
+
+interface FAQ {
+  question: string;
+  answer: string;
+}
+
+interface InsuranceProduct {
+  title: string;
+  subtitle: string;
+  benefits: Benefit[];
+  faqs: FAQ[];
+}
+
+export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
+  AUTO: {
     title: 'Auto Insurance',
     subtitle: 'Find the perfect auto insurance coverage for your needs',
     benefits: [
-      'Compare quotes and coverage options provided by licensed agents',
-      'Save time and money on your auto insurance',
-      'Get personalized coverage recommendations',
-      'Easy online quote process',
-      'Flexible payment options'
+      {
+        title: 'Compare Quotes',
+        description: 'Compare quotes and coverage options provided by licensed agents'
+      },
+      {
+        title: 'Save Time & Money',
+        description: 'Save time and money on your auto insurance'
+      },
+      {
+        title: 'Personalized Coverage',
+        description: 'Get personalized coverage recommendations'
+      },
+      {
+        title: 'Easy Process',
+        description: 'Easy online quote process'
+      },
+      {
+        title: 'Flexible Payments',
+        description: 'Flexible payment options'
+      }
     ],
     faqs: [
       {
@@ -30,15 +62,30 @@ export const insuranceProducts = {
       }
     ]
   },
-  home: {
+  HOME: {
     title: 'Home Insurance',
     subtitle: 'Protect your home with the right insurance coverage',
     benefits: [
-      'Comprehensive home protection',
-      'Competitive rates from licensed agents',
-      'Customizable coverage options',
-      'Quick and easy quote process',
-      'Expert guidance from licensed agents'
+      {
+        title: 'Comprehensive Protection',
+        description: 'Comprehensive home protection'
+      },
+      {
+        title: 'Competitive Rates',
+        description: 'Competitive rates from licensed agents'
+      },
+      {
+        title: 'Customizable Coverage',
+        description: 'Customizable coverage options'
+      },
+      {
+        title: 'Quick Process',
+        description: 'Quick and easy quote process'
+      },
+      {
+        title: 'Expert Guidance',
+        description: 'Expert guidance from licensed agents'
+      }
     ],
     faqs: [
       {
@@ -59,16 +106,34 @@ export const insuranceProducts = {
       }
     ]
   },
-  life: {
-    title: 'Life Insurance',
+  TERM_LIFE: {
+    title: 'Term Life Insurance',
     subtitle: 'Secure your family\'s future with the right life insurance',
     benefits: [
-      'Financial protection for your loved ones',
-      'Flexible policy options',
-      'Competitive rates that are tailored to your needs',
-      'Simple application process',
-      'Expert guidance from licensed agents',
-      'Peace of mind for your family'
+      {
+        title: 'Financial Protection',
+        description: 'Financial protection for your loved ones'
+      },
+      {
+        title: 'Flexible Options',
+        description: 'Flexible policy options'
+      },
+      {
+        title: 'Competitive Rates',
+        description: 'Competitive rates that are tailored to your needs'
+      },
+      {
+        title: 'Simple Process',
+        description: 'Simple application process'
+      },
+      {
+        title: 'Expert Guidance',
+        description: 'Expert guidance from licensed agents'
+      },
+      {
+        title: 'Peace of Mind',
+        description: 'Peace of mind for your family'
+      }
     ],
     faqs: [
       {
@@ -89,92 +154,144 @@ export const insuranceProducts = {
       }
     ]
   },
-  disability: {
-    title: 'Disability Insurance',
-    subtitle: 'Protect your income with disability insurance',
+  PERMANENT_LIFE: {
+    title: 'Permanent Life Insurance',
+    subtitle: 'Lifetime protection with cash value growth',
     benefits: [
-      'Income protection if you can\'t work',
-      'Flexible coverage options',
-      'Cash benefits to help you cover living expenses',
-      'Simple application process',
-      'Benefits paid directly to you',
-      'Peace of mind for your future'
+      {
+        title: 'Lifetime Coverage',
+        description: 'Lifetime coverage'
+      },
+      {
+        title: 'Cash Value',
+        description: 'Cash value accumulation'
+      },
+      {
+        title: 'Tax Benefits',
+        description: 'Tax-deferred growth'
+      },
+      {
+        title: 'Flexible Payments',
+        description: 'Flexible premium payments'
+      },
+      {
+        title: 'Policy Loans',
+        description: 'Borrow against your policy'
+      },
+      {
+        title: 'Legacy Planning',
+        description: 'Leave a legacy for your loved ones'
+      }
     ],
     faqs: [
       {
-        question: 'What does disability insurance cover?',
-        answer: 'Disability insurance provides income replacement if you become unable to work due to illness or injury.'
+        question: 'What is permanent life insurance?',
+        answer: 'Permanent life insurance provides coverage for your entire life and includes a cash value component that grows over time.'
       },
       {
-        question: 'How much disability insurance do I need?',
-        answer: 'Typically, you should aim to replace 60-70% of your income. We\'ll help you determine the right amount for your situation.'
+        question: 'How does the cash value work?',
+        answer: 'A portion of your premium goes into a cash value account that grows tax-deferred. You can borrow against this value or use it to pay premiums.'
       },
       {
-        question: 'What\'s the difference between short-term and long-term disability?',
-        answer: 'Short-term disability covers shorter periods (typically 1-3 years), while long-term disability can cover extended periods or until retirement.'
+        question: 'What types of permanent life insurance are available?',
+        answer: 'Common types include whole life, universal life, and variable universal life insurance.'
       },
       {
-        question: 'How quickly can I get coverage?',
-        answer: 'Some policies, such as short-term disability, offer quick approval, while long-term disability may require a medical review. We\'ll help you find the right option for your needs.'
+        question: 'Is permanent life insurance right for me?',
+        answer: 'Permanent life insurance is ideal for those seeking lifetime coverage and want to build cash value. We\'ll help you determine if it\'s the right choice.'
       }
     ]
   },
-  health: {
-    title: 'Health Insurance',
-    subtitle: 'Find the right health insurance coverage for you and your family',
+  SHORT_TERM_DISABILITY: {
+    title: 'Short-Term Disability Insurance',
+    subtitle: 'Protect your income if you can\'t work',
     benefits: [
-      'Supplemental health coverage',
-      'Prepare for unexpected medical expenses',
-      'Benefits paid directly to you',
-      'Coverage for unexpected stays in the hospital',
+      {
+        title: 'Income Protection',
+        description: 'Income protection if you can\'t work'
+      },
+      {
+        title: 'Flexible Coverage',
+        description: 'Flexible coverage options'
+      },
+      {
+        title: 'Cash Benefits',
+        description: 'Cash benefits to help you cover living expenses'
+      },
+      {
+        title: 'Simple Process',
+        description: 'Simple application process'
+      },
+      {
+        title: 'Direct Payment',
+        description: 'Benefits paid directly to you'
+      }
     ],
     faqs: [
       {
-        question: 'What types of supplemental health insurance are available?',
-        answer: 'The supplemental health insurance includes coverage for unexpected medical expenses, hospital stays, and other gaps that arise from medical costs.'
+        question: 'What does short-term disability insurance cover?',
+        answer: 'It provides income replacement if you become unable to work due to illness or injury for a short period, typically 3-6 months.'
       },
       {
-        question: 'When can I sign up for supplental health insurance?',
-        answer: 'You can apply anytime, given you are between the ages of 16 and 64.'
+        question: 'How much coverage do I need?',
+        answer: 'Coverage amounts typically range from 40-60% of your income. We\'ll help you determine the right amount for your needs.'
       },
       {
-        question: 'What\'s the difference between supplemental health insurance and group health insurance?',
-        answer: 'Supplemental health insurance plans are purchased directly and owned by you, while group plans are typically offered through employers or organizations.'
+        question: 'How long does coverage last?',
+        answer: 'Short-term disability benefits typically last 3-6 months, depending on your policy.'
       },
       {
-        question: 'What factors affect supplemental health insurance rates?',
-        answer: 'Factors include your age, location, overall health, and the type of plan you select.'
+        question: 'When do benefits start?',
+        answer: 'Benefits usually begin after a waiting period of 0-14 days from the start of your disability.'
       }
     ]
   },
-  term: {
-    title: 'Term Life Insurance',
-    subtitle: 'Affordable term life insurance for your family\'s protection',
+  SUPPLEMENTAL_HEALTH: {
+    title: 'Supplemental Health Insurance',
+    subtitle: 'Extra coverage for your healthcare needs',
     benefits: [
-      'Fixed rates that are affordable',
-      'Simple coverage options',
-      'Convertible policies',
-      'Family protection',
-      'Flexible term lengths',
-      'Competitive rates'
+      {
+        title: 'Additional Coverage',
+        description: 'Additional coverage beyond your primary health insurance'
+      },
+      {
+        title: 'Cost Help',
+        description: 'Help with out-of-pocket costs'
+      },
+      {
+        title: 'Specific Coverage',
+        description: 'Coverage for specific health conditions'
+      },
+      {
+        title: 'Flexible Plans',
+        description: 'Flexible plan options'
+      },
+      {
+        title: 'No Restrictions',
+        description: 'No network restrictions'
+      }
     ],
     faqs: [
       {
-        question: 'What is term life insurance?',
-        answer: 'Term life insurance provides coverage for a specific period (term) in exchange for regular premium payments. If you pass away during the term, your beneficiaries receive a death benefit.'
+        question: 'What is supplemental health insurance?',
+        answer: 'It\'s additional coverage that helps pay for costs not covered by your primary health insurance, such as deductibles, copayments, and specific medical conditions.'
       },
       {
-        question: 'How long should my term be?',
-        answer: 'The length of your term should align with your financial obligations and goals. Common terms are 10, 20, or 30 years, depending on your needs.'
+        question: 'Do I need supplemental health insurance?',
+        answer: 'It depends on your healthcare needs and financial situation. We\'ll help you evaluate if it\'s right for you.'
       },
       {
-        question: 'Can I convert my term policy later?',
-        answer: 'Many term policies offer conversion options to permanent life insurance without requiring a new medical exam, though this varies by provider. This is a great way to lock in a low rate and protect your family.'
+        question: 'What types of supplemental plans are available?',
+        answer: 'Common types include critical illness, accident, hospital indemnity, and dental/vision plans.'
       },
       {
-        question: 'How quickly can I get coverage?',
-        answer: 'Some policies offer instant approval and coverage within 24 hours. Traditional policies typically take 4-6 weeks for full underwriting. We can help you find the fastest option for your needs.'
+        question: 'Can I have multiple supplemental plans?',
+        answer: 'Yes, you can have multiple supplemental plans to cover different healthcare needs.'
       }
     ]
   }
-}; 
+};
+
+export function getProductContent(type: InsuranceType): InsuranceProduct {
+  return insuranceProducts[type];
+}
