@@ -30,7 +30,7 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
-          <div className="flex items-center justify-between">
+          <div className="relative flex items-center justify-between">
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link 
@@ -38,7 +38,7 @@ export default function Header() {
                 className="block transform transition-transform hover:scale-105 duration-200" 
                 onClick={() => handleNavClick('Logo', '/')}
               >
-                <Logo showText={!mobileMenuOpen} className="h-8 w-auto" />
+                <Logo showText={true} className="h-8 w-auto" />
               </Link>
             </div>
 
@@ -88,7 +88,7 @@ export default function Header() {
               </Link>
               <button
                 type="button"
-                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200 hover:scale-105 transform"
+                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 <span className="sr-only">Open main menu</span>
@@ -103,17 +103,22 @@ export default function Header() {
 
           {/* Mobile menu */}
           <div 
-            className={`lg:hidden mt-3 pb-3 border-t border-gray-200 transition-all duration-300 transform ${
-              mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+            className={`lg:hidden fixed left-0 right-0 bg-white/95 backdrop-blur-sm transition-all duration-300 ${
+              mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
             }`}
+            style={{
+              top: '64px', // Height of the header
+              maxHeight: 'calc(100vh - 64px)',
+              overflowY: 'auto'
+            }}
           >
-            <div className="flex flex-col space-y-2 pt-3">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col space-y-2">
               {/* Insurance Types First */}
               {insuranceTypes.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 rounded-lg text-gray-900 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200 font-medium hover:scale-[1.02] transform"
+                  className="block px-3 py-2 rounded-lg text-gray-900 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200 font-medium"
                   onClick={() => handleNavClick(item.name, item.href)}
                 >
                   {item.name}
@@ -125,7 +130,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="block px-3 py-2 rounded-lg text-gray-500 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200 hover:scale-[1.02] transform"
+                  className="block px-3 py-2 rounded-lg text-gray-500 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200"
                   onClick={() => handleNavClick(item.name, item.href)}
                 >
                   {item.name}
@@ -136,7 +141,7 @@ export default function Header() {
         </nav>
       </header>
       {/* Spacer to prevent content from hiding under fixed header */}
-      <div className="h-16" />
+      <div className="h-[64px]" />
     </>
   );
 } 
