@@ -38,13 +38,15 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className="text-gray-700 hover:text-brand-primary transition-colors duration-200"
+                onClick={() => handleNavClick(item.name, item.href)}
               >
                 {item.name}
               </Link>
             ))}
             <Link
-              href="/quote"
+              href="/auto"
               className="inline-flex items-center justify-center bg-brand-primary text-white px-5 py-2 rounded-lg shadow-sm hover:bg-brand-primary-dark transition-colors duration-200"
+              onClick={() => handleNavClick('Get a Quote', '/auto')}
             >
               Get a Quote
             </Link>
@@ -76,15 +78,15 @@ export default function Header() {
                   key={item.name}
                   href={item.href}
                   className="block px-3 py-2 rounded-lg text-gray-700 hover:text-brand-primary hover:bg-gray-100 transition-colors duration-200"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => handleNavClick(item.name, item.href)}
                 >
                   {item.name}
                 </Link>
               ))}
               <Link
-                href="/quote"
+                href="/auto"
                 className="block px-3 py-2 text-center bg-brand-primary text-white rounded-lg shadow-sm hover:bg-brand-primary-dark transition-colors duration-200"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => handleNavClick('Get a Quote', '/auto')}
               >
                 Get a Quote
               </Link>
