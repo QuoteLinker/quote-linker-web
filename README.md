@@ -1,87 +1,98 @@
-# QuoteLinker
+# QuoteLinker Web Application
 
-A Next.js 14 application for QuoteLinker, a lead generation platform for licensed agents to connect with consumers seeking insurance solutions.
+A Next.js 14 application for managing insurance quote requests.
 
 ## Features
 
-- Dynamic product pages for different insurance types
-- Mobile-optimized responsive design
-- Secure form handling with validation
+- Lead form for insurance quote requests
+- Salesforce integration for lead management
 - Google Tag Manager integration
-- Anti-spam protection with honeypot
-- Zapier integration for lead management
+- Google Ads conversion tracking
+- Responsive design with TailwindCSS
 
 ## Prerequisites
 
-- Node.js 18.17 or later
+- Node.js 18.x or later
 - npm or yarn
-- Vercel account for deployment
+- Salesforce account with API access
+- Google Tag Manager account
+- Google Ads account (optional)
 
 ## Environment Variables
 
-Create a `.env.local` file with the following variables:
+Create the following environment files:
 
-```bash
-NEXT_PUBLIC_GTM_ID=your-gtm-id
-ZAPIER_WEBHOOK_URL=your-zapier-webhook-url
+### .env.local (Development)
+```
+SF_USERNAME=your_salesforce_username
+SF_PASSWORD=your_salesforce_password
+SF_SECURITY_TOKEN=your_salesforce_security_token
+SF_LOGIN_URL=https://login.salesforce.com
+GTM_ID=GTM-XXXXXXX
+GOOGLE_ADS_CONVERSION_ID=AW-XXXXXXXXXX
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
 ```
 
-## Development
+### .env.production (Production)
+```
+SF_USERNAME=your_production_salesforce_username
+SF_PASSWORD=your_production_salesforce_password
+SF_SECURITY_TOKEN=your_production_salesforce_security_token
+SF_LOGIN_URL=https://login.salesforce.com
+GTM_ID=GTM-XXXXXXX
+GOOGLE_ADS_CONVERSION_ID=AW-XXXXXXXXXX
+NEXT_PUBLIC_BASE_URL=https://your-production-domain.com
+```
 
-1. Install dependencies:
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
    ```bash
    npm install
    # or
    yarn install
    ```
-
-2. Run the development server:
+3. Set up environment variables
+4. Run the development server:
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
 ## Deployment
 
-The site is automatically deployed to Vercel when changes are pushed to the main branch.
+### Vercel Deployment
 
-To deploy manually:
+1. Push your code to a Git repository
+2. Connect your repository to Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy
 
-1. Install Vercel CLI:
+### Manual Deployment
+
+1. Build the application:
    ```bash
-   npm i -g vercel
+   npm run build
+   # or
+   yarn build
+   ```
+2. Start the production server:
+   ```bash
+   npm start
+   # or
+   yarn start
    ```
 
-2. Deploy:
-   ```bash
-   vercel
-   ```
+## Security Considerations
 
-## Project Structure
+- Never commit environment files to version control
+- Use strong passwords for Salesforce credentials
+- Regularly rotate security tokens
+- Enable HTTPS in production
+- Implement rate limiting for the API routes
 
-- `/app` - Next.js 14 app directory
-  - `/api` - API routes
-  - `/components` - Reusable React components
-  - `/[type]` - Dynamic product pages
-- `/public` - Static assets
+## Support
 
-## Security
-
-- Form validation using Zod
-- Honeypot field for spam prevention
-- Environment variables for sensitive data
-- Secure API routes
-
-## Analytics
-
-Google Tag Manager is integrated for:
-- Page views
-- Form submissions
-- User interactions
-
-## License
-
-Proprietary - All rights reserved 
+For support, please contact the development team. 

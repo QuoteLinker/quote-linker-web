@@ -201,9 +201,9 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         throw new Error(result.error || 'Failed to submit form');
       }
 
-      // Track form submission in Google Analytics
+      // Track form submission in Google Tag Manager
       if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'form_submission', {
+        window.gtag('event', 'form_submit', {
           event_category: 'Quote',
           event_label: insuranceType,
           value: 1

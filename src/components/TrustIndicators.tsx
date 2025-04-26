@@ -1,28 +1,28 @@
 'use client';
 
-import { ShieldCheckIcon, StarIcon, UserGroupIcon, ClockIcon } from '@heroicons/react/24/solid';
+import { ShieldCheckIcon, StarIcon, UserGroupIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 
 export default function TrustIndicators() {
   const indicators = [
     {
       icon: ShieldCheckIcon,
-      text: 'Licensed Agents',
+      text: 'Vetted Licensed Agents',
       description: 'Expert guidance from certified professionals'
+    },
+    {
+      icon: UserGroupIcon,
+      text: '1000+ Satisfied Clients',
+      description: 'Trusted by families and individuals'
+    },
+    {
+      icon: LockClosedIcon,
+      text: 'Secure Form',
+      description: 'Your information is protected'
     },
     {
       icon: StarIcon,
       text: '5-Star Service',
       description: 'Highly rated customer satisfaction'
-    },
-    {
-      icon: UserGroupIcon,
-      text: '10K+ Customers',
-      description: 'Trusted by thousands nationwide'
-    },
-    {
-      icon: ClockIcon,
-      text: '24/7 Support',
-      description: 'Always here when you need us'
     }
   ];
 
