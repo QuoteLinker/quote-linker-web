@@ -48,50 +48,45 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-background">
-      <div className="container mx-auto px-4 sm:px-6 py-12">
+    <footer className="bg-white border-t border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-brand-headline font-semibold mb-4">Insurance</h3>
+            <h3 className="text-gray-900 font-semibold mb-4">Insurance</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/auto" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/auto" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Auto Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/home" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/home" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Home Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/life" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/life" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Life Insurance
                 </Link>
               </li>
               <li>
-                <Link href="/health" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/health" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Health Insurance
-                </Link>
-              </li>
-              <li>
-                <Link href="/disability" className="text-brand-body hover:text-brand-primary transition-colors">
-                  Disability Insurance
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-brand-headline font-semibold mb-4">Company</h3>
+            <h3 className="text-gray-900 font-semibold mb-4">Company</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/about" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/contact" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Contact
                 </Link>
               </li>
@@ -99,15 +94,15 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-brand-headline font-semibold mb-4">Legal</h3>
+            <h3 className="text-gray-900 font-semibold mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/privacy" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-brand-body hover:text-brand-primary transition-colors">
+                <Link href="/terms" className="text-gray-600 hover:text-[#00ECFF] transition-colors">
                   Terms of Service
                 </Link>
               </li>
@@ -115,13 +110,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-brand-headline font-semibold mb-4">Connect</h3>
+            <h3 className="text-gray-900 font-semibold mb-4">Connect</h3>
             <div className="flex space-x-4">
               {socialLinks.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-brand-body hover:text-brand-primary transition-colors"
+                  className="text-gray-600 hover:text-[#00ECFF] transition-colors"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -130,7 +125,7 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className="mt-8 text-brand-body text-sm">
+            <p className="mt-8 text-gray-600 text-sm">
               © {new Date().getFullYear()} QuoteLinker. All rights reserved.
             </p>
           </div>
