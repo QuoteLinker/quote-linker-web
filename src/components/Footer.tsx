@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 const socialLinks = [
   {
@@ -27,32 +26,37 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-        <div className="flex justify-center space-x-6 md:order-2">
-          {socialLinks.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="text-gray-400 hover:text-gray-500"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span className="sr-only">{item.name}</span>
-              <item.icon className="h-6 w-6" aria-hidden="true" />
-            </a>
-          ))}
-          <Link href="/privacy" className="text-gray-400 hover:text-gray-500">
-            Privacy Policy
-          </Link>
-          <Link href="/terms" className="text-gray-400 hover:text-gray-500">
-            Terms of Service
-          </Link>
-        </div>
-        <div className="mt-8 md:order-1 md:mt-0">
-          <p className="text-center text-xs leading-5 text-gray-500">
-            &copy; {new Date().getFullYear()} QuoteLinker. All rights reserved.
-          </p>
+    <footer className="bg-white border-t border-gray-200">
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        <div className="flex flex-col items-center justify-between md:flex-row">
+          <div className="flex flex-col items-center space-y-2 md:items-start">
+            <p className="text-sm text-gray-500">
+              © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
+            </p>
+            <div className="flex space-x-4">
+              <Link href="/terms" className="text-sm text-gray-500 hover:text-[#00EEFD]">
+                Terms
+              </Link>
+              <span className="text-gray-500">|</span>
+              <Link href="/privacy" className="text-sm text-gray-500 hover:text-[#00EEFD]">
+                Privacy
+              </Link>
+            </div>
+          </div>
+          <div className="mt-4 flex space-x-6 md:mt-0">
+            {socialLinks.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="text-gray-400 hover:text-[#00EEFD] transition-colors"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="sr-only">{item.name}</span>
+                <item.icon className="h-6 w-6" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

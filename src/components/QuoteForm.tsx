@@ -184,20 +184,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   // Get CTA text based on product and subType
   function getCTAText(): string {
     if (isSubmitting) return 'Submitting...';
-    
-    const baseText = 'Get My';
-    switch (productType) {
-      case 'life':
-        return `${baseText} ${subType === 'term' ? 'Term' : 'Permanent'} Life Quote`;
-      case 'health':
-        return `${baseText} ${subType === 'std' ? 'Short-Term Disability' : 'Supplemental Health'} Quote`;
-      case 'auto':
-        return `${baseText} Auto Insurance Quote`;
-      case 'home':
-        return `${baseText} Home Insurance Quote`;
-      default:
-        return `${baseText} Insurance Quote`;
-    }
+    return 'Get My Free Quote';
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -251,95 +238,54 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const fields = formFields[insuranceType] || [];
 
   return (
-    <div className="flex justify-center items-center mx-auto max-w-lg pb-8">
-      <form onSubmit={handleSubmit} className="w-full space-y-6 bg-white p-8 rounded-lg shadow-lg">
+    <div className="w-full">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
-          <p className="text-gray-600">{getFormDescription()}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
+          <p className="text-sm sm:text-base text-gray-600">{getFormDescription()}</p>
         </div>
-
-        {/* Hidden inputs for productType and subType */}
-        <input type="hidden" name="productType" value={productType} />
-        <input type="hidden" name="subType" value={subType} />
 
         {/* Form Fields */}
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                value={formData.firstName}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                value={formData.lastName}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                Phone
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                value={formData.phone}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-              ZIP Code
-            </label>
-            <input
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              required
-              pattern="[0-9]{5}"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-              value={formData.zipCode}
-              onChange={handleInputChange}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {fields.map((field) => (
+              <div key={field.name} className={field.name === 'zipCode' ? 'sm:col-span-2' : ''}>
+                <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
+                  {field.label} {field.required && <span className="text-[#00EEFD]">*</span>}
+                  {field.tooltip && (
+                    <QuestionMarkCircleIcon className="inline-block w-4 h-4 ml-1 text-gray-400" />
+                  )}
+                </label>
+                {field.type === 'select' ? (
+                  <select
+                    id={field.name}
+                    name={field.name}
+                    required={field.required}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base"
+                    value={formData[field.name] || ''}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select {field.label}</option>
+                    {field.options?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type={field.type}
+                    id={field.name}
+                    name={field.name}
+                    required={field.required}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base"
+                    value={formData[field.name] || ''}
+                    onChange={handleInputChange}
+                    pattern={field.name === 'zipCode' ? '[0-9]{5}' : undefined}
+                  />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -350,10 +296,14 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-primary-600 text-white py-3 px-6 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+          className="w-full bg-[#00EEFD] text-white py-3 px-6 rounded-md hover:bg-[#00d4e1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
         >
           {getCTAText()}
         </button>
+
+        <p className="text-xs sm:text-sm text-gray-500 text-center mt-4">
+          By submitting this form, you agree to our Terms of Service and Privacy Policy.
+        </p>
       </form>
     </div>
   );

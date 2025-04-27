@@ -1,6 +1,6 @@
 'use client';
 
-import { TruckIcon, ClockIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { TruckIcon, ClockIcon, ShieldCheckIcon, CurrencyDollarIcon, UserGroupIcon, StarIcon } from '@heroicons/react/24/outline';
 import ProductLayout from '@/components/ProductLayout';
 
 export default function AutoInsurancePage() {
@@ -22,18 +22,33 @@ export default function AutoInsurancePage() {
   const benefits = [
     {
       icon: <TruckIcon className="h-8 w-8 text-[#00EEFD]" />,
-      title: 'Auto Coverage',
-      description: 'Get the coverage you need for your vehicle.',
+      title: 'Comprehensive Coverage',
+      description: 'Protect your vehicle with comprehensive coverage tailored to your needs.',
+    },
+    {
+      icon: <CurrencyDollarIcon className="h-8 w-8 text-[#00EEFD]" />,
+      title: 'Competitive Rates',
+      description: 'Get the best rates from top insurance providers in your area.',
+    },
+    {
+      icon: <UserGroupIcon className="h-8 w-8 text-[#00EEFD]" />,
+      title: 'Expert Support',
+      description: 'Access to licensed insurance agents for personalized assistance.',
     },
     {
       icon: <ClockIcon className="h-8 w-8 text-[#00EEFD]" />,
-      title: 'Fast Approval',
+      title: 'Fast Process',
       description: 'Quick and easy application process with fast approval times.',
     },
     {
       icon: <ShieldCheckIcon className="h-8 w-8 text-[#00EEFD]" />,
       title: 'Reliable Protection',
       description: 'Trust in our comprehensive auto insurance solutions.',
+    },
+    {
+      icon: <StarIcon className="h-8 w-8 text-[#00EEFD]" />,
+      title: 'Top-Rated Carriers',
+      description: 'Access quotes from the most trusted insurance companies.',
     },
   ];
 
@@ -42,10 +57,10 @@ export default function AutoInsurancePage() {
       productType="auto"
       subType="auto"
       heroTitle="Auto Insurance Quotes"
-      heroSubtitle="Find the right auto coverage for you"
-      heroCTA="Get Your Quote"
+      heroSubtitle="Find the perfect auto coverage for your needs at the best rates"
+      heroCTA="Get My Free Quote"
       heroIconItems={heroIconItems}
-      benefitsTitle="Why Choose Auto Insurance?"
+      benefitsTitle="Why Choose Our Auto Insurance?"
       benefits={benefits}
     />
   );
