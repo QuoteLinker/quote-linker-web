@@ -34,9 +34,12 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   const sfInstanceUrl = process.env.SF_INSTANCE_URL;
   const sfClientId = process.env.SF_CLIENT_ID;
   const sfClientSecret = process.env.SF_CLIENT_SECRET;
+  const sfUsername = process.env.SF_USERNAME;
+  const sfPassword = process.env.SF_PASSWORD;
+  const sfSecurityToken = process.env.SF_SECURITY_TOKEN;
   const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
 
-  if (!sfInstanceUrl || !sfClientId || !sfClientSecret) {
+  if (!sfInstanceUrl || !sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
     throw new Error('Missing Salesforce credentials');
   }
 
@@ -47,13 +50,17 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
-      grant_type: 'client_credentials',
+      grant_type: 'password',
       client_id: sfClientId,
       client_secret: sfClientSecret,
+      username: sfUsername,
+      password: `${sfPassword}${sfSecurityToken}`,
     }),
   });
 
   if (!authResponse.ok) {
+    const errorText = await authResponse.text();
+    console.error('Salesforce authentication error:', errorText);
     throw new Error('Failed to authenticate with Salesforce');
   }
 
