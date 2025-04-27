@@ -18,6 +18,8 @@ function getQuoteFormTypes(insuranceType: InsuranceType): { productType: 'auto' 
       return { productType: 'health', subType: 'std' };
     case 'SUPPLEMENTAL_HEALTH':
       return { productType: 'health', subType: 'supplemental' };
+    default:
+      return { productType: 'auto' }; // Default fallback
   }
 }
 
