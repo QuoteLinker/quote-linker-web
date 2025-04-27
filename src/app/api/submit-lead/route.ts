@@ -39,11 +39,29 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   const sfSecurityToken = process.env.SALESFORCE_TOKEN;
   const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
 
+  // Log environment variables (without sensitive data)
+  console.log('Salesforce Configuration:', {
+    loginUrl: sfLoginUrl,
+    clientId: sfClientId ? '***' : 'missing',
+    clientSecret: sfClientSecret ? '***' : 'missing',
+    username: sfUsername ? '***' : 'missing',
+    password: sfPassword ? '***' : 'missing',
+    securityToken: sfSecurityToken ? '***' : 'missing',
+    apiVersion: sfApiVersion
+  });
+
   if (!sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
-    throw new Error('Missing Salesforce credentials');
+    const missingVars = [];
+    if (!sfClientId) missingVars.push('SALESFORCE_CLIENT_ID');
+    if (!sfClientSecret) missingVars.push('SALESFORCE_CLIENT_SECRET');
+    if (!sfUsername) missingVars.push('SALESFORCE_USERNAME');
+    if (!sfPassword) missingVars.push('SALESFORCE_PASSWORD');
+    if (!sfSecurityToken) missingVars.push('SALESFORCE_TOKEN');
+    throw new Error(`Missing Salesforce credentials: ${missingVars.join(', ')}`);
   }
 
   // Authenticate with Salesforce
+  console.log('Attempting Salesforce authentication...');
   const authResponse = await fetch(`${sfLoginUrl}/services/oauth2/token`, {
     method: 'POST',
     headers: {
@@ -60,11 +78,17 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
 
   if (!authResponse.ok) {
     const errorText = await authResponse.text();
-    console.error('Salesforce authentication error:', errorText);
-    throw new Error('Failed to authenticate with Salesforce');
+    console.error('Salesforce authentication error:', {
+      status: authResponse.status,
+      statusText: authResponse.statusText,
+      error: errorText
+    });
+    throw new Error(`Failed to authenticate with Salesforce: ${errorText}`);
   }
 
-  const { access_token, instance_url } = await authResponse.json();
+  const authData = await authResponse.json();
+  console.log('Salesforce authentication successful');
+  const { access_token, instance_url } = authData;
 
   // Create Contact
   const contactData = {
