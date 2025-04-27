@@ -50,7 +50,7 @@ function LifeInsuranceContent() {
               href="?subType=term"
               className={`px-6 py-2 rounded-lg ${
                 subType === 'term'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#00EEFD] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -60,7 +60,7 @@ function LifeInsuranceContent() {
               href="?subType=permanent"
               className={`px-6 py-2 rounded-lg ${
                 subType === 'permanent'
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-[#00EEFD] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >

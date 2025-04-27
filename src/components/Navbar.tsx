@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import Logo from './Logo';
 
 export default function Navbar() {
   return (
@@ -10,10 +10,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href="/" className="flex items-center">
-              <picture>
-                <source srcSet="/logo.svg" type="image/svg+xml" />
-                <Image src="/quotelinker_icon.png" alt="QuoteLinker" width={150} height={40} priority />
-              </picture>
+              <Logo showText={true} className="h-8 w-auto" />
             </Link>
           </div>
           <div className="hidden sm:flex sm:space-x-8 items-center">
@@ -21,7 +18,7 @@ export default function Navbar() {
             <Link href="/products/home" className="text-gray-700 hover:text-gray-900">Home</Link>
             <Link href="/products/life" className="text-gray-700 hover:text-gray-900">Life</Link>
             <Link href="/products/health" className="text-gray-700 hover:text-gray-900">Health</Link>
-            <Link href="/contact" className="bg-[#00EEFD] text-white px-4 py-2 rounded-lg hover:bg-opacity-90">
+            <Link href="/products/life?subType=term" className="bg-[#00EEFD] text-white px-4 py-2 rounded-lg hover:bg-opacity-90">
               Get My Free Quote
             </Link>
           </div>
