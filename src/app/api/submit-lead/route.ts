@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { authenticateWithSalesforce, createSalesforceLead } from '@/utils/salesforce';
+import { authenticateWithSalesforce, createSalesforceLead, type SalesforceLeadData } from '@/utils/salesforce';
 
 // Form validation schema
 const formSchema = z.object({
