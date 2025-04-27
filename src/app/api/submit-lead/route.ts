@@ -22,38 +22,68 @@ const formSchema = z.object({
 
 export async function POST(request: Request) {
   try {
+    // Check if required environment variables are set
+    if (!process.env.SALESFORCE_LOGIN_URL || 
+        !process.env.SALESFORCE_CLIENT_ID || 
+        !process.env.SALESFORCE_CLIENT_SECRET || 
+        !process.env.SALESFORCE_USERNAME || 
+        !process.env.SALESFORCE_PASSWORD || 
+        !process.env.SALESFORCE_TOKEN) {
+      console.error('Missing required Salesforce environment variables');
+      return NextResponse.json(
+        { error: 'Service configuration error' },
+        { status: 500 }
+      );
+    }
+
     // Parse and validate request body
     const body = await request.json();
+    console.log('Received form data:', body);
+    
     const validatedData = formSchema.parse(body);
+    console.log('Validated data:', validatedData);
 
-    // Authenticate with Salesforce
-    const { access_token, instance_url } = await authenticateWithSalesforce();
+    try {
+      // Authenticate with Salesforce
+      console.log('Authenticating with Salesforce...');
+      const { access_token, instance_url } = await authenticateWithSalesforce();
+      console.log('Salesforce authentication successful');
 
-    // Prepare Lead Data
-    const leadData: SalesforceLeadData = {
-      FirstName: validatedData.firstName,
-      LastName: validatedData.lastName,
-      Phone: validatedData.phone,
-      Email: validatedData.email,
-      Company: 'QuoteLinker Lead',
-      PostalCode: validatedData.zipCode,
-      LeadSource: 'QuoteLinker Web',
-      Product_Type__c: validatedData.productType,
-      Sub_Type__c: validatedData.subType,
-      Age__c: validatedData.age,
-      Term_Length__c: validatedData.termLength,
-      Coverage_Amount__c: validatedData.coverageAmount,
-      Occupation__c: validatedData.occupation,
-      Income__c: validatedData.income,
-      Coverage_Type__c: validatedData.coverageType,
-      Pre_Existing_Conditions__c: validatedData.preExistingConditions,
-      Status: 'Open - Not Contacted'
-    };
+      // Prepare Lead Data
+      const leadData: SalesforceLeadData = {
+        FirstName: validatedData.firstName,
+        LastName: validatedData.lastName,
+        Phone: validatedData.phone,
+        Email: validatedData.email,
+        Company: 'QuoteLinker Lead',
+        PostalCode: validatedData.zipCode,
+        LeadSource: 'QuoteLinker Web',
+        Product_Type__c: validatedData.productType,
+        Sub_Type__c: validatedData.subType,
+        Age__c: validatedData.age,
+        Term_Length__c: validatedData.termLength,
+        Coverage_Amount__c: validatedData.coverageAmount,
+        Occupation__c: validatedData.occupation,
+        Income__c: validatedData.income,
+        Coverage_Type__c: validatedData.coverageType,
+        Pre_Existing_Conditions__c: validatedData.preExistingConditions,
+        Status: 'Open - Not Contacted'
+      };
+      console.log('Prepared lead data:', leadData);
 
-    // Create Lead in Salesforce
-    await createSalesforceLead(leadData, access_token, instance_url);
+      // Create Lead in Salesforce
+      console.log('Creating lead in Salesforce...');
+      await createSalesforceLead(leadData, access_token, instance_url);
+      console.log('Lead created successfully');
 
-    return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true });
+    } catch (sfError) {
+      console.error('Salesforce operation failed:', sfError);
+      return NextResponse.json(
+        { error: 'Failed to process lead in Salesforce' },
+        { status: 500 }
+      );
+    }
   } catch (error) {
     console.error('Lead submission error:', error);
     

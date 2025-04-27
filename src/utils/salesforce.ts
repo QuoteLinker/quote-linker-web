@@ -31,6 +31,9 @@ export interface SalesforceLeadData {
  */
 export async function authenticateWithSalesforce(): Promise<SalesforceAuthResponse> {
   try {
+    console.log('Attempting to authenticate with Salesforce...');
+    console.log('Using login URL:', process.env.SALESFORCE_LOGIN_URL);
+    
     const response = await axios.post<SalesforceAuthResponse>(
       `${process.env.SALESFORCE_LOGIN_URL}/services/oauth2/token`,
       null,
@@ -45,9 +48,19 @@ export async function authenticateWithSalesforce(): Promise<SalesforceAuthRespon
       }
     );
 
+    console.log('Salesforce authentication successful');
     return response.data;
   } catch (error) {
-    console.error('Salesforce Authentication Error:', error);
+    if (axios.isAxiosError(error)) {
+      console.error('Salesforce Authentication Error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+    } else {
+      console.error('Salesforce Authentication Error:', error);
+    }
     throw new Error('Failed to authenticate with Salesforce');
   }
 }
@@ -65,7 +78,10 @@ export async function createSalesforceLead(
   instanceUrl: string
 ): Promise<void> {
   try {
-    await axios.post(
+    console.log('Attempting to create lead in Salesforce...');
+    console.log('Instance URL:', instanceUrl);
+    
+    const response = await axios.post(
       `${instanceUrl}/services/data/v57.0/sobjects/Lead`,
       leadData,
       {
@@ -75,8 +91,19 @@ export async function createSalesforceLead(
         }
       }
     );
+
+    console.log('Lead creation response:', response.data);
   } catch (error) {
-    console.error('Salesforce Lead Creation Error:', error);
+    if (axios.isAxiosError(error)) {
+      console.error('Salesforce Lead Creation Error:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+    } else {
+      console.error('Salesforce Lead Creation Error:', error);
+    }
     throw new Error('Failed to create lead in Salesforce');
   }
 } 
