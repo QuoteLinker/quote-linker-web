@@ -57,6 +57,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
     { name: 'vehicleYear', label: 'Vehicle Year', type: 'number', required: true },
     { name: 'vehicleMake', label: 'Vehicle Make', type: 'text', required: true },
     { name: 'vehicleModel', label: 'Vehicle Model', type: 'text', required: true }
@@ -66,6 +67,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
     { name: 'address', label: 'Property Address', type: 'text', required: true },
     { name: 'propertyType', label: 'Property Type', type: 'select', required: true, options: [
       { value: 'single', label: 'Single Family Home' },
@@ -147,6 +149,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
     { name: 'age', label: 'Age', type: 'number', required: true },
     { name: 'coverageAmount', label: 'Coverage Amount', type: 'select', required: true, options: [
       { value: '100000', label: '$100,000' },
@@ -172,6 +175,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
     { name: 'age', label: 'Age', type: 'number', required: true },
     { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
       { value: 'individual', label: 'Individual' },
@@ -257,6 +261,11 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
 
       if (missingFields.length > 0) {
         throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      }
+
+      // Validate ZIP Code format
+      if (formData.zipCode && !/^\d{5}$/.test(formData.zipCode)) {
+        throw new Error('ZIP Code must be exactly 5 digits');
       }
 
       // Log submission attempt with full form data
@@ -403,7 +412,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
             {fields.map((field) => (
               <div key={field.name} className={field.name === 'zipCode' ? 'sm:col-span-2' : ''}>
                 <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
-                  {field.label} {field.required && <span className="text-[#00EEFD]">*</span>}
+                  {field.label} {field.required && <span className="text-red-500">*</span>}
                   {field.tooltip && (
                     <QuestionMarkCircleIcon className="inline-block w-4 h-4 ml-1 text-gray-400" />
                   )}
@@ -413,7 +422,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
                     id={field.name}
                     name={field.name}
                     required={field.required}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base transition-all duration-200"
                     value={formData[field.name] || ''}
                     onChange={handleInputChange}
                   >
@@ -430,10 +439,13 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
                     id={field.name}
                     name={field.name}
                     required={field.required}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base transition-all duration-200"
                     value={formData[field.name] || ''}
                     onChange={handleInputChange}
                     pattern={field.name === 'zipCode' ? '[0-9]{5}' : undefined}
+                    maxLength={field.name === 'zipCode' ? 5 : undefined}
+                    placeholder={field.name === 'zipCode' ? '12345' : undefined}
+                    autoFocus={!!(error && error.includes('ZIP Code') && field.name === 'zipCode')}
                   />
                 )}
               </div>
@@ -450,7 +462,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
+            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ${
               isSubmitting ? 'opacity-75 cursor-not-allowed animate-pulse' : ''
             }`}
           >
