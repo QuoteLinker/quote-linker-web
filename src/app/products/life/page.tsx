@@ -1,3 +1,5 @@
+'use client';
+
 import HeroSection from '@/components/HeroSection';
 import FeatureGrid from '@/components/FeatureGrid';
 import QuoteForm from '@/components/QuoteForm';
