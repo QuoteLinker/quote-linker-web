@@ -286,7 +286,9 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           ...formData,
           productType,

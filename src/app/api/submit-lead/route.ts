@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 // Base schema for common fields
 const baseFormSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -151,7 +163,7 @@ export async function POST(request: Request) {
       }
 
       console.log('MOCK MODE: Lead data:', mockLeadData);
-      return NextResponse.json({ success: true, mockMode: true, mockData: mockLeadData });
+      return NextResponse.json({ success: true, mockMode: true, mockData: mockLeadData }, { headers: corsHeaders });
     }
 
     // Authenticate with Salesforce
@@ -273,6 +285,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       success: true,
       leadId: leadResult.id
+    }, { 
+      headers: corsHeaders 
     });
 
   } catch (error) {
@@ -292,7 +306,10 @@ export async function POST(request: Request) {
             message: err.message
           }))
         },
-        { status: 400 }
+        { 
+          status: 400,
+          headers: corsHeaders
+        }
       );
     }
     
@@ -306,7 +323,10 @@ export async function POST(request: Request) {
           'Service temporarily unavailable. Please try again in a few minutes.' : 
           'We encountered an issue processing your request. Please try again later.'
       },
-      { status: isAuthError ? 503 : 500 }
+      { 
+        status: isAuthError ? 503 : 500,
+        headers: corsHeaders
+      }
     );
   }
 } 
