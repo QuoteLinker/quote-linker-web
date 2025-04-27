@@ -110,12 +110,11 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'lastName', label: 'Last Name', type: 'text', required: true },
     { name: 'phone', label: 'Phone', type: 'tel', required: true },
     { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
     { name: 'occupation', label: 'Occupation', type: 'text', required: true },
     { name: 'income', label: 'Annual Income', type: 'number', required: true },
     { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
-      { value: 'short', label: 'Short-term Disability' },
-      { value: 'long', label: 'Long-term Disability' },
-      { value: 'both', label: 'Both' }
+      { value: 'short', label: 'Short-term Disability' }
     ]}
   ],
   'SUPPLEMENTAL_HEALTH': [
