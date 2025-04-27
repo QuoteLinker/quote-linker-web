@@ -176,7 +176,10 @@ export async function POST(request: Request) {
         status: authResponse.status,
         statusText: authResponse.statusText,
         error: errorText,
-        headers: Object.fromEntries(authResponse.headers.entries())
+        headers: Array.from(authResponse.headers).reduce((obj, [key, value]) => {
+          obj[key] = value;
+          return obj;
+        }, {} as Record<string, string>)
       });
       throw new Error(`Authentication failed: ${authResponse.status} - ${errorText}`);
     }
@@ -278,7 +281,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Invalid form data', 
+          error: 'Please check your form inputs', 
           details: error.errors.map(err => ({
             field: err.path.join('.'),
             message: err.message
@@ -295,8 +298,8 @@ export async function POST(request: Request) {
       { 
         success: false, 
         error: isAuthError ? 
-          'Service temporarily unavailable' : 
-          'Failed to process your request. Please try again later.'
+          'Service temporarily unavailable. Please try again in a few minutes.' : 
+          'We encountered an issue processing your request. Please try again later.'
       },
       { status: isAuthError ? 503 : 500 }
     );
