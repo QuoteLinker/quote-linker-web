@@ -176,10 +176,9 @@ export async function POST(request: Request) {
         status: authResponse.status,
         statusText: authResponse.statusText,
         error: errorText,
-        headers: Array.from(authResponse.headers).reduce((obj, [key, value]) => {
-          obj[key] = value;
-          return obj;
-        }, {} as Record<string, string>)
+        headers: Object.fromEntries(
+          [...authResponse.headers].map(([key, value]) => [key, value])
+        )
       });
       throw new Error(`Authentication failed: ${authResponse.status} - ${errorText}`);
     }
