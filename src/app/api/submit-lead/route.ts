@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { authenticateWithSalesforce, createSalesforceLead, SalesforceLeadData } from '@/utils/salesforce';
 
 // CORS headers
 const corsHeaders = {
@@ -31,128 +32,37 @@ const leadSchema = z.object({
 const mockMode = process.env.NODE_ENV === 'development';
 
 async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
-  const sfLoginUrl = process.env.SALESFORCE_LOGIN_URL || 'https://login.salesforce.com';
-  const sfClientId = process.env.SALESFORCE_CLIENT_ID;
-  const sfClientSecret = process.env.SALESFORCE_CLIENT_SECRET;
-  const sfUsername = process.env.SALESFORCE_USERNAME;
-  const sfPassword = process.env.SALESFORCE_PASSWORD;
-  const sfSecurityToken = process.env.SALESFORCE_TOKEN;
-  const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
+  try {
+    // Authenticate with Salesforce
+    console.log('Attempting Salesforce authentication...');
+    const authResponse = await authenticateWithSalesforce();
+    const { access_token, instance_url } = authResponse;
+    console.log('Salesforce authentication successful');
 
-  // Log environment variables (without sensitive data)
-  console.log('Salesforce Configuration:', {
-    loginUrl: sfLoginUrl,
-    clientId: sfClientId ? '***' : 'missing',
-    clientSecret: sfClientSecret ? '***' : 'missing',
-    username: sfUsername ? '***' : 'missing',
-    password: sfPassword ? '***' : 'missing',
-    securityToken: sfSecurityToken ? '***' : 'missing',
-    apiVersion: sfApiVersion
-  });
+    // Create Lead in Salesforce
+    const leadData: SalesforceLeadData = {
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email,
+      Phone: data.phone,
+      PostalCode: data.zipCode,
+      Company: 'QuoteLinker',
+      LeadSource: 'QuoteLinker Web',
+      Product_Type__c: data.productType,
+      Sub_Type__c: data.subType,
+      Age__c: data.age,
+      Coverage_Amount__c: data.coverageAmount,
+      Status: 'New',
+    };
 
-  if (!sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
-    const missingVars = [];
-    if (!sfClientId) missingVars.push('SALESFORCE_CLIENT_ID');
-    if (!sfClientSecret) missingVars.push('SALESFORCE_CLIENT_SECRET');
-    if (!sfUsername) missingVars.push('SALESFORCE_USERNAME');
-    if (!sfPassword) missingVars.push('SALESFORCE_PASSWORD');
-    if (!sfSecurityToken) missingVars.push('SALESFORCE_TOKEN');
-    throw new Error(`Missing Salesforce credentials: ${missingVars.join(', ')}`);
+    await createSalesforceLead(leadData, access_token, instance_url);
+    console.log('Lead created successfully in Salesforce');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error creating Salesforce records:', error);
+    throw error;
   }
-
-  // Authenticate with Salesforce
-  console.log('Attempting Salesforce authentication...');
-  const authResponse = await fetch(`${sfLoginUrl}/services/oauth2/token`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      grant_type: 'password',
-      client_id: sfClientId,
-      client_secret: sfClientSecret,
-      username: sfUsername,
-      password: `${sfPassword}${sfSecurityToken}`,
-    }),
-  });
-
-  if (!authResponse.ok) {
-    const errorText = await authResponse.text();
-    console.error('Salesforce authentication error:', {
-      status: authResponse.status,
-      statusText: authResponse.statusText,
-      error: errorText
-    });
-    throw new Error(`Failed to authenticate with Salesforce: ${errorText}`);
-  }
-
-  const authData = await authResponse.json();
-  console.log('Salesforce authentication successful');
-  const { access_token, instance_url } = authData;
-
-  // Create Contact
-  const contactData = {
-    FirstName: data.firstName,
-    LastName: data.lastName,
-    Email: data.email,
-    Phone: data.phone,
-    MailingPostalCode: data.zipCode,
-    Product_Type__c: data.productType,
-    Sub_Type__c: data.subType,
-    Age__c: data.age,
-    Coverage_Amount__c: data.coverageAmount,
-    Notes__c: data.notes,
-  };
-
-  const contactResponse = await fetch(
-    `${instance_url}/services/data/${sfApiVersion}/sobjects/Contact`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify(contactData),
-    }
-  );
-
-  if (!contactResponse.ok) {
-    throw new Error('Failed to create Contact in Salesforce');
-  }
-
-  const { id: contactId } = await contactResponse.json();
-
-  // Create Opportunity
-  const opportunityData = {
-    Name: `Quote Request - ${data.firstName} ${data.lastName}`,
-    StageName: 'Prospecting',
-    Type: 'New Business',
-    CloseDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-    ContactId: contactId,
-    Product_Type__c: data.productType,
-    Sub_Type__c: data.subType,
-    Amount: data.coverageAmount ? parseFloat(data.coverageAmount) : null,
-  };
-
-  const opportunityResponse = await fetch(
-    `${instance_url}/services/data/${sfApiVersion}/sobjects/Opportunity`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify(opportunityData),
-    }
-  );
-
-  if (!opportunityResponse.ok) {
-    throw new Error('Failed to create Opportunity in Salesforce');
-  }
-
-  const { id: opportunityId } = await opportunityResponse.json();
-
-  return { contactId, opportunityId };
 }
 
 export async function POST(request: Request) {
@@ -176,7 +86,7 @@ export async function POST(request: Request) {
           error: 'Validation failed', 
           details: validationResult.error.errors 
         },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -188,19 +98,17 @@ export async function POST(request: Request) {
         mockMode: true,
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
         message: 'Lead submitted successfully (mock mode)'
-      });
+      }, { headers: corsHeaders });
     }
 
     try {
       // Attempt to create records in Salesforce
-      const { contactId, opportunityId } = await createSalesforceRecords(validationResult.data);
+      const result = await createSalesforceRecords(validationResult.data);
       
       return NextResponse.json({
         success: true,
-        contactId,
-        opportunityId,
         message: 'Lead submitted successfully'
-      });
+      }, { headers: corsHeaders });
     } catch (sfError) {
       console.error('Salesforce error:', sfError);
       
@@ -211,7 +119,7 @@ export async function POST(request: Request) {
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
         message: 'Lead submitted successfully (mock mode due to Salesforce error)',
         error: sfError instanceof Error ? sfError.message : 'Unknown Salesforce error'
-      });
+      }, { headers: corsHeaders });
     }
 
   } catch (error) {
@@ -226,7 +134,7 @@ export async function POST(request: Request) {
         error: errorMessage,
         details: error instanceof Error ? error.stack : undefined
       },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 } 

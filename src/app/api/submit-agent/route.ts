@@ -1,5 +1,19 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { authenticateWithSalesforce } from '@/utils/salesforce';
+import axios from 'axios';
+
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// Handle OPTIONS request for CORS
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
 // Validation schema for agent submission
 const agentSchema = z.object({
@@ -8,129 +22,75 @@ const agentSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
   agencyName: z.string().min(1, 'Agency name is required'),
+  zipCode: z.string().min(5, 'ZIP code is required'),
 });
 
 // Force mock mode for testing
 const mockMode = process.env.NODE_ENV === 'development';
 
 async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
-  const sfLoginUrl = process.env.SALESFORCE_LOGIN_URL || 'https://login.salesforce.com';
-  const sfClientId = process.env.SALESFORCE_CLIENT_ID;
-  const sfClientSecret = process.env.SALESFORCE_CLIENT_SECRET;
-  const sfUsername = process.env.SALESFORCE_USERNAME;
-  const sfPassword = process.env.SALESFORCE_PASSWORD;
-  const sfSecurityToken = process.env.SALESFORCE_TOKEN;
-  const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
+  try {
+    // Authenticate with Salesforce
+    console.log('Attempting Salesforce authentication...');
+    const authResponse = await authenticateWithSalesforce();
+    const { access_token, instance_url } = authResponse;
+    console.log('Salesforce authentication successful');
 
-  // Log environment variables (without sensitive data)
-  console.log('Salesforce Configuration:', {
-    loginUrl: sfLoginUrl,
-    clientId: sfClientId ? '***' : 'missing',
-    clientSecret: sfClientSecret ? '***' : 'missing',
-    username: sfUsername ? '***' : 'missing',
-    password: sfPassword ? '***' : 'missing',
-    securityToken: sfSecurityToken ? '***' : 'missing',
-    apiVersion: sfApiVersion
-  });
+    // Create Contact for agent
+    const contactData = {
+      FirstName: data.firstName,
+      LastName: data.lastName,
+      Email: data.email,
+      Phone: data.phone,
+      MailingPostalCode: data.zipCode,
+      RecordTypeId: process.env.SF_AGENT_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
+      Agency_Name__c: data.agencyName,
+      Type: 'Agent',
+    };
 
-  if (!sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
-    const missingVars = [];
-    if (!sfClientId) missingVars.push('SALESFORCE_CLIENT_ID');
-    if (!sfClientSecret) missingVars.push('SALESFORCE_CLIENT_SECRET');
-    if (!sfUsername) missingVars.push('SALESFORCE_USERNAME');
-    if (!sfPassword) missingVars.push('SALESFORCE_PASSWORD');
-    if (!sfSecurityToken) missingVars.push('SALESFORCE_TOKEN');
-    throw new Error(`Missing Salesforce credentials: ${missingVars.join(', ')}`);
+    const contactResponse = await axios.post(
+      `${instance_url}/services/data/v57.0/sobjects/Contact`,
+      contactData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    console.log('Agent Contact created successfully in Salesforce');
+    const { id: contactId } = contactResponse.data;
+
+    // Create Opportunity for agent onboarding
+    const opportunityData = {
+      Name: `Agent Onboarding - ${data.firstName} ${data.lastName}`,
+      StageName: 'Prospecting',
+      Type: 'New Business',
+      CloseDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+      ContactId: contactId,
+      RecordTypeId: process.env.SF_AGENT_OPPORTUNITY_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
+    };
+
+    const opportunityResponse = await axios.post(
+      `${instance_url}/services/data/v57.0/sobjects/Opportunity`,
+      opportunityData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+
+    console.log('Agent Opportunity created successfully in Salesforce');
+    const { id: opportunityId } = opportunityResponse.data;
+
+    return { contactId, opportunityId };
+  } catch (error) {
+    console.error('Error creating Salesforce agent records:', error);
+    throw error;
   }
-
-  // Authenticate with Salesforce
-  console.log('Attempting Salesforce authentication...');
-  const authResponse = await fetch(`${sfLoginUrl}/services/oauth2/token`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      grant_type: 'password',
-      client_id: sfClientId,
-      client_secret: sfClientSecret,
-      username: sfUsername,
-      password: `${sfPassword}${sfSecurityToken}`,
-    }),
-  });
-
-  if (!authResponse.ok) {
-    const errorText = await authResponse.text();
-    console.error('Salesforce authentication error:', {
-      status: authResponse.status,
-      statusText: authResponse.statusText,
-      error: errorText
-    });
-    throw new Error(`Failed to authenticate with Salesforce: ${errorText}`);
-  }
-
-  const authData = await authResponse.json();
-  console.log('Salesforce authentication successful');
-  const { access_token, instance_url } = authData;
-
-  // Create Contact for agent
-  const contactData = {
-    FirstName: data.firstName,
-    LastName: data.lastName,
-    Email: data.email,
-    Phone: data.phone,
-    RecordTypeId: process.env.SF_AGENT_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
-    Agency_Name__c: data.agencyName,
-    Type: 'Agent',
-  };
-
-  const contactResponse = await fetch(
-    `${instance_url}/services/data/${sfApiVersion}/sobjects/Contact`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify(contactData),
-    }
-  );
-
-  if (!contactResponse.ok) {
-    throw new Error('Failed to create Agent Contact in Salesforce');
-  }
-
-  const { id: contactId } = await contactResponse.json();
-
-  // Create Opportunity for agent onboarding
-  const opportunityData = {
-    Name: `Agent Onboarding - ${data.firstName} ${data.lastName}`,
-    StageName: 'Prospecting',
-    Type: 'New Business',
-    CloseDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
-    ContactId: contactId,
-    RecordTypeId: process.env.SF_AGENT_OPPORTUNITY_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
-  };
-
-  const opportunityResponse = await fetch(
-    `${instance_url}/services/data/${sfApiVersion}/sobjects/Opportunity`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify(opportunityData),
-    }
-  );
-
-  if (!opportunityResponse.ok) {
-    throw new Error('Failed to create Agent Opportunity in Salesforce');
-  }
-
-  const { id: opportunityId } = await opportunityResponse.json();
-
-  return { contactId, opportunityId };
 }
 
 export async function POST(request: Request) {
@@ -154,7 +114,7 @@ export async function POST(request: Request) {
           error: 'Validation failed', 
           details: validationResult.error.errors 
         },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -166,7 +126,7 @@ export async function POST(request: Request) {
         mockMode: true,
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
         message: 'Agent submission successful (mock mode)'
-      });
+      }, { headers: corsHeaders });
     }
 
     try {
@@ -178,7 +138,7 @@ export async function POST(request: Request) {
         contactId,
         opportunityId,
         message: 'Agent submission successful'
-      });
+      }, { headers: corsHeaders });
     } catch (sfError) {
       console.error('Salesforce error:', sfError);
       
@@ -189,7 +149,7 @@ export async function POST(request: Request) {
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
         message: 'Agent submission successful (mock mode due to Salesforce error)',
         error: sfError instanceof Error ? sfError.message : 'Unknown Salesforce error'
-      });
+      }, { headers: corsHeaders });
     }
 
   } catch (error) {
@@ -204,7 +164,7 @@ export async function POST(request: Request) {
         error: errorMessage,
         details: error instanceof Error ? error.stack : undefined
       },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 } 

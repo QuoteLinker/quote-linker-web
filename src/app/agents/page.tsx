@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import AgentSignupForm from '@/components/AgentSignupForm';
+import AgentSignupForm from '../../components/AgentSignupForm';
 
 export const metadata: Metadata = {
   title: 'Join QuoteLinker as an Agent | Partner With Us',
