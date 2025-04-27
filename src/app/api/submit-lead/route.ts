@@ -31,16 +31,15 @@ const leadSchema = z.object({
 const mockMode = process.env.NODE_ENV === 'development';
 
 async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
-  const sfInstanceUrl = process.env.SF_INSTANCE_URL;
-  const sfClientId = process.env.SF_CLIENT_ID;
-  const sfClientSecret = process.env.SF_CLIENT_SECRET;
-  const sfUsername = process.env.SF_USERNAME;
-  const sfPassword = process.env.SF_PASSWORD;
-  const sfSecurityToken = process.env.SF_SECURITY_TOKEN;
+  const sfLoginUrl = process.env.SALESFORCE_LOGIN_URL || 'https://login.salesforce.com';
+  const sfClientId = process.env.SALESFORCE_CLIENT_ID;
+  const sfClientSecret = process.env.SALESFORCE_CLIENT_SECRET;
+  const sfUsername = process.env.SALESFORCE_USERNAME;
+  const sfPassword = process.env.SALESFORCE_PASSWORD;
+  const sfSecurityToken = process.env.SALESFORCE_TOKEN;
   const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
-  const sfLoginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com';
 
-  if (!sfInstanceUrl || !sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
+  if (!sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
     throw new Error('Missing Salesforce credentials');
   }
 
