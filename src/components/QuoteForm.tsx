@@ -277,7 +277,12 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         timestamp: new Date().toISOString()
       });
 
-      const response = await fetch('/api/submit-lead', {
+      // Use the correct API endpoint based on the environment
+      const apiUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
+        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/submit-lead`
+        : '/api/submit-lead';
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -397,7 +402,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md text-green-700 animate-slide-up">
             <div className="flex items-center justify-center animate-pulse-success">
               <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <span className="text-lg font-medium">Quote Request Submitted!</span>
             </div>
