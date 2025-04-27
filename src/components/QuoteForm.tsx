@@ -11,7 +11,7 @@ type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
 interface QuoteFormProps {
   productType: ProductType;
-  subType?: SubType;
+  subType?: string;
 }
 
 interface FormData {
@@ -36,7 +36,7 @@ interface FormField {
 }
 
 // Helper function to convert ProductType to InsuranceType
-function getInsuranceType(productType: ProductType, subType?: SubType): InsuranceType {
+function getInsuranceType(productType: ProductType, subType?: string): InsuranceType {
   switch (productType) {
     case 'auto':
       return 'AUTO';
