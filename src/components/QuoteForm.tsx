@@ -75,22 +75,72 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'yearBuilt', label: 'Year Built', type: 'number', required: true }
   ],
   'TERM_LIFE': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'age', label: 'Age', type: 'number', required: true },
-    { name: 'termLength', label: 'Term Length', type: 'select', required: true, options: [
-      { value: '10', label: '10 Years' },
-      { value: '20', label: '20 Years' },
-      { value: '30', label: '30 Years' }
-    ]},
-    { name: 'coverageAmount', label: 'Coverage Amount', type: 'select', required: true, options: [
-      { value: '100000', label: '$100,000' },
-      { value: '250000', label: '$250,000' },
-      { value: '500000', label: '$500,000' },
-      { value: '1000000', label: '$1,000,000' }
-    ]}
+    {
+      name: 'firstName',
+      label: 'First Name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'lastName',
+      label: 'Last Name',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+    },
+    {
+      name: 'phone',
+      label: 'Phone',
+      type: 'tel',
+      required: true,
+    },
+    {
+      name: 'zipCode',
+      label: 'ZIP Code',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'age',
+      label: 'Age',
+      type: 'number',
+      required: true,
+    },
+    {
+      name: 'coverageAmount',
+      label: 'Coverage Amount',
+      type: 'select',
+      required: true,
+      options: [
+        { value: '100000', label: '$100,000' },
+        { value: '250000', label: '$250,000' },
+        { value: '500000', label: '$500,000' },
+        { value: '1000000', label: '$1,000,000' },
+      ],
+    },
+    {
+      name: 'termLength',
+      label: 'Term Length',
+      type: 'select',
+      required: true,
+      options: [
+        { value: '10', label: '10 Years' },
+        { value: '15', label: '15 Years' },
+        { value: '20', label: '20 Years' },
+        { value: '30', label: '30 Years' },
+      ],
+    },
+    {
+      name: 'notes',
+      label: 'Additional Notes',
+      type: 'textarea',
+      required: false,
+    },
   ],
   'PERMANENT_LIFE': [
     { name: 'firstName', label: 'First Name', type: 'text', required: true },
@@ -199,11 +249,22 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     setShowSuccessMessage(false);
 
     try {
-      // Log submission attempt
+      // Validate required fields before submission
+      const missingFields = fields
+        .filter(field => field.required)
+        .filter(field => !formData[field.name] || formData[field.name].trim() === '')
+        .map(field => field.label);
+
+      if (missingFields.length > 0) {
+        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+      }
+
+      // Log submission attempt with full form data
       console.log('Submitting form:', {
         productType,
         subType,
-        fields: Object.keys(formData).length
+        formData,
+        timestamp: new Date().toISOString()
       });
 
       const response = await fetch('/api/submit-lead', {
@@ -223,19 +284,25 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       if (!response.ok) {
         let errorMessage = 'Failed to submit form. ';
         
-        // Add specific error context based on status
-        switch (response.status) {
-          case 400:
-            errorMessage += 'Please check your information and try again.';
-            break;
-          case 429:
-            errorMessage += 'Too many requests. Please wait a moment and try again.';
-            break;
-          case 503:
-            errorMessage += 'Service temporarily unavailable. Please try again in a few minutes.';
-            break;
-          default:
-            errorMessage += `Error (${response.status}): ${data.error || 'Please try again or contact support.'}`;
+        if (data.details && Array.isArray(data.details)) {
+          // Handle validation errors from the API
+          const fieldErrors = data.details.map((err: any) => `${err.field}: ${err.message}`).join(', ');
+          errorMessage += `Please check the following fields: ${fieldErrors}`;
+        } else {
+          // Handle other types of errors
+          switch (response.status) {
+            case 400:
+              errorMessage += data.error || 'Please check your information and try again.';
+              break;
+            case 429:
+              errorMessage += 'Too many requests. Please wait a moment and try again.';
+              break;
+            case 503:
+              errorMessage += 'Service temporarily unavailable. Please try again in a few minutes.';
+              break;
+            default:
+              errorMessage += `Error (${response.status}): ${data.error || 'Please try again or contact support.'}`;
+          }
         }
         
         throw new Error(errorMessage);
