@@ -176,9 +176,11 @@ export async function POST(request: Request) {
         status: authResponse.status,
         statusText: authResponse.statusText,
         error: errorText,
-        headers: Object.fromEntries(
-          Array.from(authResponse.headers.entries())
-        )
+        headers: {
+          'content-type': authResponse.headers.get('content-type') || '',
+          'date': authResponse.headers.get('date') || '',
+          'server': authResponse.headers.get('server') || ''
+        }
       });
       throw new Error(`Authentication failed: ${authResponse.status} - ${errorText}`);
     }
