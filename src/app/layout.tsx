@@ -14,15 +14,46 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.quotelinker.com'),
   icons: {
     icon: [
-      { url: '/favicon.ico' },
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   manifest: '/site.webmanifest',
+  openGraph: {
+    title: 'QuoteLinker - Insurance Quotes Made Easy',
+    description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+    url: 'https://www.quotelinker.com',
+    siteName: 'QuoteLinker',
+    images: [
+      {
+        url: '/quotelinker_logo_1280x640.png',
+        width: 1280,
+        height: 640,
+        alt: 'QuoteLinker Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'QuoteLinker - Insurance Quotes Made Easy',
+    description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+    images: ['/quotelinker_logo_1280x640.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 }
 
 export const viewport: Viewport = {
