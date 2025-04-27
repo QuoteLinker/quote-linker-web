@@ -93,7 +93,7 @@ export default function Home() {
         title="QuoteLinker"
         subtitle="Your Trusted Insurance Marketplace"
         ctaText="Get My Free Quote"
-        ctaLink="/products/life?subType=term"
+        ctaLink="/term-life"
       />
       
       <FeatureGrid items={features} />
