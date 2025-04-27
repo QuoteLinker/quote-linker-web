@@ -199,13 +199,14 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
 
     try {
       // Submit form data to API
-      const response = await fetch('/api/submitLead', {
+      const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
+          postalCode: formData.zipCode,
           productType,
           subType,
         }),
