@@ -203,7 +203,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // Get form title based on product and subType
   function getFormTitle(): string {
@@ -247,137 +247,74 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     return 'Get My Free Quote';
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
-    setShowSuccessMessage(false);
+    setSuccess(false);
+
+    const form = e.currentTarget;
+    const data: Record<string, string> = {};
+    
+    // Collect form data using form elements
+    const formElements = form.elements;
+    for (let i = 0; i < formElements.length; i++) {
+      const element = formElements[i] as HTMLInputElement;
+      if (element.name && element.value) {
+        data[element.name] = element.value;
+      }
+    }
 
     try {
-      // Validate required fields before submission
-      const missingFields = fields
-        .filter(field => field.required)
-        .filter(field => !formData[field.name] || formData[field.name].trim() === '')
-        .map(field => field.label);
-
-      if (missingFields.length > 0) {
-        throw new Error(`Please fill in all required fields: ${missingFields.join(', ')}`);
-      }
-
-      // Validate ZIP Code format
-      if (formData.zipCode && !/^\d{5}$/.test(formData.zipCode)) {
-        throw new Error('ZIP Code must be exactly 5 digits');
-      }
-
-      // Log submission attempt with full form data
-      console.log('Submitting form:', {
-        productType,
-        subType,
-        formData,
-        timestamp: new Date().toISOString()
-      });
-
-      // Use the correct API endpoint based on the environment
-      const apiUrl = process.env.NEXT_PUBLIC_VERCEL_URL 
-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/submit-lead`
-        : '/api/submit-lead';
-
-      const response = await fetch(apiUrl, {
+      console.log('Submitting form data:', data);
+      
+      const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
         },
-        credentials: 'include',
-        body: JSON.stringify({
-          ...formData,
-          productType,
-          subType,
-        }),
+        body: JSON.stringify(data),
       });
 
-      const data = await response.json();
+      const result = await response.json();
+      console.log('Form submission response:', result);
 
       if (!response.ok) {
-        let errorMessage = 'Failed to submit form. ';
-        
-        if (data.details && Array.isArray(data.details)) {
-          // Handle validation errors from the API
-          const fieldErrors = data.details.map((err: any) => `${err.field}: ${err.message}`).join(', ');
-          errorMessage += `Please check the following fields: ${fieldErrors}`;
-        } else {
-          // Handle other types of errors
-          switch (response.status) {
-            case 400:
-              errorMessage += data.error || 'Please check your information and try again.';
-              break;
-            case 429:
-              errorMessage += 'Too many requests. Please wait a moment and try again.';
-              break;
-            case 503:
-              errorMessage += 'Service temporarily unavailable. Please try again in a few minutes.';
-              break;
-            default:
-              errorMessage += `Error (${response.status}): ${data.error || 'Please try again or contact support.'}`;
+        throw new Error(result.error || 'Failed to submit form');
+      }
+
+      // Log successful submission to GTM
+      if (window.dataLayer) {
+        window.dataLayer.push({
+          event: 'form_submission_success',
+          form_data: {
+            ...data,
+            leadId: result.leadId,
+            mockMode: result.mockMode
           }
-        }
-        
-        throw new Error(errorMessage);
-      }
-
-      // Push GTM event with enhanced data
-      if (typeof window !== 'undefined') {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: 'leadSubmit',
-          productType,
-          subType,
-          mockMode: data.mockMode || false,
-          leadId: data.leadId || null,
-          formFields: Object.keys(formData).length,
-          submissionTime: new Date().toISOString(),
-          successStatus: true
         });
       }
 
-      // Log success with detailed information
-      console.log('Form submitted successfully:', {
-        productType,
-        subType,
-        mockMode: data.mockMode,
-        leadId: data.leadId,
-        timestamp: new Date().toISOString()
-      });
-
-      // Show success message before redirecting
-      setShowSuccessMessage(true);
+      setSuccess(true);
       
-      // Delay redirect to show success message
+      // Redirect to success page after a delay
       setTimeout(() => {
-        router.push('/success');
-      }, 1500);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'An unexpected error occurred. Please try again or contact support if the issue persists.';
-      
-      setError(errorMessage);
+        window.location.href = '/success';
+      }, 2000);
 
-      // Track form error in GTM with enhanced error tracking
-      if (typeof window !== 'undefined') {
-        window.dataLayer = window.dataLayer || [];
+    } catch (err) {
+      console.error('Form submission error:', err);
+      
+      // Log error to GTM
+      if (window.dataLayer) {
         window.dataLayer.push({
-          event: 'leadSubmitError',
-          productType,
-          subType,
-          errorType: error instanceof Error ? error.name : 'Unknown',
-          errorMessage: errorMessage,
-          formFields: Object.keys(formData).length,
-          timestamp: new Date().toISOString()
+          event: 'form_submission_error',
+          error: err instanceof Error ? err.message : 'Unknown error',
+          form_data: data
         });
       }
+
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -400,17 +337,16 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         </div>
 
         {/* Success Message */}
-        {showSuccessMessage && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md text-green-700 animate-slide-up">
-            <div className="flex items-center justify-center animate-pulse-success">
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span className="text-lg font-medium">Quote Request Submitted!</span>
+        {success && (
+          <div className="rounded-md bg-green-50 p-4">
+            <div className="flex">
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800">Success!</h3>
+                <div className="mt-2 text-sm text-green-700">
+                  <p>Your information has been submitted successfully. Redirecting...</p>
+                </div>
+              </div>
             </div>
-            <p className="text-center mt-2 text-green-600">
-              We'll be in touch with you shortly.
-            </p>
           </div>
         )}
 
@@ -472,13 +408,11 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         {error && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
               <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <h3 className="text-sm font-medium text-red-800">Error</h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <p>{error}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -488,15 +422,15 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00d4e1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-all duration-200 ${
+            className={`w-full rounded-md bg-[#00EEFD] px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-[#00EEFD]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00EEFD] ${
               isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
             }`}
           >
             {isSubmitting ? (
-              <>
-                <ArrowPathIcon className="animate-spin -ml-1 mr-3 h-5 w-5" />
-                {getCTAText()}
-              </>
+              <div className="flex items-center justify-center">
+                <ArrowPathIcon className="h-5 w-5 animate-spin mr-2" />
+                Submitting...
+              </div>
             ) : (
               getCTAText()
             )}
