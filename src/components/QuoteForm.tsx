@@ -317,12 +317,15 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
 
         {/* Success Message */}
         {showSuccessMessage && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-700 animate-fade-in">
-            <p className="flex items-center">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-md text-green-700 animate-slide-up">
+            <div className="flex items-center justify-center animate-pulse-success">
+              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Your information has been submitted successfully!
+              <span className="text-lg font-medium">Quote Request Submitted!</span>
+            </div>
+            <p className="text-center mt-2 text-green-600">
+              We'll be in touch with you shortly.
             </p>
           </div>
         )}
@@ -381,7 +384,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
             type="submit"
             disabled={isSubmitting}
             className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
-              isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+              isSubmitting ? 'opacity-75 cursor-not-allowed animate-pulse' : ''
             }`}
           >
             {isSubmitting ? (
@@ -406,7 +409,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   />
                 </svg>
-                Submitting...
+                Processing your request...
               </>
             ) : (
               'Get My Quote'
