@@ -38,13 +38,14 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   const sfPassword = process.env.SF_PASSWORD;
   const sfSecurityToken = process.env.SF_SECURITY_TOKEN;
   const sfApiVersion = process.env.SF_API_VERSION || 'v57.0';
+  const sfLoginUrl = process.env.SF_LOGIN_URL || 'https://login.salesforce.com';
 
   if (!sfInstanceUrl || !sfClientId || !sfClientSecret || !sfUsername || !sfPassword || !sfSecurityToken) {
     throw new Error('Missing Salesforce credentials');
   }
 
   // Authenticate with Salesforce
-  const authResponse = await fetch(`${sfInstanceUrl}/services/oauth2/token`, {
+  const authResponse = await fetch(`${sfLoginUrl}/services/oauth2/token`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -64,7 +65,7 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
     throw new Error('Failed to authenticate with Salesforce');
   }
 
-  const { access_token } = await authResponse.json();
+  const { access_token, instance_url } = await authResponse.json();
 
   // Create Contact
   const contactData = {
@@ -81,7 +82,7 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   };
 
   const contactResponse = await fetch(
-    `${sfInstanceUrl}/services/data/${sfApiVersion}/sobjects/Contact`,
+    `${instance_url}/services/data/${sfApiVersion}/sobjects/Contact`,
     {
       method: 'POST',
       headers: {
@@ -111,7 +112,7 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   };
 
   const opportunityResponse = await fetch(
-    `${sfInstanceUrl}/services/data/${sfApiVersion}/sobjects/Opportunity`,
+    `${instance_url}/services/data/${sfApiVersion}/sobjects/Opportunity`,
     {
       method: 'POST',
       headers: {
