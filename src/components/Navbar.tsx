@@ -10,7 +10,10 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <Link href="/" className="flex items-center">
-              <Image src="/logo.svg" alt="QuoteLinker" width={150} height={40} />
+              <picture>
+                <source srcSet="/logo.svg" type="image/svg+xml" />
+                <Image src="/quotelinker_icon.png" alt="QuoteLinker" width={150} height={40} priority />
+              </picture>
             </Link>
           </div>
           <div className="hidden sm:flex sm:space-x-8 items-center">
