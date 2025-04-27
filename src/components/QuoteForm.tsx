@@ -197,7 +197,6 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     setError(null);
 
     try {
-      // Submit form data to API
       const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
@@ -205,19 +204,19 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         },
         body: JSON.stringify({
           ...formData,
-          postalCode: formData.zipCode,
           productType,
           subType,
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit form');
+      const data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to submit form');
       }
 
       // Push GTM event
-      if (typeof window !== 'undefined' && window.dataLayer) {
+      if (typeof window !== 'undefined') {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           event: 'leadSubmit',

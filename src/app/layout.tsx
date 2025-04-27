@@ -1,11 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import type { ReactNode } from 'react'
+import Navbar from '@/components/Navbar'
 import Script from 'next/script'
-import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,8 +22,8 @@ const navigation = [
 ];
 
 export const metadata: Metadata = {
-  title: 'QuoteLinker - Your Trusted Insurance Marketplace',
-  description: 'Get fast, free quotes from top insurance carriers. Compare auto, home, life, and health insurance options.',
+  title: 'QuoteLinker - Insurance Quotes Made Easy',
+  description: 'Get competitive insurance quotes from top providers. Compare rates for auto, home, life, and health insurance.',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
@@ -69,26 +66,27 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: ReactNode
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" className="h-full">
       <head>
         {GTM_ID && (
           <Script
-            id="gtm-script"
+            id="google-tag-manager"
             strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          >
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${GTM_ID}');`,
-            }}
-          />
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `}
+          </Script>
         )}
       </head>
-      <body className={`${inter.className} min-h-full flex flex-col`}>
+      <body className={`${inter.className} h-full`}>
         {GTM_ID && (
           <noscript>
             <iframe
@@ -99,11 +97,9 @@ export default function RootLayout({
             />
           </noscript>
         )}
-        <Navigation />
-        <Header />
-        <main className="flex-grow">{children}</main>
-        <Footer />
+        <Navbar />
+        {children}
       </body>
     </html>
   );
-} 
+}
