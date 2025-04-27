@@ -10,21 +10,14 @@ const formSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
   zipCode: z.string().regex(/^\d{5}$/, 'ZIP code must be exactly 5 digits'),
-  insuranceType: z.enum(['auto', 'home', 'life', 'health', 'disability', 'term'] as const),
+  insuranceType: z.string(),
+  subType: z.string().optional(),
   // Add other fields based on insurance type
   age: z.string().optional(),
   tobaccoUse: z.string().optional(),
-  termLength: z.string().optional(),
   coverageAmount: z.string().optional(),
-  vehicleYear: z.string().optional(),
-  vehicleMake: z.string().optional(),
-  vehicleModel: z.string().optional(),
-  address: z.string().optional(),
-  propertyType: z.string().optional(),
-  yearBuilt: z.string().optional(),
-  occupation: z.string().optional(),
-  income: z.string().optional(),
-  coverageType: z.string().optional(),
+  vehicleDetails: z.string().optional(),
+  propertyAddress: z.string().optional(),
   preExistingConditions: z.string().optional(),
   // Honeypot field
   website: z.string().optional(),
@@ -34,6 +27,10 @@ const formSchema = z.object({
 const rateLimit = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 5; // 5 requests per minute
+
+// Default Zapier webhook URL for Google Sheets integration
+const DEFAULT_ZAPIER_WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/22689304/2phdsmv/';
+const ZAPIER_WEBHOOK_URL = process.env.ZAPIER_WEBHOOK_URL || DEFAULT_ZAPIER_WEBHOOK_URL;
 
 export async function POST(request: Request) {
   try {
@@ -71,59 +68,44 @@ export async function POST(request: Request) {
     // Validate form data
     const validatedData = formSchema.parse(data);
 
-    // Get Zapier webhook URL from environment variable
-    const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
-    if (!zapierWebhookUrl) {
-      console.error('Zapier webhook URL not configured');
+    // For development/testing, log the data but still try to submit to Zapier
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Development mode: Form data:', validatedData);
+    }
+
+    // Send data to Zapier
+    const response = await fetch(ZAPIER_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...validatedData,
+        timestamp: new Date().toISOString(),
+        source: 'quote-linker-web',
+        page: `${validatedData.insuranceType.toLowerCase()}${validatedData.subType ? `-${validatedData.subType.toLowerCase()}` : ''}`,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Failed to submit to Zapier:', await response.text());
       return NextResponse.json(
-        { error: 'Service temporarily unavailable' },
-        { status: 503 }
+        { error: 'Failed to submit form. Please try again later.' },
+        { status: 500 }
       );
     }
 
-    // Send data to Zapier with timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-    try {
-      const response = await fetch(zapierWebhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...validatedData,
-          source: 'quotelinker.com',
-          timestamp: new Date().toISOString(),
-          ip: ip,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (!response.ok) {
-        throw new Error(`Zapier responded with status: ${response.status}`);
-      }
-
-      return NextResponse.json({ success: true });
-    } catch (error) {
-      clearTimeout(timeout);
-      throw error;
-    }
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Form submission error:', error);
-    
+    console.error('Error submitting quote:', error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid form data', details: error.errors },
+        { error: 'Invalid form data. Please check your inputs.' },
         { status: 400 }
       );
     }
-    
-    // Return generic error message to prevent information leakage
     return NextResponse.json(
-      { error: 'There was an error processing your submission' },
+      { error: 'An error occurred while submitting your form. Please try again.' },
       { status: 500 }
     );
   }
