@@ -56,16 +56,16 @@ function HealthInsuranceContent() {
             >
               Short Term Disability
             </a>
-            <button
-              onClick={() => setSelectedType('SUPPLEMENTAL_HEALTH')}
-              className={`px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
-                selectedType === 'SUPPLEMENTAL_HEALTH'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-blue-600 hover:bg-blue-50'
+            <a
+              href="?subType=supplemental"
+              className={`px-6 py-2 rounded-lg ${
+                subType === 'supplemental'
+                  ? 'bg-[#00EEFD] text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
               Supplemental Health
-            </button>
+            </a>
           </div>
         </div>
       </div>
