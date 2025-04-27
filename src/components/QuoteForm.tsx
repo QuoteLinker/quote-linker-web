@@ -148,6 +148,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   // Get form title based on product and subType
   function getFormTitle(): string {
@@ -195,8 +196,16 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     e.preventDefault();
     setIsSubmitting(true);
     setError(null);
+    setShowSuccessMessage(false);
 
     try {
+      // Log submission attempt
+      console.log('Submitting form:', {
+        productType,
+        subType,
+        fields: Object.keys(formData).length
+      });
+
       const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
@@ -211,25 +220,80 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
 
       const data = await response.json();
 
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to submit form');
+      if (!response.ok) {
+        let errorMessage = 'Failed to submit form. ';
+        
+        // Add specific error context based on status
+        switch (response.status) {
+          case 400:
+            errorMessage += 'Please check your information and try again.';
+            break;
+          case 429:
+            errorMessage += 'Too many requests. Please wait a moment and try again.';
+            break;
+          case 503:
+            errorMessage += 'Service temporarily unavailable. Please try again in a few minutes.';
+            break;
+          default:
+            errorMessage += `Error (${response.status}): ${data.error || 'Please try again or contact support.'}`;
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      // Push GTM event
+      // Push GTM event with enhanced data
       if (typeof window !== 'undefined') {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           event: 'leadSubmit',
           productType,
           subType,
+          mockMode: data.mockMode || false,
+          leadId: data.leadId || null,
+          formFields: Object.keys(formData).length,
+          submissionTime: new Date().toISOString(),
+          successStatus: true
         });
       }
 
-      // Redirect to success page
-      router.push('/success');
+      // Log success with detailed information
+      console.log('Form submitted successfully:', {
+        productType,
+        subType,
+        mockMode: data.mockMode,
+        leadId: data.leadId,
+        timestamp: new Date().toISOString()
+      });
+
+      // Show success message before redirecting
+      setShowSuccessMessage(true);
+      
+      // Delay redirect to show success message
+      setTimeout(() => {
+        router.push('/success');
+      }, 1500);
     } catch (error) {
       console.error('Error submitting form:', error);
-      setError(error instanceof Error ? error.message : 'Failed to submit form. Please try again.');
+      
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'An unexpected error occurred. Please try again or contact support if the issue persists.';
+      
+      setError(errorMessage);
+
+      // Track form error in GTM with enhanced error tracking
+      if (typeof window !== 'undefined') {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: 'leadSubmitError',
+          productType,
+          subType,
+          errorType: error instanceof Error ? error.name : 'Unknown',
+          errorMessage: errorMessage,
+          formFields: Object.keys(formData).length,
+          timestamp: new Date().toISOString()
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -250,6 +314,18 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
           <p className="text-sm sm:text-base text-gray-600">{getFormDescription()}</p>
         </div>
+
+        {/* Success Message */}
+        {showSuccessMessage && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md text-green-700 animate-fade-in">
+            <p className="flex items-center">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Your information has been submitted successfully!
+            </p>
+          </div>
+        )}
 
         {/* Form Fields */}
         <div className="space-y-4">
@@ -295,17 +371,48 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           </div>
         </div>
 
-        {error && (
-          <div className="text-red-500 text-sm text-center">{error}</div>
-        )}
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-[#00EEFD] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
-        >
-          {getCTAText()}
-        </button>
+        <div className="mt-6">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-700">
+              <p>{error}</p>
+            </div>
+          )}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
+              isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+            }`}
+          >
+            {isSubmitting ? (
+              <>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Submitting...
+              </>
+            ) : (
+              'Get My Quote'
+            )}
+          </button>
+        </div>
 
         <p className="text-xs sm:text-sm text-gray-500 text-center mt-4">
           By submitting this form, you agree to our Terms of Service and Privacy Policy.
