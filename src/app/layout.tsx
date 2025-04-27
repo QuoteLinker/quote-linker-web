@@ -5,8 +5,14 @@ import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import GoogleTagManager from '@/components/GoogleTagManager'
+import * as Sentry from '@sentry/nextjs'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+})
 
 export const metadata: Metadata = {
   title: 'QuoteLinker - Insurance Quotes Made Easy',
@@ -98,6 +104,50 @@ function GoogleTagManagerBody() {
   );
 }
 
+// Add JSON-LD structured data
+function OrganizationSchema() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "QuoteLinker",
+          "url": "https://www.quotelinker.com",
+          "logo": "https://www.quotelinker.com/quotelinker_logo_1280x640.png",
+          "description": "Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.",
+          "sameAs": [
+            "https://www.facebook.com/quotelinker",
+            "https://www.linkedin.com/company/quotelinker",
+            "https://twitter.com/quotelinker"
+          ]
+        })
+      }}
+    />
+  )
+}
+
+function BreadcrumbSchema() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.quotelinker.com"
+          }]
+        })
+      }}
+    />
+  )
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -109,12 +159,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {gtmId && <GoogleTagManager gtmId={gtmId} />}
+        <OrganizationSchema />
+        <BreadcrumbSchema />
       </head>
       <body className={inter.className}>
         <GoogleTagManagerHead />
         <GoogleTagManagerBody />
         <Header />
-        <main>{children}</main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

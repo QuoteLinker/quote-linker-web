@@ -25,6 +25,35 @@ export interface SalesforceLeadData {
   Status: string;
 }
 
+interface SalesforceConfig {
+  loginUrl: string;
+  clientId: string;
+  clientSecret: string;
+  username: string;
+  password: string;
+  token: string;
+  apiVersion: string;
+}
+
+interface LeadData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  insuranceType: string;
+  zipCode: string;
+  age?: number;
+  preExistingConditions?: boolean;
+  additionalInfo?: string;
+}
+
+class SalesforceError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SalesforceError';
+  }
+}
+
 /**
  * Gets the appropriate callback URL based on the environment
  * @returns The callback URL for the current environment
@@ -120,4 +149,46 @@ export async function createSalesforceLead(
     }
     throw new Error('Failed to create lead in Salesforce');
   }
-} 
+}
+
+function validateConfig(): SalesforceConfig {
+  const requiredEnvVars = {
+    loginUrl: process.env.SALESFORCE_LOGIN_URL,
+    clientId: process.env.SALESFORCE_CLIENT_ID,
+    clientSecret: process.env.SALESFORCE_CLIENT_SECRET,
+    username: process.env.SALESFORCE_USERNAME,
+    password: process.env.SALESFORCE_PASSWORD,
+    token: process.env.SALESFORCE_TOKEN,
+    apiVersion: process.env.SF_API_VERSION || '57.0'
+  };
+
+  const missingVars = Object.entries(requiredEnvVars)
+    .filter(([_, value]) => !value)
+    .map(([key]) => key);
+
+  if (missingVars.length > 0) {
+    throw new SalesforceError(
+      `Missing required Salesforce environment variables: ${missingVars.join(', ')}`
+    );
+  }
+
+  return requiredEnvVars as SalesforceConfig;
+}
+
+export async function submitToSalesforce(leadData: LeadData): Promise<void> {
+  const config = validateConfig();
+  
+  // TODO: Implement Salesforce API integration
+  // 1. Authenticate with Salesforce using OAuth 2.0
+  // 2. Create Lead record with provided data
+  // 3. Handle errors and retries
+  // 4. Log success/failure
+  
+  console.log('Salesforce integration not yet implemented');
+  console.log('Config validated:', config);
+  console.log('Lead data:', leadData);
+}
+
+// Export types for use in other files
+export type { LeadData, SalesforceConfig };
+export { SalesforceError }; 
