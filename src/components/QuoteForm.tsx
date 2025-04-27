@@ -126,8 +126,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
     { name: 'age', label: 'Age', type: 'number', required: true },
     { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
       { value: 'individual', label: 'Individual' },
-      { value: 'family', label: 'Family' },
-      { value: 'medicare', label: 'Medicare' }
+      { value: 'family', label: 'Family' }
     ]},
     { name: 'preExistingConditions', label: 'Pre-existing Conditions', type: 'select', required: true, options: [
       { value: 'yes', label: 'Yes' },
