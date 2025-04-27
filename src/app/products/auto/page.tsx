@@ -6,6 +6,8 @@ import HeroSection from '@/components/HeroSection';
 import BenefitsSection from '@/components/BenefitsSection';
 import QuoteForm from '@/components/QuoteForm';
 import { Suspense } from 'react';
+import FeatureGrid from '@/components/FeatureGrid';
+import { FaCar, FaShieldAlt, FaMoneyBillWave, FaClock } from 'react-icons/fa';
 
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
@@ -43,24 +45,45 @@ function AutoInsuranceContent() {
     },
   ];
 
+  const features = [
+    {
+      icon: <FaCar />,
+      title: 'Comprehensive Coverage',
+      description: 'Protection for your vehicle against accidents, theft, and natural disasters'
+    },
+    {
+      icon: <FaShieldAlt />,
+      title: 'Liability Protection',
+      description: 'Coverage for bodily injury and property damage to others'
+    },
+    {
+      icon: <FaMoneyBillWave />,
+      title: 'Competitive Rates',
+      description: 'Save money with quotes from top-rated insurance carriers'
+    },
+    {
+      icon: <FaClock />,
+      title: 'Quick Process',
+      description: 'Get your quote in minutes, coverage in hours'
+    }
+  ];
+
   return (
     <main>
       <HeroSection
         title="Auto Insurance"
-        subtitle="Find the perfect auto insurance coverage for your needs"
+        subtitle="Protect your ride with the right coverage"
         ctaText="Get My Auto Quote"
-        ctaLink="/products/auto"
-        iconItems={iconItems}
+        ctaLink="#quote-form"
       />
       
-      <BenefitsSection
-        title="Why Choose Auto Insurance Through QuoteLinker"
-        benefits={benefits}
-      />
+      <FeatureGrid items={features} />
       
-      <div className="container mx-auto max-w-md p-6 bg-white rounded-2xl shadow-lg mt-12 mb-12">
-        <QuoteForm productType="auto" subType={subType} />
-      </div>
+      <section id="quote-form" className="py-16">
+        <div className="container mx-auto px-4">
+          <QuoteForm productType="auto" />
+        </div>
+      </section>
     </main>
   );
 }

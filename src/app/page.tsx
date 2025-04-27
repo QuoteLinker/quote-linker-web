@@ -1,4 +1,6 @@
-import QuoteForm from '@/components/QuoteForm';
+import HeroSection from '@/components/HeroSection';
+import FeatureGrid from '@/components/FeatureGrid';
+import { FaUserTie, FaStar, FaUsers } from 'react-icons/fa';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
@@ -15,8 +17,26 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const features = [
+    {
+      icon: <FaUserTie />,
+      title: 'Licensed Agents',
+      description: 'Expert guidance from certified insurance professionals'
+    },
+    {
+      icon: <FaStar />,
+      title: '5-Star Service',
+      description: 'Rated 5 stars by thousands of satisfied customers'
+    },
+    {
+      icon: <FaUsers />,
+      title: '10K+ Customers',
+      description: 'Trusted by over 10,000 happy policyholders'
+    }
+  ];
+
   return (
-    <div className="bg-white">
+    <main>
       <Script id="structured-data" type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -69,7 +89,14 @@ export default function Home() {
         })}
       </Script>
 
-      <QuoteForm productType="life" subType="term" />
-    </div>
+      <HeroSection
+        title="QuoteLinker"
+        subtitle="Your Trusted Insurance Marketplace"
+        ctaText="Get My Free Quote"
+        ctaLink="/products/auto"
+      />
+      
+      <FeatureGrid items={features} />
+    </main>
   );
 } 

@@ -6,6 +6,8 @@ import HeroSection from '@/components/HeroSection';
 import BenefitsSection from '@/components/BenefitsSection';
 import QuoteForm from '@/components/QuoteForm';
 import { Suspense } from 'react';
+import FeatureGrid from '@/components/FeatureGrid';
+import { FaHome, FaShieldAlt, FaTools, FaHandHoldingUsd } from 'react-icons/fa';
 
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
@@ -43,24 +45,45 @@ function HomeInsuranceContent() {
     },
   ];
 
+  const features = [
+    {
+      icon: <FaHome />,
+      title: 'Property Protection',
+      description: 'Coverage for your home and personal belongings'
+    },
+    {
+      icon: <FaShieldAlt />,
+      title: 'Liability Coverage',
+      description: 'Protection against accidents and injuries on your property'
+    },
+    {
+      icon: <FaTools />,
+      title: 'Additional Coverage',
+      description: 'Options for natural disasters and other perils'
+    },
+    {
+      icon: <FaHandHoldingUsd />,
+      title: 'Competitive Rates',
+      description: 'Save money with quotes from top insurance carriers'
+    }
+  ];
+
   return (
     <main>
       <HeroSection
         title="Home Insurance"
-        subtitle="Protect your home with comprehensive coverage from trusted providers"
+        subtitle="Protect your biggest investment"
         ctaText="Get My Home Quote"
-        ctaLink="/products/home"
-        iconItems={iconItems}
+        ctaLink="#quote-form"
       />
       
-      <BenefitsSection
-        title="Why Choose Home Insurance Through QuoteLinker"
-        benefits={benefits}
-      />
+      <FeatureGrid items={features} />
       
-      <div className="container mx-auto max-w-md p-6 bg-white rounded-2xl shadow-lg mt-12 mb-12">
-        <QuoteForm productType="home" subType={subType} />
-      </div>
+      <section id="quote-form" className="py-16">
+        <div className="container mx-auto px-4">
+          <QuoteForm productType="home" />
+        </div>
+      </section>
     </main>
   );
 }

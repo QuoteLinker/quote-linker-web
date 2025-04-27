@@ -25,8 +25,8 @@ const navigation = [
 ];
 
 export const metadata: Metadata = {
-  title: 'QuoteLinker - Find the Perfect Insurance Coverage',
-  description: 'QuoteLinker helps you find the perfect insurance coverage for your needs. Compare quotes from top providers for auto, home, life, and health insurance.',
+  title: 'QuoteLinker - Your Trusted Insurance Marketplace',
+  description: 'Get fast, free quotes from top insurance carriers. Compare auto, home, life, and health insurance options.',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
@@ -74,31 +74,35 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <head>
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${process.env.NEXT_PUBLIC_GTM_ID}');`,
-          }}
-        />
+        {GTM_ID && (
+          <>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','${GTM_ID}');`,
+              }}
+            />
+          </>
+        )}
       </head>
       <body className={`${inter.className} min-h-full flex flex-col`}>
         <Navigation />
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
-            height="0"
-            width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
-          />
-        </noscript>
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
+        )}
       </body>
     </html>
   )

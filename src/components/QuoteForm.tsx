@@ -20,6 +20,9 @@ interface FormData {
   email: string;
   phone: string;
   zipCode: string;
+  age: string;
+  coverageAmount: string;
+  notes: string;
   [key: string]: any; // Allow for dynamic fields
 }
 
@@ -133,7 +136,7 @@ const formFields: Record<InsuranceType, FormField[]> = {
   ]
 };
 
-export default function QuoteForm({ productType, subType }: QuoteFormProps) {
+export default function QuoteForm({ productType, subType = productType }: QuoteFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -141,6 +144,9 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
     email: '',
     phone: '',
     zipCode: '',
+    age: '',
+    coverageAmount: '',
+    notes: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -203,6 +209,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
           ...formData,
           productType,
           subType,
+          leadSource: 'QuoteLinker Web'
         }),
       });
 
@@ -229,7 +236,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -238,8 +245,8 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
   const fields = formFields[insuranceType] || [];
 
   return (
-    <div className="w-full">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto pb-8">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="text-center">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
           <p className="text-sm sm:text-base text-gray-600">{getFormDescription()}</p>
@@ -247,7 +254,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
 
         {/* Form Fields */}
         <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             {fields.map((field) => (
               <div key={field.name} className={field.name === 'zipCode' ? 'sm:col-span-2' : ''}>
                 <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
@@ -296,7 +303,7 @@ export default function QuoteForm({ productType, subType }: QuoteFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#00EEFD] text-white py-3 px-6 rounded-md hover:bg-[#00d4e1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base font-medium"
+          className="w-full bg-[#00EEFD] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
         >
           {getCTAText()}
         </button>
