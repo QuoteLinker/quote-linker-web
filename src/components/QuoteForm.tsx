@@ -209,16 +209,17 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           ...formData,
           productType,
           subType,
-          leadSource: 'QuoteLinker Web'
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit form');
       }
 
       // Push GTM event
       if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
           event: 'leadSubmit',
           productType,
@@ -230,7 +231,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       router.push('/success');
     } catch (error) {
       console.error('Error submitting form:', error);
-      setError('Failed to submit form. Please try again.');
+      setError(error instanceof Error ? error.message : 'Failed to submit form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
