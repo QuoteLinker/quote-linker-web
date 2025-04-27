@@ -50,7 +50,7 @@ function HealthInsuranceContent() {
               href="?subType=std"
               className={`px-6 py-2 rounded-lg ${
                 subType === 'std'
-                  ? 'bg-[#00EEFD] text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -60,7 +60,7 @@ function HealthInsuranceContent() {
               href="?subType=supplemental"
               className={`px-6 py-2 rounded-lg ${
                 subType === 'supplemental'
-                  ? 'bg-[#00EEFD] text-white'
+                  ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
