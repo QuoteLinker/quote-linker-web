@@ -297,22 +297,25 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     }
 
     try {
-      console.log('Submitting form data:', data);
+      console.log('Submitting form data to Zapier:', data);
       
-      const response = await fetch('/api/submit-lead', {
+      const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || 'https://hooks.zapier.com/hooks/catch/22689304/2phdsmv/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          timestamp: new Date().toISOString(),
+          source: 'quotelinker.com'
+        }),
       });
 
-      const result = await response.json();
-      console.log('Form submission response:', result);
-
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to submit form');
+        throw new Error('Failed to submit lead to Zapier');
       }
+
+      console.log('Lead successfully submitted to Zapier');
 
       // Log successful submission to GTM
       if (window.dataLayer) {
@@ -320,8 +323,8 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           event: 'leadSubmit',
           form_data: {
             ...data,
-            leadId: result.leadId,
-            mockMode: result.mockMode
+            leadId: 'ZAPIER-' + Math.random().toString(36).substr(2, 9),
+            mockMode: false
           }
         });
       }
@@ -403,9 +406,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               id="firstName"
               name="firstName"
               required
+              disabled={isSubmitting}
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 formErrors.firstName ? 'border-red-500' : ''
-              }`}
+              } ${isSubmitting ? 'bg-gray-100' : ''}`}
             />
             {formErrors.firstName && (
               <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
@@ -421,9 +425,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               id="lastName"
               name="lastName"
               required
+              disabled={isSubmitting}
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 formErrors.lastName ? 'border-red-500' : ''
-              }`}
+              } ${isSubmitting ? 'bg-gray-100' : ''}`}
             />
             {formErrors.lastName && (
               <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
@@ -439,9 +444,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               id="email"
               name="email"
               required
+              disabled={isSubmitting}
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 formErrors.email ? 'border-red-500' : ''
-              }`}
+              } ${isSubmitting ? 'bg-gray-100' : ''}`}
             />
             {formErrors.email && (
               <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
@@ -457,9 +463,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               id="phone"
               name="phone"
               required
+              disabled={isSubmitting}
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 formErrors.phone ? 'border-red-500' : ''
-              }`}
+              } ${isSubmitting ? 'bg-gray-100' : ''}`}
             />
             {formErrors.phone && (
               <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
@@ -477,9 +484,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               required
               pattern="\d{5}"
               maxLength={5}
+              disabled={isSubmitting}
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                 formErrors.zipCode ? 'border-red-500' : ''
-              }`}
+              } ${isSubmitting ? 'bg-gray-100' : ''}`}
             />
             {formErrors.zipCode && (
               <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
@@ -512,7 +520,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-green-800">Success! Redirecting you to confirmation...</p>
+                <p className="text-sm font-medium text-green-800">Your quote request has been submitted successfully! Redirecting you to confirmation...</p>
               </div>
             </div>
           </div>
