@@ -13,7 +13,6 @@ interface FormData {
   subType?: string;
   age?: string;
   tobaccoUse?: string;
-  preExistingConditions?: string;
   vehicleDetails?: string;
   propertyAddress?: string;
 }
@@ -87,7 +86,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
   const showHealthFields = type === 'SHORT_TERM_DISABILITY' || type === 'SUPPLEMENTAL_HEALTH';
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm">
       <div className="space-y-6">
         {/* Required Fields */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -209,29 +208,28 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
         {/* Health Insurance Fields */}
         {showHealthFields && (
           <div>
-            <label htmlFor="preExistingConditions" className="block text-sm font-medium text-gray-700">
-              Pre-existing Conditions *
+            <label htmlFor="age" className="block text-sm font-medium text-gray-700">
+              Age *
             </label>
-            <select
-              name="preExistingConditions"
-              id="preExistingConditions"
+            <input
+              type="number"
+              name="age"
+              id="age"
               required
-              value={formData.preExistingConditions}
+              min="18"
+              max="85"
+              value={formData.age}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
-            >
-              <option value="">Select an option</option>
-              <option value="no">No</option>
-              <option value="yes">Yes</option>
-            </select>
+            />
           </div>
         )}
 
-        <div>
+        <div className="flex justify-center">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
             {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
           </button>

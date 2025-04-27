@@ -73,7 +73,7 @@ export default function Home() {
                 "@type": "InsuranceLeadGenerator",
                 "name": "Life Insurance",
                 "description": "Comprehensive life insurance coverage options",
-                "url": "/products/life"
+                "url": "/term-life"
               }
             },
             {

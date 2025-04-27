@@ -12,15 +12,22 @@ const formSchema = z.object({
   zipCode: z.string().regex(/^\d{5}$/, 'ZIP code must be exactly 5 digits'),
   insuranceType: z.string(),
   subType: z.string().optional(),
-  // Add other fields based on insurance type
   age: z.string().optional(),
   tobaccoUse: z.string().optional(),
   coverageAmount: z.string().optional(),
   vehicleDetails: z.string().optional(),
   propertyAddress: z.string().optional(),
-  preExistingConditions: z.string().optional(),
   // Honeypot field
   website: z.string().optional(),
+}).refine((data) => {
+  // Require age for health insurance types
+  if (data.insuranceType === 'SHORT_TERM_DISABILITY' || data.insuranceType === 'SUPPLEMENTAL_HEALTH') {
+    return !!data.age;
+  }
+  return true;
+}, {
+  message: "Age is required for health insurance options",
+  path: ["age"]
 });
 
 // Rate limiting map (in production, use Redis or similar)
