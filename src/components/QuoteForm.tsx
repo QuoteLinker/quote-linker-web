@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import { InsuranceType } from '@/utils/insuranceCopy';
 import Image from 'next/image';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 type ProductType = 'auto' | 'home' | 'life' | 'health';
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
@@ -385,10 +386,10 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
 
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto pb-8">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{getFormTitle()}</h2>
-          <p className="text-sm sm:text-base text-gray-600">{getFormDescription()}</p>
+          <h2 className="text-2xl font-bold text-gray-900">{getFormTitle()}</h2>
+          <p className="mt-2 text-sm text-gray-600">{getFormDescription()}</p>
         </div>
 
         {/* Success Message */}
@@ -406,25 +407,32 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           </div>
         )}
 
-        {/* Form Fields */}
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            {fields.map((field) => (
-              <div key={field.name} className={field.name === 'zipCode' ? 'sm:col-span-2' : ''}>
-                <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
-                  {field.label} {field.required && <span className="text-red-500">*</span>}
-                  {field.tooltip && (
-                    <QuestionMarkCircleIcon className="inline-block w-4 h-4 ml-1 text-gray-400" />
-                  )}
-                </label>
-                {field.type === 'select' ? (
+          {fields.map((field) => (
+            <div key={field.name} className="relative">
+              <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
+                {field.label}
+                {field.required && <span className="text-red-500 ml-1">*</span>}
+              </label>
+              <div className="mt-1 relative">
+                {field.type === 'textarea' ? (
+                  <textarea
+                    id={field.name}
+                    name={field.name}
+                    value={formData[field.name] || ''}
+                    onChange={handleInputChange}
+                    required={field.required}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
+                    rows={3}
+                  />
+                ) : field.type === 'select' ? (
                   <select
                     id={field.name}
                     name={field.name}
-                    required={field.required}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base transition-all duration-200"
                     value={formData[field.name] || ''}
                     onChange={handleInputChange}
+                    required={field.required}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
                   >
                     <option value="">Select {field.label}</option>
                     {field.options?.map((option) => (
@@ -438,60 +446,52 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
                     type={field.type}
                     id={field.name}
                     name={field.name}
-                    required={field.required}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] text-sm sm:text-base transition-all duration-200"
                     value={formData[field.name] || ''}
                     onChange={handleInputChange}
-                    pattern={field.name === 'zipCode' ? '[0-9]{5}' : undefined}
-                    maxLength={field.name === 'zipCode' ? 5 : undefined}
-                    placeholder={field.name === 'zipCode' ? '12345' : undefined}
-                    autoFocus={!!(error && error.includes('ZIP Code') && field.name === 'zipCode')}
+                    required={field.required}
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
                   />
                 )}
+                {field.tooltip && (
+                  <div className="absolute right-0 top-0 h-full flex items-center pr-3">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-6">
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-700">
-              <p>{error}</p>
+        {error && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-700">{error}</p>
+              </div>
             </div>
-          )}
+          </div>
+        )}
+
+        <div>
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 ${
-              isSubmitting ? 'opacity-75 cursor-not-allowed animate-pulse' : ''
+            className={`w-full flex justify-center items-center px-4 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00d4e1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-all duration-200 ${
+              isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
             }`}
           >
             {isSubmitting ? (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-                Processing your request...
+                <ArrowPathIcon className="animate-spin -ml-1 mr-3 h-5 w-5" />
+                {getCTAText()}
               </>
             ) : (
-              'Get My Quote'
+              getCTAText()
             )}
           </button>
         </div>
