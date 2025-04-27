@@ -6,7 +6,8 @@
  * and verifies the response.
  */
 
-const fetch = require('node-fetch');
+// Import node-fetch correctly
+import fetch from 'node-fetch';
 
 // Zapier webhook URL
 const ZAPIER_WEBHOOK_URL = process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || 'https://hooks.zapier.com/hooks/catch/22689304/2phdsmv/';
