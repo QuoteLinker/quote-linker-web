@@ -1,12 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
 import HeroSection from '@/components/HeroSection';
 import FeatureGrid from '@/components/FeatureGrid';
 import QuoteForm from '@/components/QuoteForm';
 import { FaHeart, FaLock, FaChartLine, FaHandHoldingUsd } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 
-export default function LifeInsurancePage() {
+function LifeInsuranceContent() {
   const searchParams = useSearchParams();
   const subType = searchParams.get('subType') || 'term';
 
@@ -77,5 +78,13 @@ export default function LifeInsurancePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function LifeInsurancePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LifeInsuranceContent />
+    </Suspense>
   );
 } 

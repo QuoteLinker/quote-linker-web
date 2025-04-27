@@ -1,12 +1,13 @@
 'use client';
 
+import { Suspense } from 'react';
 import HeroSection from '@/components/HeroSection';
 import FeatureGrid from '@/components/FeatureGrid';
 import QuoteForm from '@/components/QuoteForm';
 import { FaMedkit, FaHospital, FaUserMd, FaFileMedical } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
 
-export default function HealthInsurancePage() {
+function HealthInsuranceContent() {
   const searchParams = useSearchParams();
   const subType = searchParams.get('subType') || 'std';
 
@@ -77,5 +78,13 @@ export default function HealthInsurancePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function HealthInsurancePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HealthInsuranceContent />
+    </Suspense>
   );
 } 
