@@ -6,10 +6,12 @@ import FeatureGrid from '@/components/FeatureGrid';
 import QuoteForm from '@/components/QuoteForm';
 import { FaMedkit, FaHospital, FaUserMd, FaFileMedical } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 function HealthInsuranceContent() {
   const searchParams = useSearchParams();
   const subType = searchParams.get('subType') || 'std';
+  const insuranceType: InsuranceType = subType === 'std' ? 'SHORT_TERM_DISABILITY' : 'SUPPLEMENTAL_HEALTH';
 
   const features = [
     {
@@ -74,7 +76,7 @@ function HealthInsuranceContent() {
       
       <section id="quote-form" className="py-16">
         <div className="container mx-auto px-4">
-          <QuoteForm productType="health" subType={subType} />
+          <QuoteForm insuranceType={insuranceType} />
         </div>
       </section>
     </main>

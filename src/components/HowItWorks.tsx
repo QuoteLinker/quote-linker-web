@@ -1,65 +1,59 @@
-interface Step {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
+import React from 'react';
+import { ClipboardDocumentCheckIcon, UserGroupIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { InsuranceType } from '@/utils/insuranceCopy';
+
+export interface HowItWorksProps {
+  insuranceType: InsuranceType;
 }
 
-const steps: Step[] = [
+const steps = [
   {
-    title: 'Tell us your needs',
-    description: 'Fill out our simple form with your insurance requirements and preferences.',
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
+    icon: ClipboardDocumentCheckIcon,
+    title: 'Submit Your Form',
+    description: 'Fill out our simple form with your basic information. It only takes a few minutes.',
   },
   {
-    title: 'Get matched',
-    description: "We'll connect you with licensed agents who specialize in your needs based on your preferences and location.",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
+    icon: UserGroupIcon,
+    title: 'Get Matched with a Licensed Agent',
+    description: 'We\'ll connect you with a qualified agent who specializes in your insurance needs.',
   },
   {
-    title: 'Review your quote',
-    description: "Compare quotes and choose the coverage that's right for you.",
-    icon: (
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    icon: ShieldCheckIcon,
+    title: 'Get Covered Fast',
+    description: 'Review your options, choose your coverage, and get protected quickly and easily.',
   },
 ];
 
-export default function HowItWorks() {
+export default function HowItWorks({ insuranceType }: HowItWorksProps) {
+  const displayTitle = insuranceType.split('_').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
+
   return (
-    <section className="py-24 bg-brand-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-brand-headline mb-6">
-            How It Works
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-[#0B0B45] mb-4">
+            How QuoteLinker Works
           </h2>
-          <p className="text-xl text-brand-body opacity-80 max-w-2xl mx-auto">
-            Get the coverage you need in three easy steps
+          <p className="text-xl text-gray-600">
+            Get your {displayTitle} Insurance quote in three simple steps
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
-            <div 
-              key={step.title} 
-              className="bg-brand-card p-8 rounded-2xl shadow-brand hover:shadow-2xl transition"
+            <div
+              key={index}
+              className="flex flex-col items-center text-center p-6 bg-gray-50 rounded-xl"
             >
-              <div className="w-10 h-10 text-brand-primary">
-                {step.icon}
+              <div className="w-16 h-16 bg-[#00EEFD] bg-opacity-10 rounded-full flex items-center justify-center mb-4">
+                <step.icon className="w-8 h-8 text-[#00EEFD]" />
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-brand-headline">
-                Step {index + 1}: {step.title}
+              <h3 className="text-xl font-bold text-[#0B0B45] mb-2">
+                {step.title}
               </h3>
-              <p className="mt-2 text-brand-body opacity-75">
+              <p className="text-gray-600">
                 {step.description}
               </p>
             </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheckIcon, ClockIcon, CurrencyDollarIcon, StarIcon } from '@heroicons/react/24/outline';
+import { ShieldCheckIcon, ClockIcon, CurrencyDollarIcon, StarIcon, DocumentCheckIcon } from '@heroicons/react/24/outline';
 
 const trustFeatures = [
   {
@@ -27,28 +27,29 @@ const trustFeatures = [
 ];
 
 export default function TrustIndicators() {
+  const indicators = [
+    {
+      icon: ShieldCheckIcon,
+      text: 'Secure Application',
+    },
+    {
+      icon: ClockIcon,
+      text: 'Fast & Easy Quotes',
+    },
+    {
+      icon: DocumentCheckIcon,
+      text: 'No Obligation',
+    },
+  ];
+
   return (
-    <div className="bg-gray-50 py-12 mt-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {trustFeatures.map((feature) => (
-            <div
-              key={feature.name}
-              className="relative bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <feature.icon className="h-8 w-8 text-[#00ECFF]" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{feature.name}</h3>
-                  <p className="mt-1 text-sm text-gray-500">{feature.description}</p>
-                </div>
-              </div>
-            </div>
-          ))}
+    <div className="flex flex-wrap justify-center gap-8">
+      {indicators.map((indicator, index) => (
+        <div key={index} className="flex items-center gap-2 text-gray-600">
+          <indicator.icon className="h-5 w-5 text-primary-500" />
+          <span className="text-sm font-medium">{indicator.text}</span>
         </div>
-      </div>
+      ))}
     </div>
   );
 } 

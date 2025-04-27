@@ -5,11 +5,12 @@ import HeroSection from './HeroSection';
 import QuoteForm from './QuoteForm';
 import BenefitsSection from './BenefitsSection';
 import WhyChooseSection from './WhyChooseSection';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
 interface ProductLayoutProps {
-  productType: 'life' | 'health' | 'auto' | 'home';
+  insuranceType: InsuranceType;
   subType?: SubType;
   heroTitle: string;
   heroSubtitle: string;
@@ -33,7 +34,7 @@ interface ProductLayoutProps {
 }
 
 export default function ProductLayout({
-  productType,
+  insuranceType,
   subType,
   heroTitle,
   heroSubtitle,
@@ -107,7 +108,7 @@ export default function ProductLayout({
           {/* Form Section */}
           <div className="w-full lg:w-1/2">
             <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
-              <QuoteForm productType={productType} subType={subType} />
+              <QuoteForm insuranceType={insuranceType} subType={subType} />
             </div>
           </div>
 

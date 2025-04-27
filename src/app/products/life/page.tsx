@@ -6,10 +6,12 @@ import FeatureGrid from '@/components/FeatureGrid';
 import QuoteForm from '@/components/QuoteForm';
 import { FaHeart, FaLock, FaChartLine, FaHandHoldingUsd } from 'react-icons/fa';
 import { useSearchParams } from 'next/navigation';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 function LifeInsuranceContent() {
   const searchParams = useSearchParams();
   const subType = searchParams.get('subType') || 'term';
+  const insuranceType: InsuranceType = subType === 'term' ? 'TERM_LIFE' : 'PERMANENT_LIFE';
 
   const features = [
     {
@@ -74,7 +76,7 @@ function LifeInsuranceContent() {
       
       <section id="quote-form" className="py-16">
         <div className="container mx-auto px-4">
-          <QuoteForm productType="life" subType={subType} />
+          <QuoteForm insuranceType={insuranceType} />
         </div>
       </section>
     </main>

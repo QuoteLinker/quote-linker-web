@@ -8,6 +8,7 @@ import QuoteForm from '@/components/QuoteForm';
 import { Suspense } from 'react';
 import FeatureGrid from '@/components/FeatureGrid';
 import { FaHome, FaShieldAlt, FaTools, FaHandHoldingUsd } from 'react-icons/fa';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
@@ -81,7 +82,7 @@ function HomeInsuranceContent() {
       
       <section id="quote-form" className="py-16">
         <div className="container mx-auto px-4">
-          <QuoteForm productType="home" />
+          <QuoteForm insuranceType="HOME" />
         </div>
       </section>
     </main>

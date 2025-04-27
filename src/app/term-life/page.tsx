@@ -1,4 +1,5 @@
 import ProductPage from '@/components/ProductPage';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function TermLifeInsurancePage() {
   return <ProductPage insuranceType="TERM_LIFE" />;

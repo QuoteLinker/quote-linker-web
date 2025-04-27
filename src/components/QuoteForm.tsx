@@ -20,17 +20,20 @@ interface FormData {
 
 interface QuoteFormProps {
   insuranceType: InsuranceType;
+  productType?: InsuranceType;
   subType?: string;
 }
 
-export default function QuoteForm({ insuranceType, subType }: QuoteFormProps) {
+export default function QuoteForm({ insuranceType, productType, subType }: QuoteFormProps) {
+  const type = insuranceType || productType;
+
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     zipCode: '',
-    insuranceType,
+    insuranceType: type,
     subType,
   });
 
@@ -69,7 +72,7 @@ export default function QuoteForm({ insuranceType, subType }: QuoteFormProps) {
         email: '',
         phone: '',
         zipCode: '',
-        insuranceType,
+        insuranceType: type,
         subType,
       });
     } catch (error) {
@@ -80,8 +83,8 @@ export default function QuoteForm({ insuranceType, subType }: QuoteFormProps) {
     }
   };
 
-  const showLifeFields = insuranceType === 'TERM_LIFE' || insuranceType === 'PERMANENT_LIFE';
-  const showHealthFields = insuranceType === 'SHORT_TERM_DISABILITY' || insuranceType === 'SUPPLEMENTAL_HEALTH';
+  const showLifeFields = type === 'TERM_LIFE' || type === 'PERMANENT_LIFE';
+  const showHealthFields = type === 'SHORT_TERM_DISABILITY' || type === 'SUPPLEMENTAL_HEALTH';
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm">

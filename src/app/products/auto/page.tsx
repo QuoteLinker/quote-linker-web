@@ -81,7 +81,7 @@ function AutoInsuranceContent() {
       
       <section id="quote-form" className="py-16">
         <div className="container mx-auto px-4">
-          <QuoteForm productType="auto" />
+          <QuoteForm insuranceType="AUTO" />
         </div>
       </section>
     </main>

@@ -29,8 +29,8 @@ export default function Footer() {
     <footer className="bg-white border-t border-gray-200">
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <div className="flex flex-col items-center space-y-2 md:items-start">
-            <p className="text-sm text-gray-500">
+          <div className="flex flex-col items-center space-y-2 md:items-center md:flex-1">
+            <p className="text-sm text-gray-500 text-center">
               © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
             </p>
             <div className="flex space-x-4">
@@ -43,7 +43,7 @@ export default function Footer() {
               </Link>
             </div>
           </div>
-          <div className="mt-4 flex space-x-6 md:mt-0">
+          <div className="mt-4 flex space-x-6 md:mt-0 md:justify-end">
             {socialLinks.map((item) => (
               <a
                 key={item.name}
