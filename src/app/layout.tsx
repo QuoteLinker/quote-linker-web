@@ -5,7 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import type { ReactNode } from 'react'
 import Script from 'next/script'
-import { Navigation } from '@/components/Navigation'
+import Navigation from '@/components/Navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,8 +25,8 @@ const navigation = [
 ];
 
 export const metadata: Metadata = {
-  title: 'QuoteLinker - Insurance Quotes Made Simple',
-  description: 'Get instant insurance quotes for auto, home, life, and health insurance. Compare rates from top providers and save.',
+  title: 'QuoteLinker - Find the Perfect Insurance Coverage',
+  description: 'QuoteLinker helps you find the perfect insurance coverage for your needs. Compare quotes from top providers for auto, home, life, and health insurance.',
   metadataBase: new URL('https://quotelinker.com'),
   icons: {
     icon: [
