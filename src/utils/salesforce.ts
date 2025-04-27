@@ -11,13 +11,17 @@ export interface SalesforceLeadData {
   Phone: string;
   Email: string;
   Company: string;
-  Street?: string;
   PostalCode: string;
   LeadSource: string;
-  Description?: string;
-  Custom_Insurance_Type__c: string;
-  Custom_Sub_Line__c?: string;
-  Custom_Heard_About_Us__c?: string;
+  Product_Type__c: string;
+  Sub_Type__c?: string;
+  Age__c?: string;
+  Term_Length__c?: string;
+  Coverage_Amount__c?: string;
+  Occupation__c?: string;
+  Income__c?: string;
+  Coverage_Type__c?: string;
+  Pre_Existing_Conditions__c?: string;
   Status: string;
 }
 

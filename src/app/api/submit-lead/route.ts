@@ -30,23 +30,23 @@ export async function POST(request: Request) {
     const { access_token, instance_url } = await authenticateWithSalesforce();
 
     // Prepare Lead Data
-    const leadData = {
+    const leadData: SalesforceLeadData = {
       FirstName: validatedData.firstName,
       LastName: validatedData.lastName,
       Phone: validatedData.phone,
       Email: validatedData.email,
-      Company: 'QuoteLinker Lead', // Required by Salesforce
+      Company: 'QuoteLinker Lead',
       PostalCode: validatedData.zipCode,
       LeadSource: 'QuoteLinker Web',
       Product_Type__c: validatedData.productType,
-      Sub_Type__c: validatedData.subType || '',
-      Age__c: validatedData.age || '',
-      Term_Length__c: validatedData.termLength || '',
-      Coverage_Amount__c: validatedData.coverageAmount || '',
-      Occupation__c: validatedData.occupation || '',
-      Income__c: validatedData.income || '',
-      Coverage_Type__c: validatedData.coverageType || '',
-      Pre_Existing_Conditions__c: validatedData.preExistingConditions || '',
+      Sub_Type__c: validatedData.subType,
+      Age__c: validatedData.age,
+      Term_Length__c: validatedData.termLength,
+      Coverage_Amount__c: validatedData.coverageAmount,
+      Occupation__c: validatedData.occupation,
+      Income__c: validatedData.income,
+      Coverage_Type__c: validatedData.coverageType,
+      Pre_Existing_Conditions__c: validatedData.preExistingConditions,
       Status: 'Open - Not Contacted'
     };
 
