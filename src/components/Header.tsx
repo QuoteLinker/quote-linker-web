@@ -103,9 +103,17 @@ export default function Header() {
             </div>
           </div>
 
+          {/* Mobile menu backdrop */}
+          {mobileMenuOpen && (
+            <div 
+              className="fixed inset-0 bg-black/30 z-[90] lg:hidden"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+          )}
+
           {/* Mobile menu */}
           <div 
-            className={`lg:hidden fixed left-0 right-0 bg-white/95 backdrop-blur-sm transition-all duration-300 z-50 ${
+            className={`lg:hidden fixed left-0 right-0 bg-white/95 backdrop-blur-sm transition-all duration-300 z-[100] ${
               mobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
             }`}
             style={{
