@@ -252,7 +252,11 @@ export async function POST(request: Request) {
         status: leadResponse.status,
         statusText: leadResponse.statusText,
         error: errorData,
-        headers: Object.fromEntries(leadResponse.headers.entries()),
+        headers: {
+          'content-type': leadResponse.headers.get('content-type') || '',
+          'date': leadResponse.headers.get('date') || '',
+          'server': leadResponse.headers.get('server') || ''
+        },
         requestData: leadData
       });
       throw new Error(`Failed to create lead: ${leadResponse.status} - ${errorData}`);
