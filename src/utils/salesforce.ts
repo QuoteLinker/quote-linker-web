@@ -26,13 +26,26 @@ export interface SalesforceLeadData {
 }
 
 /**
+ * Gets the appropriate callback URL based on the environment
+ * @returns The callback URL for the current environment
+ */
+function getCallbackUrl(): string {
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://www.quotelinker.com/api/auth/callback/salesforce';
+  }
+  return 'http://localhost:3000/oauth/callback';
+}
+
+/**
  * Authenticates with Salesforce using OAuth password flow
  * @returns Promise containing access token and instance URL
  */
 export async function authenticateWithSalesforce(): Promise<SalesforceAuthResponse> {
   try {
     console.log('Attempting to authenticate with Salesforce...');
+    console.log('Environment:', process.env.NODE_ENV);
     console.log('Using login URL:', process.env.SALESFORCE_LOGIN_URL);
+    console.log('Using callback URL:', getCallbackUrl());
     
     const response = await axios.post<SalesforceAuthResponse>(
       `${process.env.SALESFORCE_LOGIN_URL}/services/oauth2/token`,
@@ -43,7 +56,8 @@ export async function authenticateWithSalesforce(): Promise<SalesforceAuthRespon
           client_id: process.env.SALESFORCE_CLIENT_ID,
           client_secret: process.env.SALESFORCE_CLIENT_SECRET,
           username: process.env.SALESFORCE_USERNAME,
-          password: `${process.env.SALESFORCE_PASSWORD}${process.env.SALESFORCE_TOKEN}`
+          password: `${process.env.SALESFORCE_PASSWORD}${process.env.SALESFORCE_TOKEN}`,
+          redirect_uri: getCallbackUrl()
         }
       }
     );
