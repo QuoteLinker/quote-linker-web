@@ -177,7 +177,7 @@ export async function POST(request: Request) {
         statusText: authResponse.statusText,
         error: errorText,
         headers: Object.fromEntries(
-          [...authResponse.headers].map(([key, value]) => [key, value])
+          Array.from(authResponse.headers.entries())
         )
       });
       throw new Error(`Authentication failed: ${authResponse.status} - ${errorText}`);
