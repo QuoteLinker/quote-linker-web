@@ -208,27 +208,6 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  const [sfStatus, setSfStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
-  
-  // Check Salesforce connection status
-  useEffect(() => {
-    const checkSalesforceStatus = async () => {
-      try {
-        const response = await fetch('/api/ping');
-        const data = await response.json();
-        if (data.salesforceConnected) {
-          setSfStatus('connected');
-        } else {
-          setSfStatus('disconnected');
-        }
-      } catch (error) {
-        console.error('Error checking Salesforce status:', error);
-        setSfStatus('disconnected');
-      }
-    };
-    
-    checkSalesforceStatus();
-  }, []);
 
   const validateForm = (data: Record<string, string>) => {
     const errors: Record<string, string> = {};
@@ -257,14 +236,6 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       errors.zipCode = 'ZIP code is required';
     } else if (!/^\d{5}$/.test(data.zipCode)) {
       errors.zipCode = 'Please enter a valid 5-digit ZIP code';
-    }
-    
-    if (!data.productType?.trim()) {
-      errors.productType = 'Product type is required';
-    }
-    
-    if (!data.subType?.trim()) {
-      errors.subType = 'Sub type is required';
     }
     
     setFormErrors(errors);
@@ -297,8 +268,6 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     }
 
     try {
-      console.log('Submitting form data to Zapier:', data);
-      
       const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || 'https://hooks.zapier.com/hooks/catch/22689304/2phdsmv/', {
         method: 'POST',
         headers: {
@@ -312,10 +281,8 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit lead to Zapier');
+        throw new Error('Failed to submit quote request. Please try again.');
       }
-
-      console.log('Lead successfully submitted to Zapier');
 
       // Log successful submission to GTM
       if (window.dataLayer) {
@@ -323,8 +290,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
           event: 'leadSubmit',
           form_data: {
             ...data,
-            leadId: 'ZAPIER-' + Math.random().toString(36).substr(2, 9),
-            mockMode: false
+            leadId: 'QL-' + Math.random().toString(36).substr(2, 9)
           }
         });
       }
@@ -367,132 +333,68 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">Get Your {productType.charAt(0).toUpperCase() + productType.slice(1)} Insurance Quote</h2>
       
-      {/* Salesforce Status Indicator */}
-      <div className="mb-4 flex items-center justify-end">
-        <div className="flex items-center text-sm">
-          {sfStatus === 'checking' && (
-            <>
-              <ArrowPathIcon className="h-4 w-4 mr-1 text-gray-500 animate-spin" />
-              <span className="text-gray-500">Checking Salesforce connection...</span>
-            </>
-          )}
-          {sfStatus === 'connected' && (
-            <>
-              <CheckCircleIcon className="h-4 w-4 mr-1 text-green-500" />
-              <span className="text-green-500">Salesforce connected</span>
-            </>
-          )}
-          {sfStatus === 'disconnected' && (
-            <>
-              <ExclamationCircleIcon className="h-4 w-4 mr-1 text-amber-500" />
-              <span className="text-amber-500">Salesforce disconnected (using mock mode)</span>
-            </>
-          )}
-        </div>
-      </div>
-      
       <form 
         id="quote-form"
         onSubmit={handleSubmit}
         className="space-y-6 max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg"
       >
         <div className="space-y-4">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-              First Name *
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              required
-              disabled={isSubmitting}
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                formErrors.firstName ? 'border-red-500' : ''
-              } ${isSubmitting ? 'bg-gray-100' : ''}`}
-            />
-            {formErrors.firstName && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-              Last Name *
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              required
-              disabled={isSubmitting}
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                formErrors.lastName ? 'border-red-500' : ''
-              } ${isSubmitting ? 'bg-gray-100' : ''}`}
-            />
-            {formErrors.lastName && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email *
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              disabled={isSubmitting}
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                formErrors.email ? 'border-red-500' : ''
-              } ${isSubmitting ? 'bg-gray-100' : ''}`}
-            />
-            {formErrors.email && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-              Phone *
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              required
-              disabled={isSubmitting}
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                formErrors.phone ? 'border-red-500' : ''
-              } ${isSubmitting ? 'bg-gray-100' : ''}`}
-            />
-            {formErrors.phone && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-              ZIP Code *
-            </label>
-            <input
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              required
-              pattern="\d{5}"
-              maxLength={5}
-              disabled={isSubmitting}
-              className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                formErrors.zipCode ? 'border-red-500' : ''
-              } ${isSubmitting ? 'bg-gray-100' : ''}`}
-            />
-            {formErrors.zipCode && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
-            )}
-          </div>
+          {fields.map((field) => (
+            <div key={field.name}>
+              <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
+                {field.label} {field.required && <span className="text-red-500">*</span>}
+                {field.tooltip && (
+                  <QuestionMarkCircleIcon
+                    className="inline-block w-4 h-4 ml-1 text-gray-400"
+                    title={field.tooltip}
+                  />
+                )}
+              </label>
+              {field.type === 'select' ? (
+                <select
+                  id={field.name}
+                  name={field.name}
+                  required={field.required}
+                  disabled={isSubmitting}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
+                    formErrors[field.name] ? 'border-red-500' : ''
+                  } ${isSubmitting ? 'bg-gray-100' : ''}`}
+                >
+                  <option value="">Select {field.label}</option>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : field.type === 'textarea' ? (
+                <textarea
+                  id={field.name}
+                  name={field.name}
+                  required={field.required}
+                  disabled={isSubmitting}
+                  rows={4}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
+                    formErrors[field.name] ? 'border-red-500' : ''
+                  } ${isSubmitting ? 'bg-gray-100' : ''}`}
+                />
+              ) : (
+                <input
+                  type={field.type}
+                  id={field.name}
+                  name={field.name}
+                  required={field.required}
+                  disabled={isSubmitting}
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
+                    formErrors[field.name] ? 'border-red-500' : ''
+                  } ${isSubmitting ? 'bg-gray-100' : ''}`}
+                />
+              )}
+              {formErrors[field.name] && (
+                <p className="mt-1 text-sm text-red-600">{formErrors[field.name]}</p>
+              )}
+            </div>
+          ))}
 
           <input type="hidden" name="productType" value={productType} />
           <input type="hidden" name="subType" value={subType} />
