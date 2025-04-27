@@ -47,6 +47,23 @@ type LifeFormData = z.infer<typeof lifeSchema>;
 type HealthFormData = z.infer<typeof healthSchema>;
 type ValidatedFormData = AutoFormData | HomeFormData | LifeFormData | HealthFormData | BaseFormData;
 
+// Type guard functions to check specific form types
+function isAutoFormData(data: ValidatedFormData): data is AutoFormData {
+  return data.productType === 'auto' && 'vehicleYear' in data;
+}
+
+function isHomeFormData(data: ValidatedFormData): data is HomeFormData {
+  return data.productType === 'home' && 'propertyType' in data;
+}
+
+function isLifeFormData(data: ValidatedFormData): data is LifeFormData {
+  return data.productType === 'life' && 'age' in data && 'coverageAmount' in data;
+}
+
+function isHealthFormData(data: ValidatedFormData): data is HealthFormData {
+  return data.productType === 'health' && 'coverageType' in data;
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -112,20 +129,20 @@ export async function POST(request: Request) {
         Sub_Type__c: validatedData.subType || '',
       };
       
-      // Add type-specific fields based on product type
-      if (validatedData.productType === 'auto' && 'vehicleYear' in validatedData) {
+      // Add type-specific fields based on product type using type guards
+      if (isAutoFormData(validatedData)) {
         mockLeadData.Vehicle_Year__c = validatedData.vehicleYear;
         mockLeadData.Vehicle_Make__c = validatedData.vehicleMake;
         mockLeadData.Vehicle_Model__c = validatedData.vehicleModel;
-      } else if (validatedData.productType === 'home' && 'propertyType' in validatedData) {
+      } else if (isHomeFormData(validatedData)) {
         mockLeadData.Property_Type__c = validatedData.propertyType;
         mockLeadData.Property_Address__c = validatedData.address;
         mockLeadData.Year_Built__c = validatedData.yearBuilt;
-      } else if (validatedData.productType === 'life' && 'age' in validatedData) {
+      } else if (isLifeFormData(validatedData)) {
         mockLeadData.Age__c = validatedData.age;
         mockLeadData.Coverage_Amount__c = validatedData.coverageAmount;
         mockLeadData.Term_Length__c = validatedData.termLength;
-      } else if (validatedData.productType === 'health' && 'coverageType' in validatedData) {
+      } else if (isHealthFormData(validatedData)) {
         mockLeadData.Age__c = validatedData.age;
         mockLeadData.Coverage_Type__c = validatedData.coverageType;
         mockLeadData.Occupation__c = validatedData.occupation;
@@ -186,20 +203,20 @@ export async function POST(request: Request) {
       Status: 'New',
     };
 
-    // Add product-specific fields
-    if (validatedData.productType === 'auto' && 'vehicleYear' in validatedData) {
+    // Add product-specific fields using type guards
+    if (isAutoFormData(validatedData)) {
       leadData.Vehicle_Year__c = validatedData.vehicleYear;
       leadData.Vehicle_Make__c = validatedData.vehicleMake;
       leadData.Vehicle_Model__c = validatedData.vehicleModel;
-    } else if (validatedData.productType === 'home' && 'propertyType' in validatedData) {
+    } else if (isHomeFormData(validatedData)) {
       leadData.Property_Type__c = validatedData.propertyType;
       leadData.Property_Address__c = validatedData.address;
       leadData.Year_Built__c = validatedData.yearBuilt;
-    } else if (validatedData.productType === 'life' && 'age' in validatedData) {
+    } else if (isLifeFormData(validatedData)) {
       leadData.Age__c = validatedData.age;
       leadData.Coverage_Amount__c = validatedData.coverageAmount;
       leadData.Term_Length__c = validatedData.termLength;
-    } else if (validatedData.productType === 'health' && 'coverageType' in validatedData) {
+    } else if (isHealthFormData(validatedData)) {
       leadData.Age__c = validatedData.age;
       leadData.Coverage_Type__c = validatedData.coverageType;
       leadData.Occupation__c = validatedData.occupation;
