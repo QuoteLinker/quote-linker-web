@@ -39,6 +39,14 @@ const healthSchema = baseFormSchema.extend({
   preExistingConditions: z.string().optional(),
 });
 
+// Define types for the validated data
+type BaseFormData = z.infer<typeof baseFormSchema>;
+type AutoFormData = z.infer<typeof autoSchema>;
+type HomeFormData = z.infer<typeof homeSchema>;
+type LifeFormData = z.infer<typeof lifeSchema>;
+type HealthFormData = z.infer<typeof healthSchema>;
+type ValidatedFormData = AutoFormData | HomeFormData | LifeFormData | HealthFormData | BaseFormData;
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -49,7 +57,7 @@ export async function POST(request: Request) {
       data: body
     });
 
-    let validatedData;
+    let validatedData: ValidatedFormData;
 
     // Validate based on product type
     try {
@@ -91,7 +99,9 @@ export async function POST(request: Request) {
     // If Salesforce credentials are not configured, log warning and return mock success
     if (!SF_INSTANCE_URL || !SF_CLIENT_ID || !SF_CLIENT_SECRET || !SF_USERNAME || !SF_PASSWORD || !SF_SECURITY_TOKEN) {
       console.warn('WARNING: Salesforce credentials not configured. Running in mock mode.');
-      const mockLeadData = {
+      
+      // Create a type-safe mock lead data object
+      const mockLeadData: Record<string, any> = {
         FirstName: validatedData.firstName,
         LastName: validatedData.lastName,
         Email: validatedData.email,
@@ -100,29 +110,28 @@ export async function POST(request: Request) {
         LeadSource: "QuoteLinker Web",
         Product_Type__c: validatedData.productType,
         Sub_Type__c: validatedData.subType || '',
-        // Include type-specific fields
-        ...(validatedData.vehicleYear && {
-          Vehicle_Year__c: validatedData.vehicleYear,
-          Vehicle_Make__c: validatedData.vehicleMake,
-          Vehicle_Model__c: validatedData.vehicleModel,
-        }),
-        ...(validatedData.propertyType && {
-          Property_Type__c: validatedData.propertyType,
-          Property_Address__c: validatedData.address,
-          Year_Built__c: validatedData.yearBuilt,
-        }),
-        ...(validatedData.age && {
-          Age__c: validatedData.age,
-          Coverage_Amount__c: validatedData.coverageAmount,
-          Term_Length__c: validatedData.termLength,
-        }),
-        ...(validatedData.coverageType && {
-          Coverage_Type__c: validatedData.coverageType,
-          Occupation__c: validatedData.occupation,
-          Income__c: validatedData.income,
-          Pre_Existing_Conditions__c: validatedData.preExistingConditions,
-        }),
       };
+      
+      // Add type-specific fields based on product type
+      if (validatedData.productType === 'auto' && 'vehicleYear' in validatedData) {
+        mockLeadData.Vehicle_Year__c = validatedData.vehicleYear;
+        mockLeadData.Vehicle_Make__c = validatedData.vehicleMake;
+        mockLeadData.Vehicle_Model__c = validatedData.vehicleModel;
+      } else if (validatedData.productType === 'home' && 'propertyType' in validatedData) {
+        mockLeadData.Property_Type__c = validatedData.propertyType;
+        mockLeadData.Property_Address__c = validatedData.address;
+        mockLeadData.Year_Built__c = validatedData.yearBuilt;
+      } else if (validatedData.productType === 'life' && 'age' in validatedData) {
+        mockLeadData.Age__c = validatedData.age;
+        mockLeadData.Coverage_Amount__c = validatedData.coverageAmount;
+        mockLeadData.Term_Length__c = validatedData.termLength;
+      } else if (validatedData.productType === 'health' && 'coverageType' in validatedData) {
+        mockLeadData.Age__c = validatedData.age;
+        mockLeadData.Coverage_Type__c = validatedData.coverageType;
+        mockLeadData.Occupation__c = validatedData.occupation;
+        mockLeadData.Income__c = validatedData.income;
+        mockLeadData.Pre_Existing_Conditions__c = validatedData.preExistingConditions;
+      }
 
       console.log('MOCK MODE: Lead data:', mockLeadData);
       return NextResponse.json({ success: true, mockMode: true, mockData: mockLeadData });
@@ -164,7 +173,7 @@ export async function POST(request: Request) {
     });
 
     // Prepare lead data based on product type
-    const leadData = {
+    const leadData: Record<string, any> = {
       FirstName: validatedData.firstName,
       LastName: validatedData.lastName,
       Email: validatedData.email,
@@ -178,37 +187,24 @@ export async function POST(request: Request) {
     };
 
     // Add product-specific fields
-    switch (validatedData.productType) {
-      case 'auto':
-        Object.assign(leadData, {
-          Vehicle_Year__c: validatedData.vehicleYear,
-          Vehicle_Make__c: validatedData.vehicleMake,
-          Vehicle_Model__c: validatedData.vehicleModel,
-        });
-        break;
-      case 'home':
-        Object.assign(leadData, {
-          Property_Type__c: validatedData.propertyType,
-          Property_Address__c: validatedData.address,
-          Year_Built__c: validatedData.yearBuilt,
-        });
-        break;
-      case 'life':
-        Object.assign(leadData, {
-          Age__c: validatedData.age,
-          Coverage_Amount__c: validatedData.coverageAmount,
-          Term_Length__c: validatedData.termLength,
-        });
-        break;
-      case 'health':
-        Object.assign(leadData, {
-          Age__c: validatedData.age,
-          Coverage_Type__c: validatedData.coverageType,
-          Occupation__c: validatedData.occupation,
-          Income__c: validatedData.income,
-          Pre_Existing_Conditions__c: validatedData.preExistingConditions,
-        });
-        break;
+    if (validatedData.productType === 'auto' && 'vehicleYear' in validatedData) {
+      leadData.Vehicle_Year__c = validatedData.vehicleYear;
+      leadData.Vehicle_Make__c = validatedData.vehicleMake;
+      leadData.Vehicle_Model__c = validatedData.vehicleModel;
+    } else if (validatedData.productType === 'home' && 'propertyType' in validatedData) {
+      leadData.Property_Type__c = validatedData.propertyType;
+      leadData.Property_Address__c = validatedData.address;
+      leadData.Year_Built__c = validatedData.yearBuilt;
+    } else if (validatedData.productType === 'life' && 'age' in validatedData) {
+      leadData.Age__c = validatedData.age;
+      leadData.Coverage_Amount__c = validatedData.coverageAmount;
+      leadData.Term_Length__c = validatedData.termLength;
+    } else if (validatedData.productType === 'health' && 'coverageType' in validatedData) {
+      leadData.Age__c = validatedData.age;
+      leadData.Coverage_Type__c = validatedData.coverageType;
+      leadData.Occupation__c = validatedData.occupation;
+      leadData.Income__c = validatedData.income;
+      leadData.Pre_Existing_Conditions__c = validatedData.preExistingConditions;
     }
 
     console.log('Preparing to create lead in Salesforce:', {
