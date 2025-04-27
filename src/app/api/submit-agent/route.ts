@@ -1,36 +1,19 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 
-// CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
-
-// Handle OPTIONS request for CORS
-export async function OPTIONS() {
-  return NextResponse.json({}, { headers: corsHeaders });
-}
-
-// Validation schema for lead submission
-const leadSchema = z.object({
+// Validation schema for agent submission
+const agentSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  zipCode: z.string().regex(/^\d{5}$/, 'ZIP code must be exactly 5 digits'),
-  productType: z.string().min(1, 'Product type is required'),
-  subType: z.string().min(1, 'Sub type is required'),
-  age: z.string().optional(),
-  coverageAmount: z.string().optional(),
-  notes: z.string().optional(),
+  agencyName: z.string().min(1, 'Agency name is required'),
 });
 
 // Force mock mode for testing
 const mockMode = process.env.NODE_ENV === 'development';
 
-async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
+async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
   const sfInstanceUrl = process.env.SF_INSTANCE_URL;
   const sfClientId = process.env.SF_CLIENT_ID;
   const sfClientSecret = process.env.SF_CLIENT_SECRET;
@@ -59,18 +42,15 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
 
   const { access_token } = await authResponse.json();
 
-  // Create Contact
+  // Create Contact for agent
   const contactData = {
     FirstName: data.firstName,
     LastName: data.lastName,
     Email: data.email,
     Phone: data.phone,
-    MailingPostalCode: data.zipCode,
-    Product_Type__c: data.productType,
-    Sub_Type__c: data.subType,
-    Age__c: data.age,
-    Coverage_Amount__c: data.coverageAmount,
-    Notes__c: data.notes,
+    RecordTypeId: process.env.SF_AGENT_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
+    Agency_Name__c: data.agencyName,
+    Type: 'Agent',
   };
 
   const contactResponse = await fetch(
@@ -86,21 +66,19 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   );
 
   if (!contactResponse.ok) {
-    throw new Error('Failed to create Contact in Salesforce');
+    throw new Error('Failed to create Agent Contact in Salesforce');
   }
 
   const { id: contactId } = await contactResponse.json();
 
-  // Create Opportunity
+  // Create Opportunity for agent onboarding
   const opportunityData = {
-    Name: `Quote Request - ${data.firstName} ${data.lastName}`,
+    Name: `Agent Onboarding - ${data.firstName} ${data.lastName}`,
     StageName: 'Prospecting',
     Type: 'New Business',
     CloseDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
     ContactId: contactId,
-    Product_Type__c: data.productType,
-    Sub_Type__c: data.subType,
-    Amount: data.coverageAmount ? parseFloat(data.coverageAmount) : null,
+    RecordTypeId: process.env.SF_AGENT_OPPORTUNITY_RECORD_TYPE_ID, // Make sure this is set in your Salesforce org
   };
 
   const opportunityResponse = await fetch(
@@ -116,7 +94,7 @@ async function createSalesforceRecords(data: z.infer<typeof leadSchema>) {
   );
 
   if (!opportunityResponse.ok) {
-    throw new Error('Failed to create Opportunity in Salesforce');
+    throw new Error('Failed to create Agent Opportunity in Salesforce');
   }
 
   const { id: opportunityId } = await opportunityResponse.json();
@@ -129,14 +107,14 @@ export async function POST(request: Request) {
     const body = await request.json();
     
     // Log the incoming request data
-    console.log('Received lead submission:', {
+    console.log('Received agent submission:', {
       ...body,
       timestamp: new Date().toISOString(),
       mockMode
     });
 
     // Validate the request data
-    const validationResult = leadSchema.safeParse(body);
+    const validationResult = agentSchema.safeParse(body);
     
     if (!validationResult.success) {
       console.warn('Validation failed:', validationResult.error);
@@ -156,19 +134,19 @@ export async function POST(request: Request) {
         success: true,
         mockMode: true,
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
-        message: 'Lead submitted successfully (mock mode)'
+        message: 'Agent submission successful (mock mode)'
       });
     }
 
     try {
       // Attempt to create records in Salesforce
-      const { contactId, opportunityId } = await createSalesforceRecords(validationResult.data);
+      const { contactId, opportunityId } = await createSalesforceAgentRecord(validationResult.data);
       
       return NextResponse.json({
         success: true,
         contactId,
         opportunityId,
-        message: 'Lead submitted successfully'
+        message: 'Agent submission successful'
       });
     } catch (sfError) {
       console.error('Salesforce error:', sfError);
@@ -178,13 +156,13 @@ export async function POST(request: Request) {
         success: true,
         mockMode: true,
         leadId: 'MOCK-' + Math.random().toString(36).substr(2, 9),
-        message: 'Lead submitted successfully (mock mode due to Salesforce error)',
+        message: 'Agent submission successful (mock mode due to Salesforce error)',
         error: sfError instanceof Error ? sfError.message : 'Unknown Salesforce error'
       });
     }
 
   } catch (error) {
-    console.error('Error processing lead submission:', error);
+    console.error('Error processing agent submission:', error);
     
     const errorMessage = error instanceof Error 
       ? error.message 

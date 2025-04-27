@@ -1,195 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
-import { InsuranceType } from '@/utils/insuranceCopy';
-import Image from 'next/image';
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
-type ProductType = 'auto' | 'home' | 'life' | 'health';
-type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
-
-interface QuoteFormProps {
-  productType: ProductType;
-  subType?: string;
-}
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  zipCode: string;
-  age: string;
-  coverageAmount: string;
-  notes: string;
-  [key: string]: any; // Allow for dynamic fields
-}
-
-interface FormField {
-  name: string;
-  label: string;
-  type: string;
-  required: boolean;
-  tooltip?: string;
-  options?: { value: string; label: string; }[];
-}
-
-// Helper function to convert ProductType to InsuranceType
-function getInsuranceType(productType: ProductType, subType?: string): InsuranceType {
-  switch (productType) {
-    case 'auto':
-      return 'AUTO';
-    case 'home':
-      return 'HOME';
-    case 'life':
-      return subType === 'permanent' ? 'PERMANENT_LIFE' : 'TERM_LIFE';
-    case 'health':
-      return subType === 'supplemental' ? 'SUPPLEMENTAL_HEALTH' : 'SHORT_TERM_DISABILITY';
-    default:
-      return 'AUTO';
-  }
-}
-
-const formFields: Record<InsuranceType, FormField[]> = {
-  'AUTO': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
-    { name: 'vehicleYear', label: 'Vehicle Year', type: 'number', required: true },
-    { name: 'vehicleMake', label: 'Vehicle Make', type: 'text', required: true },
-    { name: 'vehicleModel', label: 'Vehicle Model', type: 'text', required: true }
-  ],
-  'HOME': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
-    { name: 'address', label: 'Property Address', type: 'text', required: true },
-    { name: 'propertyType', label: 'Property Type', type: 'select', required: true, options: [
-      { value: 'single', label: 'Single Family Home' },
-      { value: 'multi', label: 'Multi-Family Home' },
-      { value: 'condo', label: 'Condo/Townhouse' }
-    ]},
-    { name: 'yearBuilt', label: 'Year Built', type: 'number', required: true }
-  ],
-  'TERM_LIFE': [
-    {
-      name: 'firstName',
-      label: 'First Name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'lastName',
-      label: 'Last Name',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'email',
-      label: 'Email',
-      type: 'email',
-      required: true,
-    },
-    {
-      name: 'phone',
-      label: 'Phone',
-      type: 'tel',
-      required: true,
-    },
-    {
-      name: 'zipCode',
-      label: 'ZIP Code',
-      type: 'text',
-      required: true,
-    },
-    {
-      name: 'age',
-      label: 'Age',
-      type: 'number',
-      required: true,
-    },
-    {
-      name: 'coverageAmount',
-      label: 'Coverage Amount',
-      type: 'select',
-      required: true,
-      options: [
-        { value: '100000', label: '$100,000' },
-        { value: '250000', label: '$250,000' },
-        { value: '500000', label: '$500,000' },
-        { value: '1000000', label: '$1,000,000' },
-      ],
-    },
-    {
-      name: 'termLength',
-      label: 'Term Length',
-      type: 'select',
-      required: true,
-      options: [
-        { value: '10', label: '10 Years' },
-        { value: '15', label: '15 Years' },
-        { value: '20', label: '20 Years' },
-        { value: '30', label: '30 Years' },
-      ],
-    },
-    {
-      name: 'notes',
-      label: 'Additional Notes',
-      type: 'textarea',
-      required: false,
-    },
-  ],
-  'PERMANENT_LIFE': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
-    { name: 'age', label: 'Age', type: 'number', required: true },
-    { name: 'coverageAmount', label: 'Coverage Amount', type: 'select', required: true, options: [
-      { value: '100000', label: '$100,000' },
-      { value: '250000', label: '$250,000' },
-      { value: '500000', label: '$500,000' },
-      { value: '1000000', label: '$1,000,000' }
-    ]}
-  ],
-  'SHORT_TERM_DISABILITY': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
-    { name: 'occupation', label: 'Occupation', type: 'text', required: true },
-    { name: 'income', label: 'Annual Income', type: 'number', required: true },
-    { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
-      { value: 'short', label: 'Short-term Disability' }
-    ]}
-  ],
-  'SUPPLEMENTAL_HEALTH': [
-    { name: 'firstName', label: 'First Name', type: 'text', required: true },
-    { name: 'lastName', label: 'Last Name', type: 'text', required: true },
-    { name: 'phone', label: 'Phone', type: 'tel', required: true },
-    { name: 'email', label: 'Email', type: 'email', required: true },
-    { name: 'zipCode', label: 'ZIP Code', type: 'text', required: true },
-    { name: 'age', label: 'Age', type: 'number', required: true },
-    { name: 'coverageType', label: 'Coverage Type', type: 'select', required: true, options: [
-      { value: 'individual', label: 'Individual' },
-      { value: 'family', label: 'Family' }
-    ]},
-    { name: 'preExistingConditions', label: 'Pre-existing Conditions', type: 'select', required: true, options: [
-      { value: 'yes', label: 'Yes' },
-      { value: 'no', label: 'No' }
-    ]}
-  ]
-};
-
-export default function QuoteForm({ productType, subType = productType }: QuoteFormProps) {
+export default function AgentSignupForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -219,18 +33,8 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       errors.phone = 'Please enter a valid phone number';
     }
     
-    if (!data.zipCode?.trim()) {
-      errors.zipCode = 'ZIP code is required';
-    } else if (!/^\d{5}$/.test(data.zipCode)) {
-      errors.zipCode = 'Please enter a valid 5-digit ZIP code';
-    }
-    
-    if (!data.productType?.trim()) {
-      errors.productType = 'Product type is required';
-    }
-    
-    if (!data.subType?.trim()) {
-      errors.subType = 'Sub type is required';
+    if (!data.agencyName?.trim()) {
+      errors.agencyName = 'Agency name is required';
     }
     
     setFormErrors(errors);
@@ -247,7 +51,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     const form = e.currentTarget;
     const data: Record<string, string> = {};
     
-    // Collect form data using form elements
+    // Collect form data
     const formElements = form.elements;
     for (let i = 0; i < formElements.length; i++) {
       const element = formElements[i] as HTMLInputElement;
@@ -263,9 +67,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     }
 
     try {
-      console.log('Submitting form data:', data);
-      
-      const response = await fetch('/api/submit-lead', {
+      const response = await fetch('/api/submit-agent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -274,7 +76,6 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       });
 
       const result = await response.json();
-      console.log('Form submission response:', result);
 
       if (!response.ok) {
         throw new Error(result.error || 'Failed to submit form');
@@ -283,7 +84,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       // Log successful submission to GTM
       if (window.dataLayer) {
         window.dataLayer.push({
-          event: 'leadSubmit',
+          event: 'agentSignup',
           form_data: {
             ...data,
             leadId: result.leadId,
@@ -295,7 +96,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       setSuccess(true);
       
       // Show success animation
-      const formElement = document.getElementById('quote-form');
+      const formElement = document.getElementById('agent-signup-form');
       if (formElement) {
         formElement.classList.add('success-animation');
       }
@@ -311,7 +112,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
       // Log error to GTM
       if (window.dataLayer) {
         window.dataLayer.push({
-          event: 'leadSubmitError',
+          event: 'agentSignupError',
           error: err instanceof Error ? err.message : 'Unknown error',
           form_data: data
         });
@@ -323,14 +124,11 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
     }
   };
 
-  const insuranceType = getInsuranceType(productType, subType);
-  const fields = formFields[insuranceType] || [];
-
   return (
     <form 
-      id="quote-form"
+      id="agent-signup-form"
       onSubmit={handleSubmit}
-      className="space-y-6 max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg"
+      className="space-y-6 bg-white shadow sm:rounded-lg p-6"
     >
       <div className="space-y-4">
         <div>
@@ -406,27 +204,22 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
         </div>
 
         <div>
-          <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-            ZIP Code *
+          <label htmlFor="agencyName" className="block text-sm font-medium text-gray-700">
+            Agency Name *
           </label>
           <input
             type="text"
-            id="zipCode"
-            name="zipCode"
+            id="agencyName"
+            name="agencyName"
             required
-            pattern="\d{5}"
-            maxLength={5}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              formErrors.zipCode ? 'border-red-500' : ''
+              formErrors.agencyName ? 'border-red-500' : ''
             }`}
           />
-          {formErrors.zipCode && (
-            <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
+          {formErrors.agencyName && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.agencyName}</p>
           )}
         </div>
-
-        <input type="hidden" name="productType" value={productType} />
-        <input type="hidden" name="subType" value={subType} />
       </div>
 
       {error && (
@@ -476,7 +269,7 @@ export default function QuoteForm({ productType, subType = productType }: QuoteF
               Submitting...
             </>
           ) : (
-            'Get Your Quote'
+            'Join QuoteLinker'
           )}
         </button>
       </div>

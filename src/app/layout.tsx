@@ -1,15 +1,17 @@
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import GoogleTagManager from '@/components/GoogleTagManager'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'QuoteLinker - Insurance Quotes Made Easy',
   description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+  metadataBase: new URL('https://www.quotelinker.com'),
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -21,6 +23,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+}
+
+export const viewport: Viewport = {
   themeColor: '#00EEFD',
 }
 
@@ -67,12 +72,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+
   return (
     <html lang="en">
       <head>
-        <GoogleTagManagerHead />
+        {gtmId && <GoogleTagManager gtmId={gtmId} />}
       </head>
       <body className={inter.className}>
+        <GoogleTagManagerHead />
         <GoogleTagManagerBody />
         <Header />
         <main>{children}</main>
