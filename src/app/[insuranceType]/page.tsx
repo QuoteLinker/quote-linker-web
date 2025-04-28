@@ -24,16 +24,16 @@ export default function Page({ params }: { params: { insuranceType: string } }) 
       insuranceType = 'HOME';
       break;
     case 'term-life':
-      insuranceType = 'TERM_LIFE';
+      insuranceType = 'LIFE_TERM';
       break;
     case 'permanent-life':
-      insuranceType = 'PERMANENT_LIFE';
+      insuranceType = 'LIFE_PERMANENT';
       break;
     case 'short-term-disability':
-      insuranceType = 'SHORT_TERM_DISABILITY';
+      insuranceType = 'HEALTH_SHORT_TERM_DISABILITY';
       break;
     case 'supplemental-health':
-      insuranceType = 'SUPPLEMENTAL_HEALTH';
+      insuranceType = 'HEALTH_SUPPLEMENTAL';
       break;
     default:
       return notFound();
