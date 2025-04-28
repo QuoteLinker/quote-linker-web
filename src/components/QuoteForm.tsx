@@ -13,8 +13,8 @@ interface FormData {
   subType?: string;
   age?: string;
   tobaccoUse?: string;
-  vehicleDetails?: string;
-  propertyAddress?: string;
+  coverageAmount?: string;
+  termLength?: string;
 }
 
 interface QuoteFormProps {
@@ -82,8 +82,8 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     }
   };
 
-  const showLifeFields = type === 'TERM_LIFE' || type === 'PERMANENT_LIFE';
-  const showHealthFields = type === 'SHORT_TERM_DISABILITY' || type === 'SUPPLEMENTAL_HEALTH';
+  const showLifeFields = type.startsWith('LIFE_');
+  const showHealthFields = type.startsWith('HEALTH_');
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm">
@@ -202,6 +202,46 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
                 <option value="yes">Yes</option>
               </select>
             </div>
+
+            <div>
+              <label htmlFor="coverageAmount" className="block text-sm font-medium text-gray-700">
+                Coverage Amount *
+              </label>
+              <select
+                name="coverageAmount"
+                id="coverageAmount"
+                required
+                value={formData.coverageAmount}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
+              >
+                <option value="">Select an amount</option>
+                <option value="250000">$250,000</option>
+                <option value="500000">$500,000</option>
+                <option value="1000000">$1,000,000</option>
+              </select>
+            </div>
+
+            {type === 'LIFE_TERM' && (
+              <div>
+                <label htmlFor="termLength" className="block text-sm font-medium text-gray-700">
+                  Term Length *
+                </label>
+                <select
+                  name="termLength"
+                  id="termLength"
+                  required
+                  value={formData.termLength}
+                  onChange={handleChange}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm"
+                >
+                  <option value="">Select a term</option>
+                  <option value="10">10 Years</option>
+                  <option value="20">20 Years</option>
+                  <option value="30">30 Years</option>
+                </select>
+              </div>
+            )}
           </>
         )}
 

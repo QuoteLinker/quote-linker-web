@@ -1,4 +1,7 @@
-export type InsuranceType = 'AUTO' | 'HOME' | 'TERM_LIFE' | 'PERMANENT_LIFE' | 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL_HEALTH';
+export type MainInsuranceType = 'AUTO' | 'HOME' | 'LIFE' | 'HEALTH';
+export type LifeSubType = 'TERM' | 'PERMANENT';
+export type HealthSubType = 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL_HEALTH';
+export type InsuranceType = MainInsuranceType | `${MainInsuranceType}_${LifeSubType | HealthSubType}`;
 
 interface Benefit {
   title: string;
@@ -106,7 +109,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       }
     ]
   },
-  TERM_LIFE: {
+  LIFE_TERM: {
     title: 'Term Life Insurance',
     subtitle: 'Secure your family\'s future with the right life insurance',
     benefits: [
@@ -154,7 +157,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       }
     ]
   },
-  PERMANENT_LIFE: {
+  LIFE_PERMANENT: {
     title: 'Permanent Life Insurance',
     subtitle: 'Lifetime protection with cash value growth',
     benefits: [
@@ -202,7 +205,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       }
     ]
   },
-  SHORT_TERM_DISABILITY: {
+  HEALTH_SHORT_TERM_DISABILITY: {
     title: 'Short-Term Disability Insurance',
     subtitle: 'Protect your income if you can\'t work',
     benefits: [
@@ -246,7 +249,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       }
     ]
   },
-  SUPPLEMENTAL_HEALTH: {
+  HEALTH_SUPPLEMENTAL: {
     title: 'Supplemental Health Insurance',
     subtitle: 'Extra coverage for your healthcare needs',
     benefits: [

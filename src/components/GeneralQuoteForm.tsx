@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 const insuranceTypes = [
-  { id: 'auto', label: 'Auto Insurance' },
-  { id: 'home', label: 'Home Insurance' },
-  { id: 'life', label: 'Life Insurance' },
-  { id: 'disability', label: 'Disability Insurance' },
+  { id: 'LIFE_TERM', label: 'Term Life Insurance' },
+  { id: 'LIFE_PERMANENT', label: 'Permanent Life Insurance' },
+  { id: 'HEALTH_SHORT_TERM_DISABILITY', label: 'Short Term Disability Insurance' },
+  { id: 'HEALTH_SUPPLEMENTAL', label: 'Supplemental Health Insurance' },
 ];
 
 export default function GeneralQuoteForm() {

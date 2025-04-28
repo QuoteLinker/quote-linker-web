@@ -26,19 +26,23 @@
 ## Form Submission Tests
 
 ### Auto Insurance
-- [ ] Test 1: Basic quote request
-  - Status: Pending
-  - Response Code: N/A
-  - Zapier Status: N/A
-  - Google Sheets Status: N/A
-
+- [x] Test 1: Basic quote request
+  - Product Type: AUTO
+  - Sub Type: PERSONAL
+  - Status: Success
+  - Response Code: 200
+  - Zapier Status: Pending verification
+  - Google Sheets Status: Pending verification
+  - Timestamp: 2025-04-28T00:27:26.475Z
 ### Home Insurance
-- [ ] Test 1: Basic quote request
-  - Status: Pending
-  - Response Code: N/A
-  - Zapier Status: N/A
-  - Google Sheets Status: N/A
-
+- [x] Test 1: Basic quote request
+  - Product Type: HOME
+  - Sub Type: SINGLE_FAMILY
+  - Status: Success
+  - Response Code: 200
+  - Zapier Status: Pending verification
+  - Google Sheets Status: Pending verification
+  - Timestamp: 2025-04-28T00:27:28.574Z
 ### Term Life Insurance
 - [ ] Test 1: Basic quote request
   - Status: Pending
