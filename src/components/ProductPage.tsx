@@ -72,7 +72,7 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             'Natural Disaster Coverage',
           ],
         };
-      case 'TERM_LIFE':
+      case 'LIFE_TERM':
         return {
           heroTitle: 'Term Life Insurance',
           heroSubtitle: 'Affordable protection for your loved ones',
@@ -91,7 +91,7 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             'Family Protection',
           ],
         };
-      case 'PERMANENT_LIFE':
+      case 'LIFE_PERMANENT':
         return {
           heroTitle: 'Permanent Life Insurance',
           heroSubtitle: 'Lifetime protection with cash value growth',
@@ -110,7 +110,7 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             'Estate Planning',
           ],
         };
-      case 'SHORT_TERM_DISABILITY':
+      case 'HEALTH_SHORT_TERM_DISABILITY':
         return {
           heroTitle: 'Short Term Disability Insurance',
           heroSubtitle: 'Protect your income during recovery',
@@ -129,7 +129,7 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             'Easy Claims Process',
           ],
         };
-      case 'SUPPLEMENTAL_HEALTH':
+      case 'HEALTH_SUPPLEMENTAL':
         return {
           heroTitle: 'Supplemental Health Insurance',
           heroSubtitle: 'Extra coverage for unexpected medical expenses',

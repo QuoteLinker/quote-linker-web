@@ -1,7 +1,15 @@
 export type MainInsuranceType = 'AUTO' | 'HOME' | 'LIFE' | 'HEALTH';
 export type LifeSubType = 'TERM' | 'PERMANENT';
-export type HealthSubType = 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL_HEALTH';
-export type InsuranceType = MainInsuranceType | `${MainInsuranceType}_${LifeSubType | HealthSubType}`;
+export type HealthSubType = 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL';
+export type InsuranceType = 
+  | 'AUTO' 
+  | 'HOME' 
+  | 'LIFE' 
+  | 'HEALTH'
+  | 'LIFE_TERM'
+  | 'LIFE_PERMANENT'
+  | 'HEALTH_SHORT_TERM_DISABILITY'
+  | 'HEALTH_SUPPLEMENTAL';
 
 interface Benefit {
   title: string;
@@ -109,8 +117,8 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       }
     ]
   },
-  LIFE_TERM: {
-    title: 'Term Life Insurance',
+  LIFE: {
+    title: 'Life Insurance',
     subtitle: 'Secure your family\'s future with the right life insurance',
     benefits: [
       {
@@ -154,6 +162,98 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       {
         question: 'What factors affect life insurance rates?',
         answer: 'Factors include your age, health, lifestyle, and the type and amount of coverage you select.'
+      }
+    ]
+  },
+  HEALTH: {
+    title: 'Health Insurance',
+    subtitle: 'Find the right health insurance coverage for your needs',
+    benefits: [
+      {
+        title: 'Comprehensive Coverage',
+        description: 'Comprehensive health coverage'
+      },
+      {
+        title: 'Flexible Options',
+        description: 'Flexible plan options'
+      },
+      {
+        title: 'Competitive Rates',
+        description: 'Competitive rates from licensed agents'
+      },
+      {
+        title: 'Simple Process',
+        description: 'Simple application process'
+      },
+      {
+        title: 'Expert Guidance',
+        description: 'Expert guidance from licensed agents'
+      }
+    ],
+    faqs: [
+      {
+        question: 'What types of health insurance are available?',
+        answer: 'Common types include individual health plans, short-term disability, and supplemental health insurance. Each has different benefits and costs.'
+      },
+      {
+        question: 'How much health insurance do I need?',
+        answer: 'The amount depends on your health needs, budget, and risk tolerance. We\'ll help you find the right coverage for your situation.'
+      },
+      {
+        question: 'Can I get coverage if I have pre-existing conditions?',
+        answer: 'Yes, under the Affordable Care Act, insurance companies cannot deny coverage or charge more for pre-existing conditions.'
+      },
+      {
+        question: 'When can I enroll in health insurance?',
+        answer: 'You can enroll during the annual Open Enrollment Period, or you may qualify for a Special Enrollment Period if you experience certain life events.'
+      }
+    ]
+  },
+  LIFE_TERM: {
+    title: 'Term Life Insurance',
+    subtitle: 'Affordable protection for your loved ones',
+    benefits: [
+      {
+        title: 'Financial Protection',
+        description: 'Financial protection for your loved ones'
+      },
+      {
+        title: 'Flexible Options',
+        description: 'Flexible policy options'
+      },
+      {
+        title: 'Competitive Rates',
+        description: 'Competitive rates that are tailored to your needs'
+      },
+      {
+        title: 'Simple Process',
+        description: 'Simple application process'
+      },
+      {
+        title: 'Expert Guidance',
+        description: 'Expert guidance from licensed agents'
+      },
+      {
+        title: 'Peace of Mind',
+        description: 'Peace of mind for your family'
+      }
+    ],
+    faqs: [
+      {
+        question: 'How much term life insurance do I need?',
+        answer: 'The amount depends on your income, debts, and your family\'s needs. We\'ll help you calculate the right coverage amount.'
+      },
+      {
+        question: 'How long should my term be?',
+        answer: 'Common term lengths are 10, 20, or 30 years. Choose a term that covers your financial obligations and family needs.'
+      },
+      {
+        question: 'Can I convert my term policy to permanent insurance?',
+        answer: 'Many term policies offer conversion options. Check with your specific policy for details.'
+      },
+      {
+        question: 'What happens when my term expires?',
+        answer: 'When your term expires, you can renew your policy (usually at a higher rate), convert to permanent insurance, or let it lapse.'
       }
     ]
   },
@@ -251,7 +351,7 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   },
   HEALTH_SUPPLEMENTAL: {
     title: 'Supplemental Health Insurance',
-    subtitle: 'Extra coverage for your healthcare needs',
+    subtitle: 'Extra coverage for unexpected medical expenses',
     benefits: [
       {
         title: 'Additional Coverage',
