@@ -40,7 +40,7 @@ const faqContent: Record<InsuranceType, FAQItem[]> = {
       answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
     },
   ],
-  TERM_LIFE: [
+  LIFE_TERM: [
     {
       question: 'How does term life insurance work?',
       answer: 'Term life insurance provides a death benefit to your beneficiaries when you pass away. You pay regular premiums, and in exchange, your loved ones receive financial protection to help cover expenses, debts, and future needs.',
@@ -54,7 +54,7 @@ const faqContent: Record<InsuranceType, FAQItem[]> = {
       answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
     },
   ],
-  PERMANENT_LIFE: [
+  LIFE_PERMANENT: [
     {
       question: 'How does permanent life insurance work?',
       answer: 'Permanent life insurance provides lifelong coverage and includes a cash value component. You pay regular premiums, and in exchange, your loved ones receive financial protection to help cover expenses, debts, and future needs.',
@@ -68,7 +68,7 @@ const faqContent: Record<InsuranceType, FAQItem[]> = {
       answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
     },
   ],
-  SHORT_TERM_DISABILITY: [
+  HEALTH_SHORT_TERM_DISABILITY: [
     {
       question: 'How does short-term disability insurance work?',
       answer: 'Short-term disability insurance provides income replacement if you become unable to work due to illness or injury. It typically covers a portion of your salary for a limited period.',
@@ -82,13 +82,41 @@ const faqContent: Record<InsuranceType, FAQItem[]> = {
       answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
     },
   ],
-  SUPPLEMENTAL_HEALTH: [
+  HEALTH_SUPPLEMENTAL: [
     {
       question: 'How does supplemental health insurance work?',
       answer: 'Supplemental health insurance helps cover medical expenses not covered by your primary health insurance, including deductibles, copayments, and coinsurance.',
     },
     {
       question: 'What type of supplemental health coverage do I need?',
+      answer: 'The right coverage depends on your health needs, budget, and circumstances. Options include individual plans, family plans, and supplemental plans. A licensed agent can help you find the best fit.',
+    },
+    {
+      question: 'How fast will I hear back?',
+      answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
+    },
+  ],
+  LIFE: [
+    {
+      question: 'How does life insurance work?',
+      answer: 'Life insurance provides a death benefit to your beneficiaries when you pass away. You pay regular premiums, and in exchange, your loved ones receive financial protection to help cover expenses, debts, and future needs.',
+    },
+    {
+      question: 'What type of life insurance is right for me?',
+      answer: 'The right choice depends on your needs, budget, and long-term goals. Term life is typically more affordable and straightforward, while permanent life provides lifelong coverage with a cash value component.',
+    },
+    {
+      question: 'How fast will I hear back?',
+      answer: 'Most customers receive a response from a licensed agent within 24 hours. During business hours, you may hear back within just a few hours.',
+    },
+  ],
+  HEALTH: [
+    {
+      question: 'How does health insurance work?',
+      answer: 'Health insurance helps cover medical expenses, including doctor visits, hospital stays, and prescription medications. It provides financial protection against high healthcare costs.',
+    },
+    {
+      question: 'What type of health coverage do I need?',
       answer: 'The right coverage depends on your health needs, budget, and circumstances. Options include individual plans, family plans, and supplemental plans. A licensed agent can help you find the best fit.',
     },
     {

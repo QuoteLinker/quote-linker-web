@@ -10,19 +10,23 @@ export interface HeroProps {
 const productTitles: Record<InsuranceType, string> = {
   AUTO: 'Auto Insurance',
   HOME: 'Home Insurance',
-  TERM_LIFE: 'Term Life Insurance',
-  PERMANENT_LIFE: 'Permanent Life Insurance',
-  SHORT_TERM_DISABILITY: 'Short-Term Disability Insurance',
-  SUPPLEMENTAL_HEALTH: 'Supplemental Health Insurance',
+  LIFE_TERM: 'Term Life Insurance',
+  LIFE_PERMANENT: 'Permanent Life Insurance',
+  HEALTH_SHORT_TERM_DISABILITY: 'Short-Term Disability Insurance',
+  HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance',
+  LIFE: 'Life Insurance',
+  HEALTH: 'Health Insurance',
 };
 
 const productSubtitles: Record<InsuranceType, string> = {
   AUTO: 'Find the perfect auto insurance coverage tailored to your needs and budget.',
   HOME: 'Protect your home with comprehensive coverage from trusted providers.',
-  TERM_LIFE: 'Secure your family\'s future with the right term life insurance policy.',
-  PERMANENT_LIFE: 'Build lifelong protection and wealth with permanent life insurance.',
-  SHORT_TERM_DISABILITY: 'Protect your income with short-term disability coverage.',
-  SUPPLEMENTAL_HEALTH: 'Get additional health coverage for extra peace of mind.',
+  LIFE_TERM: 'Secure your family\'s future with the right term life insurance policy.',
+  LIFE_PERMANENT: 'Build lifelong protection and wealth with permanent life insurance.',
+  HEALTH_SHORT_TERM_DISABILITY: 'Protect your income with short-term disability coverage.',
+  HEALTH_SUPPLEMENTAL: 'Get additional health coverage for extra peace of mind.',
+  LIFE: 'Protect your loved ones with the right life insurance coverage.',
+  HEALTH: 'Find comprehensive health insurance that fits your needs and budget.',
 };
 
 export default function Hero({ insuranceType, subType }: HeroProps) {

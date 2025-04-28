@@ -57,7 +57,7 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       description: 'Connect with agents who understand your area\'s specific needs.',
     },
   ],
-  TERM_LIFE: [
+  LIFE_TERM: [
     {
       icon: ShieldCheckIcon,
       title: 'Family Protection',
@@ -79,7 +79,7 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       description: 'Work with agents who understand life insurance planning.',
     },
   ],
-  PERMANENT_LIFE: [
+  LIFE_PERMANENT: [
     {
       icon: ShieldCheckIcon,
       title: 'Lifetime Protection',
@@ -101,7 +101,7 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       description: 'Work with agents who understand permanent life insurance.',
     },
   ],
-  SHORT_TERM_DISABILITY: [
+  HEALTH_SHORT_TERM_DISABILITY: [
     {
       icon: ShieldCheckIcon,
       title: 'Income Protection',
@@ -123,7 +123,7 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       description: 'Work with agents who understand disability insurance.',
     },
   ],
-  SUPPLEMENTAL_HEALTH: [
+  HEALTH_SUPPLEMENTAL: [
     {
       icon: ShieldCheckIcon,
       title: 'Extra Protection',
@@ -143,6 +143,50 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       icon: UserGroupIcon,
       title: 'Expert Guidance',
       description: 'Work with agents who understand supplemental health insurance.',
+    },
+  ],
+  LIFE: [
+    {
+      icon: ShieldCheckIcon,
+      title: 'Comprehensive Protection',
+      description: 'Protect your loved ones with flexible coverage options.',
+    },
+    {
+      icon: CurrencyDollarIcon,
+      title: 'Affordable Solutions',
+      description: 'Find the right coverage at competitive rates.',
+    },
+    {
+      icon: ClockIcon,
+      title: 'Simple Process',
+      description: 'Easy application and quick approval process.',
+    },
+    {
+      icon: UserGroupIcon,
+      title: 'Expert Guidance',
+      description: 'Work with agents who understand all types of life insurance.',
+    },
+  ],
+  HEALTH: [
+    {
+      icon: ShieldCheckIcon,
+      title: 'Complete Coverage',
+      description: 'Comprehensive health insurance for your needs.',
+    },
+    {
+      icon: CurrencyDollarIcon,
+      title: 'Flexible Plans',
+      description: 'Choose from a variety of coverage options.',
+    },
+    {
+      icon: ClockIcon,
+      title: 'Quick Access',
+      description: 'Get the care you need when you need it.',
+    },
+    {
+      icon: UserGroupIcon,
+      title: 'Expert Support',
+      description: 'Work with agents who understand healthcare coverage.',
     },
   ],
 };
