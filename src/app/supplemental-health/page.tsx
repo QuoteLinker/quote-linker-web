@@ -1,8 +1,7 @@
 import ProductPage from '@/components/ProductPage';
-import { InsuranceType } from '@/utils/insuranceCopy';
 
-export default function SupplementalHealthInsurancePage() {
-  return <ProductPage insuranceType="SUPPLEMENTAL_HEALTH" />;
+export default function SupplementalHealthPage() {
+  return <ProductPage insuranceType="HEALTH_SUPPLEMENTAL" />;
 }
 
 export const metadata = {

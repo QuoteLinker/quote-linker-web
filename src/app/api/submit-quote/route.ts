@@ -21,7 +21,7 @@ const formSchema = z.object({
   website: z.string().optional(),
 }).refine((data) => {
   // Require age for health insurance types
-  if (data.insuranceType === 'SHORT_TERM_DISABILITY' || data.insuranceType === 'SUPPLEMENTAL_HEALTH') {
+  if (data.insuranceType === 'HEALTH_SHORT_TERM_DISABILITY' || data.insuranceType === 'HEALTH_SUPPLEMENTAL') {
     return !!data.age;
   }
   return true;
