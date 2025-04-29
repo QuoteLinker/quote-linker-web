@@ -15,6 +15,7 @@ import {
   CheckIcon,
 } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
+import StickyCTA from './StickyCTA';
 
 interface ProductPageProps {
   insuranceType: InsuranceType;
@@ -378,6 +379,9 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Sticky CTA */}
+      <StickyCTA ctaText={config.ctaText} />
     </div>
   );
 }

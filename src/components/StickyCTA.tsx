@@ -1,53 +1,52 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-import { trackNavClick } from '@/utils/gtm';
-import { InsuranceType } from '@/utils/insuranceCopy';
+import React, { useState, useEffect } from 'react';
 
 interface StickyCTAProps {
-  insuranceType: InsuranceType;
+  ctaText: string;
 }
 
-export default function StickyCTA({ insuranceType }: StickyCTAProps) {
+export default function StickyCTA({ ctaText }: StickyCTAProps) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const quoteForm = document.getElementById('quote-form');
-      if (!quoteForm) return;
+      const formElement = document.getElementById('quote-form');
+      if (!formElement) return;
 
-      const rect = quoteForm.getBoundingClientRect();
-      const isFormVisible = rect.top < window.innerHeight && rect.bottom >= 0;
-      setIsVisible(!isFormVisible);
+      const formRect = formElement.getBoundingClientRect();
+      const isFormInView = formRect.top <= window.innerHeight;
+      
+      // Show the CTA when we've scrolled past the hero (approximately 100px)
+      // and hide it when the form is in view
+      setIsVisible(window.scrollY > 100 && !isFormInView);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial state
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleClick = () => {
-    const quoteForm = document.getElementById('quote-form');
-    if (quoteForm) {
-      trackNavClick('Sticky CTA', '#quote-form');
-      quoteForm.scrollIntoView({ behavior: 'smooth' });
+  const scrollToForm = () => {
+    const formElement = document.getElementById('quote-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
+  if (!isVisible) return null;
+
   return (
-    <div
-      className={`fixed bottom-0 left-0 right-0 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-        isVisible ? 'translate-y-0' : 'translate-y-full'
-      } md:hidden z-50`}
-    >
-      <div className="container mx-auto px-4 py-3">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg transform transition-transform duration-300 z-50">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900">Ready to get started?</h3>
+          <p className="text-sm text-gray-600">Get your free quote in minutes</p>
+        </div>
         <button
-          onClick={handleClick}
-          className="w-full bg-electric-blue text-deep-navy font-semibold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 shadow-brand"
+          onClick={scrollToForm}
+          className="ml-4 px-6 py-3 bg-[#00EEFD] text-white rounded-lg font-medium hover:bg-[#00D4E5] transition-colors duration-200"
         >
-          Get Your {insuranceType} Quote
+          {ctaText}
         </button>
       </div>
     </div>
