@@ -12,6 +12,7 @@ import {
   HomeIcon,
   TruckIcon,
   SparklesIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 
@@ -27,7 +28,7 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
     if (searchParams?.get('quote') === 'true') {
       const formElement = document.getElementById('quote-form');
       if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   }, [searchParams]);
@@ -45,13 +46,24 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: ClockIcon, text: 'Quick Claims Process' },
           ],
           benefits: [
-            'Liability Coverage',
-            'Collision Coverage',
-            'Comprehensive Coverage',
-            'Uninsured/Underinsured Motorist',
-            'Personal Injury Protection',
-            'Roadside Assistance',
+            'Liability Coverage - Protects you if you cause injury or property damage',
+            'Collision Coverage - Repairs your car after an accident',
+            'Comprehensive Coverage - Protection against theft, vandalism, and natural disasters',
+            'Uninsured/Underinsured Motorist - Covers you if the other driver lacks insurance',
+            'Personal Injury Protection - Medical expenses for you and your passengers',
+            'Roadside Assistance - 24/7 help when you need it most',
           ],
+          eligibility: [
+            'Valid driver\'s license',
+            'Registered vehicle',
+            'Clean driving record preferred',
+            'Must be at least 16 years old',
+          ],
+          coverage: {
+            minimum: '$15,000',
+            recommended: '$100,000',
+            maximum: '$500,000'
+          }
         };
       case 'HOME':
         return {
@@ -64,18 +76,29 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: SparklesIcon, text: 'Additional Coverage Options' },
           ],
           benefits: [
-            'Dwelling Coverage',
-            'Personal Property Coverage',
-            'Liability Protection',
-            'Additional Living Expenses',
-            'Medical Payments to Others',
-            'Natural Disaster Coverage',
+            'Dwelling Coverage - Protects your home\'s structure',
+            'Personal Property Coverage - Protects your belongings',
+            'Liability Protection - Coverage for accidents on your property',
+            'Additional Living Expenses - Covers temporary housing if needed',
+            'Medical Payments - For injuries to guests on your property',
+            'Natural Disaster Coverage - Protection against specified perils',
           ],
+          eligibility: [
+            'Home ownership or pending purchase',
+            'Property meets safety standards',
+            'Located in an insurable area',
+            'No recent major claims'
+          ],
+          coverage: {
+            minimum: '$100,000',
+            recommended: '$300,000',
+            maximum: '$1,000,000+'
+          }
         };
       case 'LIFE_TERM':
         return {
           heroTitle: 'Term Life Insurance',
-          heroSubtitle: 'Affordable protection for your loved ones',
+          heroSubtitle: 'Affordable protection for your loved ones when they need it most',
           ctaText: 'Get Your Term Life Quote',
           iconItems: [
             { icon: HeartIcon, text: 'Family Protection' },
@@ -83,18 +106,29 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: ClockIcon, text: 'Fixed Term Coverage' },
           ],
           benefits: [
-            'Death Benefit',
-            'Fixed Premiums',
-            'Flexible Term Lengths',
-            'Convertible Options',
-            'No Medical Exam Options',
-            'Family Protection',
+            'Level Premiums - Fixed rates for your chosen term',
+            'Death Benefit - Tax-free payout to your beneficiaries',
+            'Flexible Terms - Choose 10, 20, or 30-year coverage',
+            'Convertible Options - Convert to permanent coverage later',
+            'No Medical Exam Options - Available for qualifying applicants',
+            'Family Protection - Income replacement and debt coverage',
           ],
+          eligibility: [
+            'Age 18-65 for most terms',
+            'No terminal illnesses',
+            'U.S. resident',
+            'Meets health requirements'
+          ],
+          coverage: {
+            minimum: '$100,000',
+            recommended: '$500,000',
+            maximum: '$2,000,000+'
+          }
         };
       case 'LIFE_PERMANENT':
         return {
           heroTitle: 'Permanent Life Insurance',
-          heroSubtitle: 'Lifetime protection with cash value growth',
+          heroSubtitle: 'Lifetime protection with cash value growth potential',
           ctaText: 'Get Your Permanent Life Quote',
           iconItems: [
             { icon: HeartIcon, text: 'Lifetime Coverage' },
@@ -102,13 +136,24 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: SparklesIcon, text: 'Living Benefits' },
           ],
           benefits: [
-            'Lifetime Coverage',
-            'Cash Value Accumulation',
-            'Tax-Deferred Growth',
-            'Policy Loans',
-            'Living Benefits',
-            'Estate Planning',
+            'Lifetime Coverage - Protection that never expires',
+            'Cash Value Growth - Tax-deferred accumulation',
+            'Fixed Premiums - Rates never increase',
+            'Policy Loans - Access to cash value when needed',
+            'Living Benefits - Use for retirement or emergencies',
+            'Estate Planning - Tax-efficient wealth transfer',
           ],
+          eligibility: [
+            'Age 18-75',
+            'No terminal illnesses',
+            'U.S. resident',
+            'Meets financial requirements'
+          ],
+          coverage: {
+            minimum: '$25,000',
+            recommended: '$250,000',
+            maximum: '$5,000,000+'
+          }
         };
       case 'HEALTH_SHORT_TERM_DISABILITY':
         return {
@@ -121,18 +166,29 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: CurrencyDollarIcon, text: 'Affordable Premiums' },
           ],
           benefits: [
-            'Income Replacement',
-            'Flexible Coverage Periods',
-            'Quick Approval',
-            'Affordable Premiums',
-            'Coverage for Illness/Injury',
-            'Easy Claims Process',
+            'Income Replacement - Up to 60% of your salary',
+            'Quick Benefits - Payments start after short waiting period',
+            'Flexible Coverage - Choose 3, 6, or 12-month terms',
+            'Guaranteed Renewable - Cannot be cancelled if you pay premiums',
+            'Coverage for Most Disabilities - Illness and injury',
+            'Easy Claims Process - Streamlined documentation',
           ],
+          eligibility: [
+            'Employed full-time',
+            'Age 18-65',
+            'U.S. resident',
+            'No pre-existing conditions'
+          ],
+          coverage: {
+            minimum: '$500/month',
+            recommended: '60% of income',
+            maximum: '$5,000/month'
+          }
         };
       case 'HEALTH_SUPPLEMENTAL':
         return {
           heroTitle: 'Supplemental Health Insurance',
-          heroSubtitle: 'Extra coverage for unexpected medical expenses',
+          heroSubtitle: 'Extra protection for unexpected medical expenses',
           ctaText: 'Get Your Health Quote',
           iconItems: [
             { icon: HeartIcon, text: 'Medical Coverage' },
@@ -140,13 +196,24 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             { icon: ShieldCheckIcon, text: 'Guaranteed Acceptance' },
           ],
           benefits: [
-            'Fixed Benefit Payments',
-            'Guaranteed Acceptance',
-            'No Network Restrictions',
-            'Coverage for Critical Illness',
-            'Accident Coverage',
-            'Hospital Indemnity',
+            'Fixed Cash Benefits - Paid directly to you',
+            'No Network Restrictions - Use any provider',
+            'Guaranteed Renewable - Keep your coverage',
+            'Critical Illness Coverage - Lump sum payments',
+            'Accident Coverage - Emergency and follow-up care',
+            'Hospital Benefits - Daily cash payments',
           ],
+          eligibility: [
+            'Age 18-65',
+            'U.S. resident',
+            'No similar coverage',
+            'Primary insurance required'
+          ],
+          coverage: {
+            minimum: '$5,000',
+            recommended: '$15,000',
+            maximum: '$50,000'
+          }
         };
       default:
         return {
@@ -166,6 +233,15 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             'Expert Support',
             'Flexible Options',
           ],
+          eligibility: [
+            'Varies by product',
+            'Contact us for details'
+          ],
+          coverage: {
+            minimum: 'Varies',
+            recommended: 'Varies',
+            maximum: 'Varies'
+          }
         };
     }
   };
@@ -248,18 +324,55 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
               <div id="quote-form">
                 <QuoteForm insuranceType={insuranceType} />
               </div>
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-medium text-gray-900 text-center">What's Included</h3>
-                <ul className="mt-4 space-y-4">
-                  {config.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start justify-center">
-                      <div className="flex-shrink-0">
-                        <ShieldCheckIcon className="h-6 w-6 text-[#00EEFD]" aria-hidden="true" />
-                      </div>
-                      <p className="ml-3 text-base text-gray-500">{benefit}</p>
-                    </li>
-                  ))}
-                </ul>
+              <div className="space-y-8">
+                {/* Coverage Information */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 text-center mb-4">Coverage Options</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Minimum:</span>
+                      <span className="font-medium">{config.coverage.minimum}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Recommended:</span>
+                      <span className="font-medium text-[#00EEFD]">{config.coverage.recommended}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Maximum:</span>
+                      <span className="font-medium">{config.coverage.maximum}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Benefits */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 text-center mb-4">What's Included</h3>
+                  <ul className="space-y-4">
+                    {config.benefits.map((benefit, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <ShieldCheckIcon className="h-6 w-6 text-[#00EEFD]" aria-hidden="true" />
+                        </div>
+                        <p className="ml-3 text-base text-gray-500">{benefit}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Eligibility */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 text-center mb-4">Eligibility Requirements</h3>
+                  <ul className="space-y-4">
+                    {config.eligibility.map((requirement, index) => (
+                      <li key={index} className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <CheckIcon className="h-6 w-6 text-[#00EEFD]" aria-hidden="true" />
+                        </div>
+                        <p className="ml-3 text-base text-gray-500">{requirement}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
