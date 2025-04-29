@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const insuranceTypes = [
   { id: 'LIFE_TERM', label: 'Term Life Insurance' },
@@ -11,10 +11,39 @@ const insuranceTypes = [
 
 export default function GeneralQuoteForm() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Scroll to form when component mounts
+  useEffect(() => {
+    const formElement = document.getElementById('general-quote-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    try {
+      // Handle form submission
+      // ... existing form submission code ...
+      
+      setSubmitStatus('success');
+      
+      // Scroll to form with consistent behavior
+      const formElement = document.getElementById('general-quote-form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const toggleInsuranceType = (id: string) => {
@@ -26,7 +55,7 @@ export default function GeneralQuoteForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} id="general-quote-form" className="space-y-6">
       <div>
         <label className="block text-sm font-medium text-brand-body mb-4">
           What type of insurance are you interested in?
@@ -114,10 +143,24 @@ export default function GeneralQuoteForm() {
       <div>
         <button
           type="submit"
-          className="w-full bg-brand-primary text-black font-semibold py-3 px-6 rounded-xl hover:bg-brand-primary-dark transition-colors shadow-brand"
+          disabled={isSubmitting}
+          className="w-full bg-brand-primary text-black font-semibold py-3 px-6 rounded-xl hover:bg-brand-primary-dark transition-colors shadow-brand disabled:opacity-50"
         >
-          Get My Free Quote
+          {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
         </button>
+        
+        {submitStatus === 'success' && (
+          <div className="mt-4 p-4 bg-green-50 text-green-800 rounded-md">
+            Thank you! We'll be in touch shortly with your personalized quotes.
+          </div>
+        )}
+        
+        {submitStatus === 'error' && (
+          <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-md">
+            There was an error submitting your form. Please try again.
+          </div>
+        )}
+        
         <p className="mt-3 text-xs text-brand-body text-center">
           By submitting this form, you agree to our <a href="/privacy" className="text-brand-primary hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
         </p>

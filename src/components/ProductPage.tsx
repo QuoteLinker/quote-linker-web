@@ -190,7 +190,10 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
                       href="#quote-form"
                       onClick={(e) => {
                         e.preventDefault();
-                        document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        const formElement = document.getElementById('quote-form');
+                        if (formElement) {
+                          formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
                       }}
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00D4E5] md:py-4 md:text-lg md:px-10"
                     >

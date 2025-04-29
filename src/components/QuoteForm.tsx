@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InsuranceType } from '@/utils/insuranceCopy';
 
 interface FormData {
@@ -39,12 +39,20 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  // Scroll to form when component mounts
+  useEffect(() => {
+    const formElement = document.getElementById('quote-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [type]); // Re-run when insurance type changes
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
@@ -74,6 +82,12 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
         insuranceType: type,
         subType,
       });
+      
+      // Scroll to form with consistent behavior
+      const formElement = document.getElementById('quote-form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
@@ -86,7 +100,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
   const showHealthFields = type.startsWith('HEALTH_');
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm">
+    <form onSubmit={handleSubmit} id="quote-form" className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-sm">
       <div className="space-y-6">
         {/* Required Fields */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

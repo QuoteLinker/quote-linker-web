@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -19,6 +19,15 @@ const LeadForm = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  // Scroll to form when component mounts
+  useEffect(() => {
+    const formElement = document.getElementById('lead-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
 
   const insuranceTypeOptions = [
     { value: 'Auto', label: 'Auto' },
@@ -43,14 +52,26 @@ const LeadForm = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess(false);
 
     try {
       await axios.post('/api/submit-lead', formData);
-      router.push('/thank-you');
+      setSuccess(true);
+      
+      // Scroll to form with consistent behavior
+      const formElement = document.getElementById('lead-form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      // Redirect after a short delay to allow the user to see the success message
+      setTimeout(() => {
+        router.push('/thank-you');
+      }, 2000);
     } catch (err) {
       console.error(err);
       setError('Something went wrong. Please try again.');
@@ -62,7 +83,7 @@ const LeadForm = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold mb-6 text-center text-[#00ECFF]">Get My Free Quote</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} id="lead-form" className="space-y-4">
         {/* First Name */}
         <div>
           <label className="block font-semibold">
@@ -214,13 +235,20 @@ const LeadForm = () => {
         </div>
 
         {/* Error Message */}
-        {error && <p className="text-red-500">{error}</p>}
+        {error && <p className="text-red-500 p-3 bg-red-50 rounded">{error}</p>}
+        
+        {/* Success Message */}
+        {success && (
+          <div className="p-3 bg-green-50 text-green-800 rounded">
+            Thank you! We'll be in touch shortly with your personalized quotes.
+          </div>
+        )}
 
         {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-[#00ECFF] text-white font-semibold py-2 px-4 rounded hover:bg-[#00d6e8]"
+          className="w-full bg-[#00ECFF] text-white font-semibold py-2 px-4 rounded hover:bg-[#00d6e8] disabled:opacity-50"
         >
           {loading ? 'Submitting...' : 'Get My Free Quote'}
         </button>
