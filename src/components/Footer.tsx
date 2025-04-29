@@ -33,6 +33,12 @@ export default function Footer() {
             <p className="text-sm text-gray-500 text-center">
               © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
             </p>
+            <p className="text-sm text-gray-500 text-center">
+              400 S 4th St Ste 410 PMB 629080, Minneapolis, MN 55415
+            </p>
+            <p className="text-sm text-gray-500 text-center">
+              <a href="mailto:support@quotelinker.com" className="hover:text-[#00EEFD]">support@quotelinker.com</a>
+            </p>
             <div className="flex space-x-4">
               <Link href="/terms" className="text-sm text-gray-500 hover:text-[#00EEFD]">
                 Terms

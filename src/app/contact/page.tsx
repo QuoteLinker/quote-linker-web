@@ -31,6 +31,9 @@ export default function ContactPage() {
       
       setFormStatus('success');
       (e.target as HTMLFormElement).reset();
+      
+      // Scroll to form with consistent behavior
+      document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       setFormStatus('error');
     }
@@ -80,7 +83,7 @@ export default function ContactPage() {
                     <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
                     <p className="text-gray-600">
                       400 S 4th St<br />
-                      Ste 410<br />
+                      Ste 410 PMB 629080<br />
                       Minneapolis, MN 55415
                     </p>
                   </div>
@@ -89,7 +92,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+              <form onSubmit={handleSubmit} id="contact-form" className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     Name <span className="text-[#00ECFF]">*</span>
