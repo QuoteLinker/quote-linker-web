@@ -113,6 +113,10 @@ We welcome contributions from the community. Please read our contribution guidel
 
 Private - All rights reserved. QuoteLinker is proprietary software and may not be used, copied, or distributed without explicit permission.
 
+## Founder's Note
+
+Founded by Weston Nelson, QuoteLinker is built by licensed insurance producers for producers. Our vision is to create a faster, fairer, and smarter distribution ecosystem — empowering agents and protecting consumers alike.
+
 ---
 
 © 2023 QuoteLinker. All rights reserved. 
