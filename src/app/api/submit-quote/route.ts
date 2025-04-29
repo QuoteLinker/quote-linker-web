@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { InsuranceType } from '@/utils/insuranceCopy';
+import { MainInsuranceType } from '@/utils/insuranceCopy';
 import { z } from 'zod';
 import { headers } from 'next/headers';
 
@@ -10,24 +10,9 @@ const formSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
   zipCode: z.string().regex(/^\d{5}$/, 'ZIP code must be exactly 5 digits'),
-  insuranceType: z.string(),
-  subType: z.string().optional(),
-  age: z.string().optional(),
-  tobaccoUse: z.string().optional(),
-  coverageAmount: z.string().optional(),
-  vehicleDetails: z.string().optional(),
-  propertyAddress: z.string().optional(),
+  insuranceType: z.enum(['AUTO', 'HOME', 'LIFE', 'HEALTH'] as const),
   // Honeypot field
   website: z.string().optional(),
-}).refine((data) => {
-  // Require age for health insurance types
-  if (data.insuranceType === 'HEALTH_SHORT_TERM_DISABILITY' || data.insuranceType === 'HEALTH_SUPPLEMENTAL') {
-    return !!data.age;
-  }
-  return true;
-}, {
-  message: "Age is required for health insurance options",
-  path: ["age"]
 });
 
 // Rate limiting map (in production, use Redis or similar)
@@ -90,7 +75,7 @@ export async function POST(request: Request) {
         ...validatedData,
         timestamp: new Date().toISOString(),
         source: 'quote-linker-web',
-        page: `${validatedData.insuranceType.toLowerCase()}${validatedData.subType ? `-${validatedData.subType.toLowerCase()}` : ''}`,
+        page: validatedData.insuranceType.toLowerCase(),
       }),
     });
 

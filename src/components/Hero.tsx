@@ -36,7 +36,7 @@ export default function Hero({ insuranceType, subType }: HeroProps) {
   const scrollToForm = () => {
     const formElement = document.getElementById('quote-form');
     if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth' });
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
