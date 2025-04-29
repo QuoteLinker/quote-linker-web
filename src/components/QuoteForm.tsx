@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
+import LoadingButton from './LoadingButton';
 
 interface FormData {
   firstName: string;
@@ -199,13 +200,14 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
           </div>
 
           <div className="pt-2">
-            <button
+            <LoadingButton
               type="submit"
-              disabled={isSubmitting}
-              className="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              isLoading={isSubmitting}
+              loadingText="Submitting..."
+              className="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-colors duration-200"
             >
-              {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
-            </button>
+              Get Your Free Quote
+            </LoadingButton>
           </div>
 
           {/* Privacy Note */}

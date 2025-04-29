@@ -119,4 +119,4 @@ Founded by Weston Nelson, QuoteLinker is built by licensed insurance producers f
 
 ---
 
-© 2023 QuoteLinker. All rights reserved. 
+© 2025 QuoteLinker. All rights reserved. 
