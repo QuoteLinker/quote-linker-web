@@ -5,6 +5,7 @@ import Script from 'next/script'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import GoogleTagManager from '@/components/GoogleTagManager'
+import BackToTop from '@/components/BackToTop'
 import * as Sentry from '@sentry/nextjs'
 
 const inter = Inter({ 
@@ -180,6 +181,7 @@ export default function RootLayout({
         <GoogleTagManagerBody />
         <Header />
         <main>{children}</main>
+        <BackToTop />
         <Footer />
       </body>
     </html>
