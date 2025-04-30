@@ -12,6 +12,36 @@ body {
   background: rgb(var(--background-rgb));
 }
 
+/* Global focus styles for interactive elements */
+@layer base {
+  /* Remove default focus styles */
+  *:focus {
+    outline: none;
+  }
+  
+  /* Add consistent focus styles for interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible,
+  [tabindex]:focus-visible {
+    @apply ring-2 ring-offset-2 ring-electric-blue;
+  }
+  
+  /* Ensure focus styles are visible even when using mouse */
+  a:hover,
+  button:hover,
+  input:hover,
+  select:hover,
+  textarea:hover,
+  [role="button"]:hover,
+  [tabindex]:hover {
+    @apply ring-1 ring-electric-blue;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

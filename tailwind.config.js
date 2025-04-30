@@ -48,6 +48,15 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      ringColor: {
+        DEFAULT: '#00EEFD',
+      },
+      ringOffsetColor: {
+        DEFAULT: '#FFFFFF',
+      },
+      ringOffsetWidth: {
+        DEFAULT: '2px',
+      },
     },
   },
   plugins: [

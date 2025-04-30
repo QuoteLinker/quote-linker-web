@@ -14,7 +14,7 @@ export function Tooltip({ content }: TooltipProps) {
       {({ open }) => (
         <>
           <Popover.Button
-            className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] rounded-full"
+            className="rounded-full"
             aria-describedby={tooltipId}
           >
             <InformationCircleIcon

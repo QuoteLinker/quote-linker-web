@@ -55,8 +55,8 @@ export default function FieldWithTooltip({
         onBlur={onBlur}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedby}
-        className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-          error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+        className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm sm:text-sm transition-colors ${
+          error ? 'border-red-500' : ''
         }`}
       />
       {error && (
