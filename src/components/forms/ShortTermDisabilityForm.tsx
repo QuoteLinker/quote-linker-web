@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
-import { validateName, validateEmail, validatePhone, validateSelect, validateBenefitAmount } from '../../utils/validation';
+import {
+  validateName,
+  validateEmail,
+  validatePhone,
+  validateSelect,
+  validateBenefitAmount,
+  validateZip,
+} from '../../utils/validation';
 
 export interface ShortTermDisabilityFormData {
   isEmployed: string;
@@ -9,6 +16,7 @@ export interface ShortTermDisabilityFormData {
   lastName: string;
   email: string;
   phone: string;
+  zipCode: string;
 }
 
 interface FormErrors {
@@ -25,15 +33,18 @@ export const ShortTermDisabilityForm: React.FC = () => {
     lastName: '',
     email: '',
     phone: '',
+    zipCode: '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(
+    null
+  );
 
   const validateStep1 = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     const isEmployedError = validateSelect(formData.isEmployed, 'Employment status');
     if (isEmployedError) newErrors.isEmployed = isEmployedError;
 
@@ -49,7 +60,7 @@ export const ShortTermDisabilityForm: React.FC = () => {
 
   const validateStep2 = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     const firstNameError = validateName(formData.firstName);
     if (firstNameError) newErrors.firstName = firstNameError;
 
@@ -61,6 +72,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
 
     const phoneError = validatePhone(formData.phone);
     if (phoneError) newErrors.phone = phoneError;
+
+    const zipError = validateZip(formData.zipCode);
+    if (zipError) newErrors.zipCode = zipError;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,7 +94,7 @@ export const ShortTermDisabilityForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (currentStep === 2 && !validateStep2()) {
       return;
     }
@@ -99,9 +113,8 @@ export const ShortTermDisabilityForm: React.FC = () => {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          zipCode: '00000', // Default value since this form doesn't collect zip
+          zipCode: formData.zipCode,
           insuranceType: 'HEALTH',
-          // Add any additional fields needed for the form
           isEmployed: formData.isEmployed,
           worksOver30Hours: formData.worksOver30Hours,
           benefitAmount: formData.benefitAmount,
@@ -113,7 +126,8 @@ export const ShortTermDisabilityForm: React.FC = () => {
       if (response.ok) {
         setSubmitStatus({
           success: true,
-          message: 'Your quote request has been submitted successfully! We will contact you shortly.',
+          message:
+            'Your quote request has been submitted successfully! We will contact you shortly.',
         });
         setFormData({
           isEmployed: '',
@@ -123,6 +137,7 @@ export const ShortTermDisabilityForm: React.FC = () => {
           lastName: '',
           email: '',
           phone: '',
+          zipCode: '',
         });
         setCurrentStep(1);
       } else {
@@ -131,7 +146,10 @@ export const ShortTermDisabilityForm: React.FC = () => {
     } catch (error) {
       setSubmitStatus({
         success: false,
-        message: error instanceof Error ? error.message : 'An error occurred while submitting your request',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while submitting your request',
       });
     } finally {
       setIsSubmitting(false);
@@ -155,10 +173,14 @@ export const ShortTermDisabilityForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Short-Term Disability Insurance Quote Request</h2>
-      
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Short-Term Disability Insurance Quote Request
+      </h2>
+
       {submitStatus && (
-        <div className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+        <div
+          className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}
+        >
           {submitStatus.message}
         </div>
       )}
@@ -166,18 +188,24 @@ export const ShortTermDisabilityForm: React.FC = () => {
       {/* Progress indicator */}
       <div className="mb-8">
         <div className="flex justify-between mb-2">
-          <div className={`h-2 rounded-full ${currentStep >= 1 ? 'bg-blue-600' : 'bg-gray-200'}`} style={{ width: '48%' }}></div>
-          <div className={`h-2 rounded-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`} style={{ width: '48%' }}></div>
+          <div
+            className={`h-2 rounded-full ${currentStep >= 1 ? 'bg-blue-600' : 'bg-gray-200'}`}
+            style={{ width: '48%' }}
+          ></div>
+          <div
+            className={`h-2 rounded-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`}
+            style={{ width: '48%' }}
+          ></div>
         </div>
-        <div className="text-center text-sm text-gray-500">
-          Step {currentStep} of 2
-        </div>
+        <div className="text-center text-sm text-gray-500">Step {currentStep} of 2</div>
       </div>
 
       {currentStep === 1 && (
         <div className="space-y-6">
           <div>
-            <label htmlFor="isEmployed" className="block text-sm font-medium text-gray-700">Are you employed?</label>
+            <label htmlFor="isEmployed" className="block text-sm font-medium text-gray-700">
+              Are you employed?
+            </label>
             <select
               id="isEmployed"
               name="isEmployed"
@@ -193,7 +221,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
           </div>
 
           <div>
-            <label htmlFor="worksOver30Hours" className="block text-sm font-medium text-gray-700">Do you work more than 30 hours/week?</label>
+            <label htmlFor="worksOver30Hours" className="block text-sm font-medium text-gray-700">
+              Do you work more than 30 hours/week?
+            </label>
             <select
               id="worksOver30Hours"
               name="worksOver30Hours"
@@ -205,23 +235,26 @@ export const ShortTermDisabilityForm: React.FC = () => {
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
-            {errors.worksOver30Hours && <p className="mt-1 text-sm text-red-600">{errors.worksOver30Hours}</p>}
+            {errors.worksOver30Hours && (
+              <p className="mt-1 text-sm text-red-600">{errors.worksOver30Hours}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="benefitAmount" className="block text-sm font-medium text-gray-700">Desired Benefit Amount ($/month)</label>
+            <label htmlFor="benefitAmount" className="block text-sm font-medium text-gray-700">
+              Desired Monthly Benefit Amount ($)
+            </label>
             <input
-              type="number"
+              type="text"
               id="benefitAmount"
               name="benefitAmount"
               value={formData.benefitAmount}
               onChange={handleChange}
-              min="300"
-              max="3000"
-              step="100"
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.benefitAmount ? 'border-red-500' : ''}`}
             />
-            {errors.benefitAmount && <p className="mt-1 text-sm text-red-600">{errors.benefitAmount}</p>}
+            {errors.benefitAmount && (
+              <p className="mt-1 text-sm text-red-600">{errors.benefitAmount}</p>
+            )}
           </div>
 
           <div className="flex justify-end">
@@ -240,7 +273,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
               <input
                 type="text"
                 id="firstName"
@@ -253,7 +288,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
               <input
                 type="text"
                 id="lastName"
@@ -266,7 +303,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -279,7 +318,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
               <input
                 type="tel"
                 id="phone"
@@ -289,6 +330,21 @@ export const ShortTermDisabilityForm: React.FC = () => {
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : ''}`}
               />
               {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
+                ZIP Code
+              </label>
+              <input
+                type="text"
+                id="zipCode"
+                name="zipCode"
+                value={formData.zipCode}
+                onChange={handleChange}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.zipCode ? 'border-red-500' : ''}`}
+              />
+              {errors.zipCode && <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>}
             </div>
           </div>
 
@@ -315,8 +371,9 @@ export const ShortTermDisabilityForm: React.FC = () => {
       )}
 
       <div className="mt-6 text-xs text-gray-500 text-center">
-        By submitting this form, you agree to be contacted by a licensed insurance representative. Msg & data rates may apply.
+        By submitting this form, you agree to be contacted by a licensed insurance representative.
+        Msg & data rates may apply.
       </div>
     </form>
   );
-}; 
+};

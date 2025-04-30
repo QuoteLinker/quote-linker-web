@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { validateName, validateEmail, validatePhone, validateSelect } from '../../utils/validation';
+import {
+  validateName,
+  validateEmail,
+  validatePhone,
+  validateSelect,
+  validateZip,
+} from '../../utils/validation';
 
 export interface SupplementalHealthFormData {
   hasHealthInsurance: string;
@@ -8,6 +14,7 @@ export interface SupplementalHealthFormData {
   lastName: string;
   email: string;
   phone: string;
+  zipCode: string;
 }
 
 interface FormErrors {
@@ -23,20 +30,30 @@ export const SupplementalHealthForm: React.FC = () => {
     lastName: '',
     email: '',
     phone: '',
+    zipCode: '',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{ success: boolean; message: string } | null>(
+    null
+  );
 
   const validateStep1 = (): boolean => {
     const newErrors: FormErrors = {};
-    
-    const hasHealthInsuranceError = validateSelect(formData.hasHealthInsurance, 'Health insurance status');
+
+    const hasHealthInsuranceError = validateSelect(
+      formData.hasHealthInsurance,
+      'Health insurance status'
+    );
     if (hasHealthInsuranceError) newErrors.hasHealthInsurance = hasHealthInsuranceError;
 
-    const needsHospitalCostCoverageError = validateSelect(formData.needsHospitalCostCoverage, 'Hospital cost coverage');
-    if (needsHospitalCostCoverageError) newErrors.needsHospitalCostCoverage = needsHospitalCostCoverageError;
+    const needsHospitalCostCoverageError = validateSelect(
+      formData.needsHospitalCostCoverage,
+      'Hospital cost coverage'
+    );
+    if (needsHospitalCostCoverageError)
+      newErrors.needsHospitalCostCoverage = needsHospitalCostCoverageError;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -44,7 +61,7 @@ export const SupplementalHealthForm: React.FC = () => {
 
   const validateStep2 = (): boolean => {
     const newErrors: FormErrors = {};
-    
+
     const firstNameError = validateName(formData.firstName);
     if (firstNameError) newErrors.firstName = firstNameError;
 
@@ -56,6 +73,9 @@ export const SupplementalHealthForm: React.FC = () => {
 
     const phoneError = validatePhone(formData.phone);
     if (phoneError) newErrors.phone = phoneError;
+
+    const zipError = validateZip(formData.zipCode);
+    if (zipError) newErrors.zipCode = zipError;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -75,7 +95,7 @@ export const SupplementalHealthForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (currentStep === 2 && !validateStep2()) {
       return;
     }
@@ -94,9 +114,8 @@ export const SupplementalHealthForm: React.FC = () => {
           lastName: formData.lastName,
           email: formData.email,
           phone: formData.phone,
-          zipCode: '00000', // Default value since this form doesn't collect zip
+          zipCode: formData.zipCode,
           insuranceType: 'HEALTH',
-          // Add any additional fields needed for the form
           hasHealthInsurance: formData.hasHealthInsurance,
           needsHospitalCostCoverage: formData.needsHospitalCostCoverage,
         }),
@@ -107,7 +126,8 @@ export const SupplementalHealthForm: React.FC = () => {
       if (response.ok) {
         setSubmitStatus({
           success: true,
-          message: 'Your quote request has been submitted successfully! We will contact you shortly.',
+          message:
+            'Your quote request has been submitted successfully! We will contact you shortly.',
         });
         setFormData({
           hasHealthInsurance: '',
@@ -116,6 +136,7 @@ export const SupplementalHealthForm: React.FC = () => {
           lastName: '',
           email: '',
           phone: '',
+          zipCode: '',
         });
         setCurrentStep(1);
       } else {
@@ -124,7 +145,10 @@ export const SupplementalHealthForm: React.FC = () => {
     } catch (error) {
       setSubmitStatus({
         success: false,
-        message: error instanceof Error ? error.message : 'An error occurred while submitting your request',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while submitting your request',
       });
     } finally {
       setIsSubmitting(false);
@@ -148,10 +172,14 @@ export const SupplementalHealthForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto p-6 space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Supplemental Health Insurance Quote Request</h2>
-      
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        Supplemental Health Insurance Quote Request
+      </h2>
+
       {submitStatus && (
-        <div className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+        <div
+          className={`p-4 rounded-md ${submitStatus.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}
+        >
           {submitStatus.message}
         </div>
       )}
@@ -159,18 +187,24 @@ export const SupplementalHealthForm: React.FC = () => {
       {/* Progress indicator */}
       <div className="mb-8">
         <div className="flex justify-between mb-2">
-          <div className={`h-2 rounded-full ${currentStep >= 1 ? 'bg-blue-600' : 'bg-gray-200'}`} style={{ width: '48%' }}></div>
-          <div className={`h-2 rounded-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`} style={{ width: '48%' }}></div>
+          <div
+            className={`h-2 rounded-full ${currentStep >= 1 ? 'bg-blue-600' : 'bg-gray-200'}`}
+            style={{ width: '48%' }}
+          ></div>
+          <div
+            className={`h-2 rounded-full ${currentStep >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`}
+            style={{ width: '48%' }}
+          ></div>
         </div>
-        <div className="text-center text-sm text-gray-500">
-          Step {currentStep} of 2
-        </div>
+        <div className="text-center text-sm text-gray-500">Step {currentStep} of 2</div>
       </div>
 
       {currentStep === 1 && (
         <div className="space-y-6">
           <div>
-            <label htmlFor="hasHealthInsurance" className="block text-sm font-medium text-gray-700">Do you currently have health insurance?</label>
+            <label htmlFor="hasHealthInsurance" className="block text-sm font-medium text-gray-700">
+              Do you currently have health insurance?
+            </label>
             <select
               id="hasHealthInsurance"
               name="hasHealthInsurance"
@@ -182,11 +216,18 @@ export const SupplementalHealthForm: React.FC = () => {
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
-            {errors.hasHealthInsurance && <p className="mt-1 text-sm text-red-600">{errors.hasHealthInsurance}</p>}
+            {errors.hasHealthInsurance && (
+              <p className="mt-1 text-sm text-red-600">{errors.hasHealthInsurance}</p>
+            )}
           </div>
 
           <div>
-            <label htmlFor="needsHospitalCostCoverage" className="block text-sm font-medium text-gray-700">Would you like help covering unexpected hospital costs?</label>
+            <label
+              htmlFor="needsHospitalCostCoverage"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Would you like help covering unexpected hospital costs?
+            </label>
             <select
               id="needsHospitalCostCoverage"
               name="needsHospitalCostCoverage"
@@ -198,7 +239,9 @@ export const SupplementalHealthForm: React.FC = () => {
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
-            {errors.needsHospitalCostCoverage && <p className="mt-1 text-sm text-red-600">{errors.needsHospitalCostCoverage}</p>}
+            {errors.needsHospitalCostCoverage && (
+              <p className="mt-1 text-sm text-red-600">{errors.needsHospitalCostCoverage}</p>
+            )}
           </div>
 
           <div className="flex justify-end">
@@ -217,7 +260,9 @@ export const SupplementalHealthForm: React.FC = () => {
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
               <input
                 type="text"
                 id="firstName"
@@ -230,7 +275,9 @@ export const SupplementalHealthForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
               <input
                 type="text"
                 id="lastName"
@@ -243,7 +290,9 @@ export const SupplementalHealthForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
               <input
                 type="email"
                 id="email"
@@ -256,7 +305,9 @@ export const SupplementalHealthForm: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone</label>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
               <input
                 type="tel"
                 id="phone"
@@ -266,6 +317,21 @@ export const SupplementalHealthForm: React.FC = () => {
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.phone ? 'border-red-500' : ''}`}
               />
               {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+            </div>
+
+            <div>
+              <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
+                ZIP Code
+              </label>
+              <input
+                type="text"
+                id="zipCode"
+                name="zipCode"
+                value={formData.zipCode}
+                onChange={handleChange}
+                className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${errors.zipCode ? 'border-red-500' : ''}`}
+              />
+              {errors.zipCode && <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>}
             </div>
           </div>
 
@@ -292,8 +358,9 @@ export const SupplementalHealthForm: React.FC = () => {
       )}
 
       <div className="mt-6 text-xs text-gray-500 text-center">
-        By submitting this form, you agree to be contacted by a licensed insurance representative. Msg & data rates may apply.
+        By submitting this form, you agree to be contacted by a licensed insurance representative.
+        Msg & data rates may apply.
       </div>
     </form>
   );
-}; 
+};

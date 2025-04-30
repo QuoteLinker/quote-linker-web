@@ -22,15 +22,15 @@ export default function InsuranceTip({ productType }: InsuranceTipProps) {
   if (!currentTip) return null;
 
   return (
-    <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
+    <div className="bg-[#FFF3CD] border border-[#FFEEBA] rounded-lg p-4 mb-6">
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0">
-          <FaLightbulb className="w-5 h-5 text-blue-500 mt-1" />
+          <FaLightbulb className="w-5 h-5 text-[#856404] mt-1" />
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-blue-900 mb-1">Insurance Insight</h4>
-          <p className="text-blue-800 mb-1">{currentTip.text}</p>
-          <p className="text-xs text-blue-600">Source: {currentTip.source}</p>
+          <h4 className="text-sm font-semibold text-[#856404] mb-1">Insurance Insight</h4>
+          <p className="text-[#856404] mb-1">{currentTip.text}</p>
+          <p className="text-xs text-[#856404] opacity-75">Source: {currentTip.source}</p>
         </div>
       </div>
     </div>

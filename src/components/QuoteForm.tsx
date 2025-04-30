@@ -3,8 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
-import LoadingButton from './LoadingButton';
-import InsuranceTip from './InsuranceTip';
+import { Button } from '@/components/ui/button';
+import { Select } from '@/components/ui/select';
+import FieldWithTooltip from '@/components/FieldWithTooltip';
 import {
   validateEmail,
   validateName,
@@ -13,8 +14,10 @@ import {
   validateAge,
   validateCoverageAmount,
 } from '@/utils/validation';
-import debounce from 'lodash/debounce';
-import FieldWithTooltip from './FieldWithTooltip';
+import { debounce } from 'lodash';
+import { Input } from '@/components/ui/input';
+import { toast } from 'react-hot-toast';
+import InsuranceTip from './InsuranceTip';
 
 interface FormData {
   firstName: string;
@@ -25,6 +28,8 @@ interface FormData {
   insuranceType: MainInsuranceType;
   age?: number;
   coverageAmount?: number;
+  website?: string;
+  honeypot?: string;
 }
 
 interface FormErrors {
@@ -43,6 +48,15 @@ interface QuoteFormProps {
   productType?: InsuranceType;
   _subType?: string;
 }
+
+const INSURANCE_OPTIONS = [
+  { value: 'AUTO', label: 'Auto Insurance' },
+  { value: 'HOME', label: 'Home Insurance' },
+  { value: 'LIFE', label: 'Life Insurance' },
+  { value: 'HEALTH', label: 'Health Insurance' },
+];
+
+const FORM_KEY = 'savedQuoteForm';
 
 export default function QuoteForm({ insuranceType, productType, _subType }: QuoteFormProps) {
   const router = useRouter();
@@ -64,7 +78,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   // Load saved form data from localStorage
   const loadSavedFormData = (): FormData | null => {
     if (typeof window === 'undefined') return null;
-    const saved = localStorage.getItem('quoteFormData');
+    const saved = localStorage.getItem(FORM_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -100,20 +114,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Debounced save function
-  const debouncedSave = useCallback(
-    debounce((data: FormData) => {
+  const debouncedSave = useCallback((data: FormData) => {
+    const saveToLocalStorage = debounce((formData: FormData) => {
       if (typeof window !== 'undefined') {
-        localStorage.setItem('quoteFormData', JSON.stringify(data));
+        localStorage.setItem(FORM_KEY, JSON.stringify(formData));
       }
-    }, 1000),
-    [] // No dependencies needed as the function is self-contained
-  );
+    }, 1000);
+    saveToLocalStorage(data);
+    return saveToLocalStorage;
+  }, []); // No dependencies needed as the function is self-contained
 
   // Save form data whenever it changes
   useEffect(() => {
-    debouncedSave(formData);
+    const saveFunction = debouncedSave(formData);
     return () => {
-      debouncedSave.cancel();
+      saveFunction.cancel();
     };
   }, [formData, debouncedSave]);
 
@@ -158,6 +173,12 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         const error = validateCoverageAmount(value as number);
         return error || undefined;
       }
+      case 'insuranceType': {
+        if (!value) {
+          return 'Please select an insurance type';
+        }
+        return undefined;
+      }
       default:
         return undefined;
     }
@@ -178,6 +199,12 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       // Clear error when user starts typing
       if (formErrors[name as keyof FormErrors]) {
         setFormErrors(prev => ({ ...prev, [name]: undefined }));
+      }
+
+      // Validate on change
+      const error = validateField(name as keyof FormData, value);
+      if (error) {
+        setFormErrors(prev => ({ ...prev, [name]: error }));
       }
     },
     [formErrors]
@@ -235,6 +262,10 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       if (coverageError) errors.coverageAmount = coverageError;
     }
 
+    if (!formData.insuranceType) {
+      errors.insuranceType = 'Please select an insurance type';
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -244,6 +275,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
     // Validate form before submission
     if (!validateForm()) {
+      toast.error('Please fix the errors in the form');
       return;
     }
 
@@ -269,7 +301,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('quoteFormData');
+        localStorage.removeItem(FORM_KEY);
       }
 
       // Redirect to thank you page after a short delay
@@ -288,15 +320,17 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     <div>
       <InsuranceTip productType={formData.insuranceType.toLowerCase()} />
 
-      <div className="flex justify-center items-center py-8">
+      <div className="flex justify-center items-center py-4 sm:py-8">
         <form
           onSubmit={handleSubmit}
           id="quote-form"
-          className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100"
+          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
         >
-          <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Get Your Free Quote</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6 text-gray-800">
+            Get Your Free Quote
+          </h2>
 
-          <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-5">
             {/* Insurance Type Selection */}
             <div>
               <label
@@ -305,26 +339,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               >
                 Insurance Type <span className="text-red-500">*</span>
               </label>
-              <select
+              <Select
                 name="insuranceType"
                 id="insuranceType"
                 required
                 value={formData.insuranceType}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                aria-invalid={!!formErrors.insuranceType}
-                aria-describedby={formErrors.insuranceType ? 'insuranceType-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
+                error={touchedFields.insuranceType ? formErrors.insuranceType : undefined}
+                options={INSURANCE_OPTIONS}
+                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
                   touchedFields.insuranceType && formErrors.insuranceType
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                     : ''
                 }`}
-              >
-                <option value="AUTO">Auto Insurance</option>
-                <option value="HOME">Home Insurance</option>
-                <option value="LIFE">Life Insurance</option>
-                <option value="HEALTH">Health Insurance</option>
-              </select>
+              />
               {touchedFields.insuranceType && formErrors.insuranceType && (
                 <div
                   id="insuranceType-error"
@@ -338,75 +367,79 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             </div>
 
             {/* Required Fields */}
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                id="firstName"
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-invalid={!!formErrors.firstName}
-                aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                  touchedFields.firstName && formErrors.firstName
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : ''
-                }`}
-              />
-              {touchedFields.firstName && formErrors.firstName && (
-                <div
-                  id="firstName-error"
-                  className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                  role="alert"
-                  aria-live="assertive"
-                >
-                  {formErrors.firstName}
-                </div>
-              )}
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                  First Name <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  type="text"
+                  name="firstName"
+                  id="firstName"
+                  required
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.firstName ? formErrors.firstName : undefined}
+                  aria-invalid={!!formErrors.firstName}
+                  aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
+                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
+                    touchedFields.firstName && formErrors.firstName
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : ''
+                  }`}
+                />
+                {touchedFields.firstName && formErrors.firstName && (
+                  <div
+                    id="firstName-error"
+                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {formErrors.firstName}
+                  </div>
+                )}
+              </div>
 
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                id="lastName"
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-invalid={!!formErrors.lastName}
-                aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                  touchedFields.lastName && formErrors.lastName
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : ''
-                }`}
-              />
-              {touchedFields.lastName && formErrors.lastName && (
-                <div
-                  id="lastName-error"
-                  className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                  role="alert"
-                  aria-live="assertive"
-                >
-                  {formErrors.lastName}
-                </div>
-              )}
+              <div>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Last Name <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  type="text"
+                  name="lastName"
+                  id="lastName"
+                  required
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.lastName ? formErrors.lastName : undefined}
+                  aria-invalid={!!formErrors.lastName}
+                  aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
+                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
+                    touchedFields.lastName && formErrors.lastName
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : ''
+                  }`}
+                />
+                {touchedFields.lastName && formErrors.lastName && (
+                  <div
+                    id="lastName-error"
+                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {formErrors.lastName}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 type="email"
                 name="email"
                 id="email"
@@ -414,9 +447,10 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touchedFields.email ? formErrors.email : undefined}
                 aria-invalid={!!formErrors.email}
                 aria-describedby={formErrors.email ? 'email-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
+                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
                   touchedFields.email && formErrors.email
                     ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                     : ''
@@ -434,50 +468,87 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               )}
             </div>
 
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                id="phone"
-                required
-                value={formData.phone}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                aria-invalid={!!formErrors.phone}
-                aria-describedby={formErrors.phone ? 'phone-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                  touchedFields.phone && formErrors.phone
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : ''
-                }`}
-              />
-              {touchedFields.phone && formErrors.phone && (
-                <div
-                  id="phone-error"
-                  className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                  role="alert"
-                  aria-live="assertive"
-                >
-                  {formErrors.phone}
-                </div>
-              )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  type="tel"
+                  name="phone"
+                  id="phone"
+                  required
+                  value={formData.phone}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.phone ? formErrors.phone : undefined}
+                  aria-invalid={!!formErrors.phone}
+                  aria-describedby={formErrors.phone ? 'phone-error' : undefined}
+                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
+                    touchedFields.phone && formErrors.phone
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : ''
+                  }`}
+                />
+                {touchedFields.phone && formErrors.phone && (
+                  <div
+                    id="phone-error"
+                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {formErrors.phone}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
+                  ZIP Code <span className="text-red-500">*</span>
+                </label>
+                <Input
+                  type="text"
+                  name="zipCode"
+                  id="zipCode"
+                  required
+                  value={formData.zipCode}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.zipCode ? formErrors.zipCode : undefined}
+                  aria-invalid={!!formErrors.zipCode}
+                  aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
+                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
+                    touchedFields.zipCode && formErrors.zipCode
+                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                      : ''
+                  }`}
+                />
+                {touchedFields.zipCode && formErrors.zipCode && (
+                  <div
+                    id="zipCode-error"
+                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {formErrors.zipCode}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <FieldWithTooltip
-              label="ZIP Code"
-              name="zipCode"
-              tooltip="5-digit USPS ZIP code helps us match you with local agents in your area."
-              required
-              value={formData.zipCode}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touchedFields.zipCode ? formErrors.zipCode : undefined}
-              aria-invalid={!!formErrors.zipCode}
-              aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
-            />
+            {/* Honeypot field - hidden from users but visible to bots */}
+            <div className="hidden">
+              <label htmlFor="website">Website</label>
+              <Input
+                type="text"
+                name="website"
+                id="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website || ''}
+                onChange={handleChange}
+              />
+            </div>
 
             <FieldWithTooltip
               label="Age"
@@ -493,6 +564,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               error={touchedFields.age ? formErrors.age : undefined}
               aria-invalid={!!formErrors.age}
               aria-describedby={formErrors.age ? 'age-error' : undefined}
+              className="h-10"
             />
 
             <FieldWithTooltip
@@ -509,17 +581,17 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
               aria-invalid={!!formErrors.coverageAmount}
               aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
+              className="h-10"
             />
 
             <div className="pt-2">
-              <LoadingButton
+              <Button
                 type="submit"
-                isLoading={isSubmitting}
-                loadingText="Submitting..."
-                className="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-all duration-200 transform hover:scale-[1.02]"
+                disabled={isSubmitting}
+                className="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-all duration-200 transform hover:scale-[1.02] h-12"
               >
-                Get Your Free Quote
-              </LoadingButton>
+                {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
+              </Button>
             </div>
 
             {/* Privacy Note */}

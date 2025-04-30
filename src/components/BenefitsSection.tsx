@@ -43,11 +43,11 @@ export default function BenefitsSection() {
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow"
+              className="bg-[#F8F9FA] rounded-xl p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="text-blue-600 mb-4">{benefit.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-              <p className="text-gray-600">{benefit.description}</p>
+              <div className="text-[#28A745] mb-4">{benefit.icon}</div>
+              <h3 className="text-xl font-semibold text-[#212529] mb-2">{benefit.title}</h3>
+              <p className="text-[#212529]">{benefit.description}</p>
             </div>
           ))}
         </div>
