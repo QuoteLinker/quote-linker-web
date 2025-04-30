@@ -1,31 +1,52 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { FaUserTie, FaRobot, FaShieldAlt, FaUserCheck } from 'react-icons/fa';
 
-interface BenefitItem {
-  icon: ReactNode;
-  title: string;
-  description: string;
-}
+export default function BenefitsSection() {
+  const benefits = [
+    {
+      icon: <FaUserTie className="w-8 h-8" />,
+      title: 'Smart AI Matching',
+      description: 'Get matched with a local agent who understands your needs',
+    },
+    {
+      icon: <FaRobot className="w-8 h-8" />,
+      title: 'No Spam, Just Agents',
+      description: 'No robocalls or spam — only real, licensed professionals',
+    },
+    {
+      icon: <FaShieldAlt className="w-8 h-8" />,
+      title: 'Built by an Agent',
+      description: 'Created by an actual insurance producer who knows the industry',
+    },
+    {
+      icon: <FaUserCheck className="w-8 h-8" />,
+      title: 'Hassle-Free Experience',
+      description: 'The most straightforward way to find the right insurance',
+    },
+  ];
 
-interface BenefitsSectionProps {
-  title: string;
-  benefits: BenefitItem[];
-}
-
-export default function BenefitsSection({ title, benefits }: BenefitsSectionProps) {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">{title}</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Why Choose QuoteLinker?
+          </h2>
+          <p className="text-xl text-gray-600">
+            We&apos;re not just another quote aggregator. We&apos;re your personal connection to
+            trusted local agents.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+              className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow"
             >
-              <div className="text-[#00EEFD] mb-4">{benefit.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
+              <div className="text-blue-600 mb-4">{benefit.icon}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{benefit.title}</h3>
               <p className="text-gray-600">{benefit.description}</p>
             </div>
           ))}
@@ -33,4 +54,4 @@ export default function BenefitsSection({ title, benefits }: BenefitsSectionProp
       </div>
     </section>
   );
-} 
+}
