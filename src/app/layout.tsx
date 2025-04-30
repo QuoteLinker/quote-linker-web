@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import GoogleTagManager from '@/components/GoogleTagManager'
 import BackToTop from '@/components/BackToTop'
 import * as Sentry from '@sentry/nextjs'
+import PageTransition from '@/components/PageTransition'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -180,7 +181,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <GoogleTagManagerBody />
         <Header />
-        <main>{children}</main>
+        <PageTransition>
+          <main className="min-h-screen">{children}</main>
+        </PageTransition>
         <BackToTop />
         <Footer />
       </body>
