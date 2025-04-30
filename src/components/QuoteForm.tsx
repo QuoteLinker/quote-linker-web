@@ -4,7 +4,13 @@ import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent } from
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import FieldWithTooltip from '@/components/FieldWithTooltip';
 import {
   validateEmail,
@@ -224,6 +230,19 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     [formData]
   );
 
+  const handleSelectBlur = useCallback(
+    (name: string) => {
+      setTouchedFields(prev => ({ ...prev, [name]: true }));
+
+      // Validate on blur
+      const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
+      if (error) {
+        setFormErrors(prev => ({ ...prev, [name]: error }));
+      }
+    },
+    [formData]
+  );
+
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
 
@@ -340,19 +359,24 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 Insurance Type <span className="text-red-500">*</span>
               </label>
               <Select
-                name="insuranceType"
                 value={formData.insuranceType}
                 onValueChange={value =>
                   handleChange({
                     target: { name: 'insuranceType', value },
                   } as ChangeEvent<HTMLInputElement>)
                 }
+                onOpenChange={() => handleSelectBlur('insuranceType')}
               >
-                {INSURANCE_OPTIONS.map(type => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select insurance type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {INSURANCE_OPTIONS.map(type => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
               {touchedFields.insuranceType && formErrors.insuranceType && (
                 <div
