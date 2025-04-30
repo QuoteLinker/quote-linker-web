@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 const testimonials = [
   {
@@ -53,9 +54,11 @@ export default function SocialProof() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
             {partnerLogos.map((partner) => (
               <div key={partner.id} className="w-32 h-16 flex items-center justify-center">
-                <img
+                <Image
                   src={partner.logo}
                   alt={partner.name}
+                  width={128}
+                  height={64}
                   className="max-w-full max-h-full opacity-60 hover:opacity-100 transition-opacity"
                 />
               </div>
@@ -78,7 +81,7 @@ export default function SocialProof() {
             </button>
             <div className="text-center px-16">
               <blockquote className="text-xl text-brand-body mb-6">
-                "{testimonials[currentTestimonial].quote}"
+                &ldquo;{testimonials[currentTestimonial].quote}&rdquo;
               </blockquote>
               <cite className="not-italic">
                 <span className="font-semibold text-brand-headline">

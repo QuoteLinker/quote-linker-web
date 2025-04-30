@@ -98,7 +98,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
         localStorage.setItem('quoteFormData', JSON.stringify(data));
       }
     }, 1000),
-    []
+    [] // No dependencies needed as the function is self-contained
   );
 
   // Save form data whenever it changes
@@ -117,81 +117,107 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     }
   }, []); // Only run once on mount
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const validateField = (name: keyof FormData, value: FormData[keyof FormData]): string | undefined => {
+    switch (name) {
+      case 'firstName': {
+        const error = validateName(value as string);
+        return error || undefined;
+      }
+      case 'lastName': {
+        const error = validateName(value as string);
+        return error || undefined;
+      }
+      case 'email': {
+        const error = validateEmail(value as string);
+        return error || undefined;
+      }
+      case 'phone': {
+        const error = validatePhone(value as string);
+        return error || undefined;
+      }
+      case 'zipCode': {
+        const error = validateZip(value as string);
+        return error || undefined;
+      }
+      case 'age': {
+        const error = validateAge(value as number);
+        return error || undefined;
+      }
+      case 'coverageAmount': {
+        const error = validateCoverageAmount(value as number);
+        return error || undefined;
+      }
+      default:
+        return undefined;
+    }
+  };
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    
+    // Handle checkbox inputs
+    if (type === 'checkbox') {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData(prev => ({ ...prev, [name]: checkbox.checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
     
     // Clear error when user starts typing
     if (formErrors[name as keyof FormErrors]) {
       setFormErrors(prev => ({ ...prev, [name]: undefined }));
     }
-  };
+  }, [formErrors]);
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name } = e.target;
     setTouchedFields(prev => ({ ...prev, [name]: true }));
     
-    // Validate the field on blur
-    const errors: FormErrors = {};
-    
-    switch (name) {
-      case 'firstName':
-        const firstNameError = validateName(formData.firstName);
-        if (firstNameError) errors.firstName = firstNameError;
-        break;
-      case 'lastName':
-        const lastNameError = validateName(formData.lastName);
-        if (lastNameError) errors.lastName = lastNameError;
-        break;
-      case 'email':
-        const emailError = validateEmail(formData.email);
-        if (emailError) errors.email = emailError;
-        break;
-      case 'phone':
-        const phoneError = validatePhone(formData.phone);
-        if (phoneError) errors.phone = phoneError;
-        break;
-      case 'zipCode':
-        const zipError = validateZip(formData.zipCode);
-        if (zipError) errors.zipCode = zipError;
-        break;
-      case 'age':
-        const ageError = validateAge(formData.age);
-        if (ageError) errors.age = ageError;
-        break;
-      case 'coverageAmount':
-        const coverageError = validateCoverageAmount(formData.coverageAmount);
-        if (coverageError) errors.coverageAmount = coverageError;
-        break;
+    // Validate on blur
+    const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
+    if (error) {
+      setFormErrors(prev => ({ ...prev, [name]: error }));
     }
-    
-    setFormErrors(prev => ({ ...prev, ...errors }));
-  };
+  }, [formData]);
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
     
-    const firstNameError = validateName(formData.firstName);
-    if (firstNameError) errors.firstName = firstNameError;
+    {
+      const firstNameError = validateName(formData.firstName);
+      if (firstNameError) errors.firstName = firstNameError;
+    }
     
-    const lastNameError = validateName(formData.lastName);
-    if (lastNameError) errors.lastName = lastNameError;
+    {
+      const lastNameError = validateName(formData.lastName);
+      if (lastNameError) errors.lastName = lastNameError;
+    }
     
-    const emailError = validateEmail(formData.email);
-    if (emailError) errors.email = emailError;
+    {
+      const emailError = validateEmail(formData.email);
+      if (emailError) errors.email = emailError;
+    }
     
-    const phoneError = validatePhone(formData.phone);
-    if (phoneError) errors.phone = phoneError;
+    {
+      const phoneError = validatePhone(formData.phone);
+      if (phoneError) errors.phone = phoneError;
+    }
     
-    const zipError = validateZip(formData.zipCode);
-    if (zipError) errors.zipCode = zipError;
+    {
+      const zipError = validateZip(formData.zipCode);
+      if (zipError) errors.zipCode = zipError;
+    }
 
-    const ageError = validateAge(formData.age);
-    if (ageError) errors.age = ageError;
+    if (formData.age) {
+      const ageError = validateAge(formData.age);
+      if (ageError) errors.age = ageError;
+    }
 
-    const coverageAmountError = validateCoverageAmount(formData.coverageAmount);
-    if (coverageAmountError) errors.coverageAmount = coverageAmountError;
-    
+    if (formData.coverageAmount) {
+      const coverageError = validateCoverageAmount(formData.coverageAmount);
+      if (coverageError) errors.coverageAmount = coverageError;
+    }
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };

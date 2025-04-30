@@ -8,10 +8,14 @@ interface Step {
   fields: React.ReactNode;
 }
 
+interface FormData {
+  [key: string]: string | boolean | number | undefined;
+}
+
 interface MultiStepFormProps {
   steps: Step[];
-  onSubmit: (formData: any) => Promise<void>;
-  initialData?: any;
+  onSubmit: (formData: FormData) => Promise<void>;
+  initialData?: FormData;
   insuranceType: string;
   onStepChange?: (currentStep: number) => void;
 }
@@ -25,18 +29,18 @@ export default function MultiStepForm({
 }: MultiStepFormProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<any>(initialData);
+  const [formData, setFormData] = useState<FormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Load saved form data from localStorage
-  const loadSavedFormData = useCallback((): any => {
+  const loadSavedFormData = useCallback((): FormData | null => {
     if (typeof window === 'undefined') return null;
     const saved = localStorage.getItem(`quoteFormData_${insuranceType}`);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
+        const parsed = JSON.parse(saved) as FormData;
         return parsed;
       } catch (e) {
         console.error('Error parsing saved form data:', e);
@@ -55,7 +59,7 @@ export default function MultiStepForm({
 
   // Debounced save function
   const debouncedSave = useCallback(
-    debounce((data: any) => {
+    debounce((data: FormData) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem(`quoteFormData_${insuranceType}`, JSON.stringify(data));
       }
@@ -84,9 +88,9 @@ export default function MultiStepForm({
     // Handle checkbox inputs
     if (type === 'checkbox') {
       const checkbox = e.target as HTMLInputElement;
-      setFormData((prev: any) => ({ ...prev, [name]: checkbox.checked }));
+      setFormData((prev: FormData) => ({ ...prev, [name]: checkbox.checked }));
     } else {
-      setFormData((prev: any) => ({ ...prev, [name]: value }));
+      setFormData((prev: FormData) => ({ ...prev, [name]: value }));
     }
     
     // Clear error when user starts typing

@@ -86,10 +86,11 @@ const LeadForm = () => {
       <form onSubmit={handleSubmit} id="lead-form" className="space-y-4">
         {/* First Name */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="firstName" className="block font-semibold">
             First Name <span className="text-red-500">*</span>
           </label>
           <input
+            id="firstName"
             type="text"
             name="firstName"
             required
@@ -101,10 +102,11 @@ const LeadForm = () => {
 
         {/* Last Name */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="lastName" className="block font-semibold">
             Last Name <span className="text-red-500">*</span>
           </label>
           <input
+            id="lastName"
             type="text"
             name="lastName"
             required
@@ -116,10 +118,11 @@ const LeadForm = () => {
 
         {/* Phone */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="phone" className="block font-semibold">
             Phone Number <span className="text-red-500">*</span>
           </label>
           <input
+            id="phone"
             type="tel"
             name="phone"
             required
@@ -131,10 +134,11 @@ const LeadForm = () => {
 
         {/* Email */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="email" className="block font-semibold">
             Email <span className="text-red-500">*</span>
           </label>
           <input
+            id="email"
             type="email"
             name="email"
             required
@@ -146,10 +150,11 @@ const LeadForm = () => {
 
         {/* Insurance Type */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="insuranceType" className="block font-semibold">
             Insurance Type <span className="text-red-500">*</span>
           </label>
           <select
+            id="insuranceType"
             name="insuranceType"
             required
             value={formData.insuranceType}
@@ -168,10 +173,11 @@ const LeadForm = () => {
         {/* Sub Line */}
         {formData.insuranceType === 'Life' || formData.insuranceType === 'Health' ? (
           <div>
-            <label className="block font-semibold">
+            <label htmlFor="subLine" className="block font-semibold">
               Sub Type (Optional)
             </label>
             <select
+              id="subLine"
               name="subLine"
               value={formData.subLine}
               onChange={handleChange}
@@ -189,10 +195,11 @@ const LeadForm = () => {
 
         {/* Zip Code */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="zipCode" className="block font-semibold">
             Zip Code <span className="text-red-500">*</span>
           </label>
           <input
+            id="zipCode"
             type="text"
             name="zipCode"
             required
@@ -204,10 +211,11 @@ const LeadForm = () => {
 
         {/* How Did You Hear About Us */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="heardAboutUs" className="block font-semibold">
             How Did You Hear About Us? (Optional)
           </label>
           <select
+            id="heardAboutUs"
             name="heardAboutUs"
             value={formData.heardAboutUs}
             onChange={handleChange}
@@ -223,10 +231,11 @@ const LeadForm = () => {
 
         {/* Additional Notes */}
         <div>
-          <label className="block font-semibold">
+          <label htmlFor="notes" className="block font-semibold">
             Additional Notes (Optional)
           </label>
           <textarea
+            id="notes"
             name="notes"
             value={formData.notes}
             onChange={handleChange}

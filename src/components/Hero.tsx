@@ -4,7 +4,6 @@ import { InsuranceType } from '@/utils/insuranceCopy';
 
 export interface HeroProps {
   insuranceType: InsuranceType;
-  subType: string;
 }
 
 const productTitles: Record<InsuranceType, string> = {
@@ -29,7 +28,7 @@ const productSubtitles: Record<InsuranceType, string> = {
   HEALTH: 'Find comprehensive health insurance that fits your needs and budget.',
 };
 
-export default function Hero({ insuranceType, subType }: HeroProps) {
+export default function Hero({ insuranceType }: HeroProps) {
   const title = productTitles[insuranceType];
   const subtitle = productSubtitles[insuranceType];
 

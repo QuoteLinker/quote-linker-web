@@ -120,6 +120,14 @@ export default function Header() {
                   className="flex items-center text-gray-900 hover:text-[#00ECFF] transition-all duration-200 text-base font-medium hover:scale-105 transform"
                   onMouseEnter={handleLifeMouseEnter}
                   onMouseLeave={handleLifeMouseLeave}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setLifeDropdownOpen(!lifeDropdownOpen);
+                    }
+                  }}
+                  aria-expanded={lifeDropdownOpen}
+                  aria-haspopup="true"
+                  tabIndex={0}
                 >
                   Life Insurance
                   <ChevronDownIcon className="h-4 w-4 ml-1" />
@@ -151,6 +159,14 @@ export default function Header() {
                   className="flex items-center text-gray-900 hover:text-[#00ECFF] transition-all duration-200 text-base font-medium hover:scale-105 transform"
                   onMouseEnter={handleHealthMouseEnter}
                   onMouseLeave={handleHealthMouseLeave}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setHealthDropdownOpen(!healthDropdownOpen);
+                    }
+                  }}
+                  aria-expanded={healthDropdownOpen}
+                  aria-haspopup="true"
+                  tabIndex={0}
                 >
                   Health Insurance
                   <ChevronDownIcon className="h-4 w-4 ml-1" />
@@ -211,8 +227,14 @@ export default function Header() {
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setMobileMenuOpen(!mobileMenuOpen);
+                  }
+                }}
                 aria-expanded={mobileMenuOpen}
                 aria-label="Toggle navigation menu"
+                tabIndex={0}
               >
                 <span className="sr-only">Open main menu</span>
                 {mobileMenuOpen ? (
