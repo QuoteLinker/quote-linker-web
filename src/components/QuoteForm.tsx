@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
 import LoadingButton from './LoadingButton';
-import { validateEmail, validateName, validatePhone, validateZip } from '@/utils/validation';
+import { validateEmail, validateName, validatePhone, validateZip, validateAge, validateCoverageAmount } from '@/utils/validation';
+import debounce from 'lodash/debounce';
+import FieldWithTooltip from './FieldWithTooltip';
 
 interface FormData {
   firstName: string;
@@ -13,6 +15,8 @@ interface FormData {
   phone: string;
   zipCode: string;
   insuranceType: MainInsuranceType;
+  age?: number;
+  coverageAmount?: number;
 }
 
 interface FormErrors {
@@ -21,6 +25,8 @@ interface FormErrors {
   email?: string;
   phone?: string;
   zipCode?: string;
+  age?: string;
+  coverageAmount?: string;
 }
 
 interface QuoteFormProps {
@@ -46,18 +52,60 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     return defaultType;
   };
 
-  const [formData, setFormData] = useState<FormData>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    zipCode: '',
-    insuranceType: getMainType(initialType),
+  // Load saved form data from localStorage
+  const loadSavedFormData = (): FormData | null => {
+    if (typeof window === 'undefined') return null;
+    const saved = localStorage.getItem('quoteFormData');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Only restore if the saved data is for the same insurance type
+        if (parsed.insuranceType === getMainType(initialType)) {
+          return parsed as FormData;
+        }
+      } catch (e) {
+        console.error('Error parsing saved form data:', e);
+      }
+    }
+    return null;
+  };
+
+  const [formData, setFormData] = useState<FormData>(() => {
+    const saved = loadSavedFormData();
+    if (saved) {
+      return saved;
+    }
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      zipCode: '',
+      insuranceType: getMainType(initialType),
+    };
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Debounced save function
+  const debouncedSave = useCallback(
+    debounce((data: FormData) => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('quoteFormData', JSON.stringify(data));
+      }
+    }, 1000),
+    []
+  );
+
+  // Save form data whenever it changes
+  useEffect(() => {
+    debouncedSave(formData);
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [formData, debouncedSave]);
 
   // Scroll to form when component mounts
   useEffect(() => {
@@ -94,6 +142,12 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     
     const zipError = validateZip(formData.zipCode);
     if (zipError) errors.zipCode = zipError;
+
+    const ageError = validateAge(formData.age);
+    if (ageError) errors.age = ageError;
+
+    const coverageAmountError = validateCoverageAmount(formData.coverageAmount);
+    if (coverageAmountError) errors.coverageAmount = coverageAmountError;
     
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -126,6 +180,11 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
       }
 
       setSubmitStatus('success');
+      
+      // Clear saved form data on successful submission
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('quoteFormData');
+      }
       
       // Redirect to thank you page after a short delay
       setTimeout(() => {
@@ -247,25 +306,41 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
             )}
           </div>
 
-          <div>
-            <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
-              ZIP Code <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="zipCode"
-              id="zipCode"
-              required
-              value={formData.zipCode}
-              onChange={handleChange}
-              className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                formErrors.zipCode ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
-              }`}
-            />
-            {formErrors.zipCode && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
-            )}
-          </div>
+          <FieldWithTooltip
+            label="ZIP Code"
+            name="zipCode"
+            tooltip="5-digit USPS ZIP code helps us match you with local agents in your area."
+            required
+            value={formData.zipCode}
+            onChange={handleChange}
+            error={formErrors.zipCode}
+          />
+
+          <FieldWithTooltip
+            label="Age"
+            name="age"
+            tooltip="Your age helps us determine the most appropriate coverage options and rates for you."
+            required
+            type="number"
+            min="18"
+            max="120"
+            value={formData.age || ''}
+            onChange={handleChange}
+            error={formErrors.age}
+          />
+
+          <FieldWithTooltip
+            label="Coverage Amount"
+            name="coverageAmount"
+            tooltip="The amount of coverage you need. This helps us calculate your premium and ensure adequate protection."
+            required
+            type="number"
+            min="0"
+            step="1000"
+            value={formData.coverageAmount || ''}
+            onChange={handleChange}
+            error={formErrors.coverageAmount}
+          />
 
           <div className="pt-2">
             <LoadingButton
