@@ -1,23 +1,23 @@
-import { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import Script from 'next/script'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import GoogleTagManager from '@/components/GoogleTagManager'
-import BackToTop from '@/components/BackToTop'
-import PageTransition from '@/components/PageTransition'
+import { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import Script from 'next/script';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import BackToTop from '@/components/BackToTop';
+import PageTransition from '@/components/PageTransition';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   preload: true,
   fallback: ['system-ui', 'arial'],
-})
+});
 
 export const metadata: Metadata = {
   title: 'QuoteLinker - Insurance Quotes Made Easy',
-  description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+  description:
+    'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
   metadataBase: new URL('https://www.quotelinker.com'),
   icons: {
     icon: [
@@ -27,9 +27,7 @@ export const metadata: Metadata = {
       { url: '/icons/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
       { url: '/icons/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [
-      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/manifest.json',
   openGraph: {
@@ -61,11 +59,11 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
-}
+};
 
 export const viewport: Viewport = {
   themeColor: '#00EEFD',
-}
+};
 
 // GTM functions
 function GoogleTagManagerHead() {
@@ -96,6 +94,7 @@ function GoogleTagManagerBody() {
   return (
     <noscript>
       <iframe
+        title="Google Tag Manager"
         src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
         height="0"
         width="0"
@@ -151,13 +150,7 @@ function BreadcrumbSchema() {
   );
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
-  
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -169,7 +162,10 @@ export default function RootLayout({
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="QuoteLinker — Fast, Free Insurance Quotes" />
-        <meta property="og:description" content="Get instant quotes for Auto, Home, Life & Health insurance." />
+        <meta
+          property="og:description"
+          content="Get instant quotes for Auto, Home, Life & Health insurance."
+        />
         <meta property="og:image" content="https://www.quotelinker.com/icons/og-image.png" />
         <meta property="og:url" content="https://www.quotelinker.com" />
         <meta name="twitter:card" content="summary_large_image" />

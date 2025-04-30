@@ -8,7 +8,7 @@ type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
 interface ProductLayoutProps {
   insuranceType: InsuranceType;
-  subType?: SubType;
+  _subType?: SubType;
   heroTitle: string;
   heroSubtitle: string;
   heroCTA: string;
@@ -22,26 +22,26 @@ interface ProductLayoutProps {
     title: string;
     description: string;
   }>;
-  showToggle?: boolean;
-  toggleOptions?: Array<{
+  _showToggle?: boolean;
+  _toggleOptions?: Array<{
     value: string;
     label: string;
   }>;
-  onToggleChange?: (value: string) => void;
+  _onToggleChange?: (value: string) => void;
 }
 
 export default function ProductLayout({
   insuranceType,
-  subType,
+  _subType,
   heroTitle,
   heroSubtitle,
   heroCTA,
   heroIconItems,
   benefitsTitle,
   benefits,
-  showToggle,
-  toggleOptions,
-  onToggleChange,
+  _showToggle,
+  _toggleOptions,
+  _onToggleChange,
 }: ProductLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -90,4 +90,4 @@ export default function ProductLayout({
       </div>
     </div>
   );
-} 
+}

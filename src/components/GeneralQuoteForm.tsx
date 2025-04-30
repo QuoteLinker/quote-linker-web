@@ -26,13 +26,13 @@ export default function GeneralQuoteForm() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
-    
+
     try {
       // Handle form submission
       // ... existing form submission code ...
-      
+
       setSubmitStatus('success');
-      
+
       // Scroll to form with consistent behavior
       const formElement = document.getElementById('general-quote-form');
       if (formElement) {
@@ -47,22 +47,20 @@ export default function GeneralQuoteForm() {
   };
 
   const toggleInsuranceType = (id: string) => {
-    setSelectedTypes(prev => 
-      prev.includes(id) 
-        ? prev.filter(type => type !== id)
-        : [...prev, id]
+    setSelectedTypes(prev =>
+      prev.includes(id) ? prev.filter(type => type !== id) : [...prev, id]
     );
   };
 
   return (
     <form onSubmit={handleSubmit} id="general-quote-form" className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-brand-body mb-4">
+        <label htmlFor="insuranceTypes" className="block text-sm font-medium text-brand-body mb-4">
           What type of insurance are you interested in?
           <span className="text-red-500 ml-1">*</span>
         </label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          {insuranceTypes.map((type) => (
+        <div id="insuranceTypes" className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          {insuranceTypes.map(type => (
             <div key={type.id} className="flex items-center">
               <input
                 type="checkbox"
@@ -81,48 +79,52 @@ export default function GeneralQuoteForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-brand-body mb-2">
+          <label htmlFor="firstName" className="block text-sm font-medium text-brand-body mb-2">
             First Name
             <span className="text-red-500 ml-1">*</span>
           </label>
           <input
             type="text"
+            id="firstName"
             required
             className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-brand-body mb-2">
+          <label htmlFor="lastName" className="block text-sm font-medium text-brand-body mb-2">
             Last Name
             <span className="text-red-500 ml-1">*</span>
           </label>
           <input
             type="text"
+            id="lastName"
             required
             className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-brand-body mb-2">
+          <label htmlFor="phone" className="block text-sm font-medium text-brand-body mb-2">
             Phone
             <span className="text-red-500 ml-1">*</span>
           </label>
           <input
             type="tel"
+            id="phone"
             required
             className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-brand-body mb-2">
+          <label htmlFor="email" className="block text-sm font-medium text-brand-body mb-2">
             Email
             <span className="text-red-500 ml-1">*</span>
           </label>
           <input
             type="email"
+            id="email"
             required
             className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
           />
@@ -130,10 +132,11 @@ export default function GeneralQuoteForm() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-brand-body mb-2">
+        <label htmlFor="additionalInfo" className="block text-sm font-medium text-brand-body mb-2">
           Additional Information (Optional)
         </label>
         <textarea
+          id="additionalInfo"
           rows={4}
           className="w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-primary focus:ring-brand-primary"
           placeholder="Tell us more about your insurance needs..."
@@ -148,23 +151,27 @@ export default function GeneralQuoteForm() {
         >
           {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
         </button>
-        
+
         {submitStatus === 'success' && (
           <div className="mt-4 p-4 bg-green-50 text-green-800 rounded-md">
-            Thank you! We'll be in touch shortly with your personalized quotes.
+            Thank you! We&apos;ll be in touch shortly with your personalized quotes.
           </div>
         )}
-        
+
         {submitStatus === 'error' && (
           <div className="mt-4 p-4 bg-red-50 text-red-800 rounded-md">
             There was an error submitting your form. Please try again.
           </div>
         )}
-        
+
         <p className="mt-3 text-xs text-brand-body text-center">
-          By submitting this form, you agree to our <a href="/privacy" className="text-brand-primary hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
+          By submitting this form, you agree to our{' '}
+          <a href="/privacy" className="text-brand-primary hover:underline">
+            Privacy Policy
+          </a>{' '}
+          and consent to being contacted by our insurance partners.
         </p>
       </div>
     </form>
   );
-} 
+}

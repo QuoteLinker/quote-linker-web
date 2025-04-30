@@ -4,7 +4,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
 import LoadingButton from './LoadingButton';
-import { validateEmail, validateName, validatePhone, validateZip, validateAge, validateCoverageAmount } from '@/utils/validation';
+import {
+  validateEmail,
+  validateName,
+  validatePhone,
+  validateZip,
+  validateAge,
+  validateCoverageAmount,
+} from '@/utils/validation';
 import debounce from 'lodash/debounce';
 import FieldWithTooltip from './FieldWithTooltip';
 
@@ -33,16 +40,16 @@ interface FormErrors {
 interface QuoteFormProps {
   insuranceType?: InsuranceType;
   productType?: InsuranceType;
-  subType?: string;
+  _subType?: string;
 }
 
-export default function QuoteForm({ insuranceType, productType, subType }: QuoteFormProps) {
+export default function QuoteForm({ insuranceType, productType, _subType }: QuoteFormProps) {
   const router = useRouter();
-  
+
   // Default to the first main insurance type if none provided
   const defaultType: MainInsuranceType = 'AUTO';
   const initialType = insuranceType || productType || defaultType;
-  
+
   // Convert to main insurance type if it's a subtype
   const getMainType = (type: InsuranceType): MainInsuranceType => {
     if (type === 'AUTO' || type === 'HOME' || type === 'LIFE' || type === 'HEALTH') {
@@ -117,7 +124,10 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     }
   }, []); // Only run once on mount
 
-  const validateField = (name: keyof FormData, value: FormData[keyof FormData]): string | undefined => {
+  const validateField = (
+    name: keyof FormData,
+    value: FormData[keyof FormData]
+  ): string | undefined => {
     switch (name) {
       case 'firstName': {
         const error = validateName(value as string);
@@ -152,57 +162,63 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     }
   };
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    
-    // Handle checkbox inputs
-    if (type === 'checkbox') {
-      const checkbox = e.target as HTMLInputElement;
-      setFormData(prev => ({ ...prev, [name]: checkbox.checked }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
-    
-    // Clear error when user starts typing
-    if (formErrors[name as keyof FormErrors]) {
-      setFormErrors(prev => ({ ...prev, [name]: undefined }));
-    }
-  }, [formErrors]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target;
 
-  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name } = e.target;
-    setTouchedFields(prev => ({ ...prev, [name]: true }));
-    
-    // Validate on blur
-    const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
-    if (error) {
-      setFormErrors(prev => ({ ...prev, [name]: error }));
-    }
-  }, [formData]);
+      // Handle checkbox inputs
+      if (type === 'checkbox') {
+        const checkbox = e.target as HTMLInputElement;
+        setFormData(prev => ({ ...prev, [name]: checkbox.checked }));
+      } else {
+        setFormData(prev => ({ ...prev, [name]: value }));
+      }
+
+      // Clear error when user starts typing
+      if (formErrors[name as keyof FormErrors]) {
+        setFormErrors(prev => ({ ...prev, [name]: undefined }));
+      }
+    },
+    [formErrors]
+  );
+
+  const handleBlur = useCallback(
+    (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name } = e.target;
+      setTouchedFields(prev => ({ ...prev, [name]: true }));
+
+      // Validate on blur
+      const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
+      if (error) {
+        setFormErrors(prev => ({ ...prev, [name]: error }));
+      }
+    },
+    [formData]
+  );
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
-    
+
     {
       const firstNameError = validateName(formData.firstName);
       if (firstNameError) errors.firstName = firstNameError;
     }
-    
+
     {
       const lastNameError = validateName(formData.lastName);
       if (lastNameError) errors.lastName = lastNameError;
     }
-    
+
     {
       const emailError = validateEmail(formData.email);
       if (emailError) errors.email = emailError;
     }
-    
+
     {
       const phoneError = validatePhone(formData.phone);
       if (phoneError) errors.phone = phoneError;
     }
-    
+
     {
       const zipError = validateZip(formData.zipCode);
       if (zipError) errors.zipCode = zipError;
@@ -224,12 +240,12 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validate form before submission
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -249,17 +265,16 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
       }
 
       setSubmitStatus('success');
-      
+
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
         localStorage.removeItem('quoteFormData');
       }
-      
+
       // Redirect to thank you page after a short delay
       setTimeout(() => {
         router.push('/thank-you');
       }, 1500);
-      
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
@@ -270,9 +285,13 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
 
   return (
     <div className="flex justify-center items-center py-8">
-      <form onSubmit={handleSubmit} id="quote-form" className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+      <form
+        onSubmit={handleSubmit}
+        id="quote-form"
+        className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg border border-gray-100"
+      >
         <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Get Your Free Quote</h2>
-        
+
         <div className="space-y-5">
           {/* Insurance Type Selection */}
           <div>
@@ -289,7 +308,9 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               aria-invalid={!!formErrors.insuranceType}
               aria-describedby={formErrors.insuranceType ? 'insuranceType-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                touchedFields.insuranceType && formErrors.insuranceType ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.insuranceType && formErrors.insuranceType
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : ''
               }`}
             >
               <option value="AUTO">Auto Insurance</option>
@@ -298,7 +319,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               <option value="HEALTH">Health Insurance</option>
             </select>
             {touchedFields.insuranceType && formErrors.insuranceType && (
-              <div 
+              <div
                 id="insuranceType-error"
                 className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
                 role="alert"
@@ -325,11 +346,13 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               aria-invalid={!!formErrors.firstName}
               aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                touchedFields.firstName && formErrors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.firstName && formErrors.firstName
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : ''
               }`}
             />
             {touchedFields.firstName && formErrors.firstName && (
-              <div 
+              <div
                 id="firstName-error"
                 className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
                 role="alert"
@@ -339,7 +362,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               </div>
             )}
           </div>
-          
+
           <div>
             <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
               Last Name <span className="text-red-500">*</span>
@@ -355,11 +378,13 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               aria-invalid={!!formErrors.lastName}
               aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                touchedFields.lastName && formErrors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.lastName && formErrors.lastName
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : ''
               }`}
             />
             {touchedFields.lastName && formErrors.lastName && (
-              <div 
+              <div
                 id="lastName-error"
                 className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
                 role="alert"
@@ -385,11 +410,13 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               aria-invalid={!!formErrors.email}
               aria-describedby={formErrors.email ? 'email-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                touchedFields.email && formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.email && formErrors.email
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : ''
               }`}
             />
             {touchedFields.email && formErrors.email && (
-              <div 
+              <div
                 id="email-error"
                 className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
                 role="alert"
@@ -415,11 +442,13 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               aria-invalid={!!formErrors.phone}
               aria-describedby={formErrors.phone ? 'phone-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                touchedFields.phone && formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.phone && formErrors.phone
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                  : ''
               }`}
             />
             {touchedFields.phone && formErrors.phone && (
-              <div 
+              <div
                 id="phone-error"
                 className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
                 role="alert"
@@ -505,7 +534,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-green-800">
-                    Thank you! We'll reach out to you shortly.
+                    Thank you! We&apos;ll reach out to you shortly.
                   </p>
                 </div>
               </div>
@@ -536,4 +565,4 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
       </form>
     </div>
   );
-} 
+}

@@ -32,7 +32,6 @@ export default function MultiStepForm({
   const [formData, setFormData] = useState<FormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Load saved form data from localStorage
   const loadSavedFormData = useCallback((): FormData | null => {
@@ -82,23 +81,6 @@ export default function MultiStepForm({
     }
   }, [currentStep, onStepChange]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    
-    // Handle checkbox inputs
-    if (type === 'checkbox') {
-      const checkbox = e.target as HTMLInputElement;
-      setFormData((prev: FormData) => ({ ...prev, [name]: checkbox.checked }));
-    } else {
-      setFormData((prev: FormData) => ({ ...prev, [name]: value }));
-    }
-    
-    // Clear error when user starts typing
-    if (formErrors[name]) {
-      setFormErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
   const validateCurrentStep = (): boolean => {
     // This should be implemented by the parent component
     // and passed as a prop if needed
@@ -117,28 +99,27 @@ export default function MultiStepForm({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (!validateCurrentStep()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
     try {
       await onSubmit(formData);
       setSubmitStatus('success');
-      
+
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
         localStorage.removeItem(`quoteFormData_${insuranceType}`);
       }
-      
+
       // Redirect to thank you page after a short delay
       setTimeout(() => {
         router.push('/thank-you');
       }, 1500);
-      
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
@@ -177,9 +158,7 @@ export default function MultiStepForm({
         </div>
 
         {/* Form fields for current step */}
-        <div className="space-y-4">
-          {steps[currentStep].fields}
-        </div>
+        <div className="space-y-4">{steps[currentStep].fields}</div>
 
         {/* Navigation buttons */}
         <div className="flex justify-between pt-4">
@@ -194,7 +173,7 @@ export default function MultiStepForm({
           ) : (
             <div></div> // Empty div to maintain spacing
           )}
-          
+
           {isLastStep ? (
             <button
               type="submit"
@@ -229,7 +208,7 @@ export default function MultiStepForm({
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-green-800">
-                  Thank you! We'll reach out to you shortly.
+                  Thank you! We&apos;ll reach out to you shortly.
                 </p>
               </div>
             </div>
@@ -259,9 +238,13 @@ export default function MultiStepForm({
 
         {/* Privacy disclosure */}
         <p className="text-xs text-gray-500 text-center mt-4">
-          By submitting this form, you agree to our <a href="/privacy" className="text-[#00EEFD] hover:underline">Privacy Policy</a> and consent to being contacted by our insurance partners.
+          By submitting this form, you agree to our{' '}
+          <a href="/privacy" className="text-[#00EEFD] hover:underline">
+            Privacy Policy
+          </a>{' '}
+          and consent to being contacted by our insurance partners.
         </p>
       </form>
     </div>
   );
-} 
+}

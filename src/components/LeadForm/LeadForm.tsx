@@ -15,7 +15,7 @@ const LeadForm = () => {
     subLine: '',
     zipCode: '',
     heardAboutUs: '',
-    notes: ''
+    notes: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,21 +33,23 @@ const LeadForm = () => {
     { value: 'Auto', label: 'Auto' },
     { value: 'Home', label: 'Home' },
     { value: 'Life', label: 'Life' },
-    { value: 'Health', label: 'Health' }
+    { value: 'Health', label: 'Health' },
   ];
 
   const subLineOptions = {
     Life: [
       { value: 'Term', label: 'Term' },
-      { value: 'Permanent', label: 'Permanent' }
+      { value: 'Permanent', label: 'Permanent' },
     ],
     Health: [
       { value: 'Short-Term Disability', label: 'Short-Term Disability' },
-      { value: 'Supplemental Health', label: 'Supplemental Health' }
-    ]
+      { value: 'Supplemental Health', label: 'Supplemental Health' },
+    ],
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -61,13 +63,13 @@ const LeadForm = () => {
     try {
       await axios.post('/api/submit-lead', formData);
       setSuccess(true);
-      
+
       // Scroll to form with consistent behavior
       const formElement = document.getElementById('lead-form');
       if (formElement) {
         formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-      
+
       // Redirect after a short delay to allow the user to see the success message
       setTimeout(() => {
         router.push('/thank-you');
@@ -245,11 +247,11 @@ const LeadForm = () => {
 
         {/* Error Message */}
         {error && <p className="text-red-500 p-3 bg-red-50 rounded">{error}</p>}
-        
+
         {/* Success Message */}
         {success && (
           <div className="p-3 bg-green-50 text-green-800 rounded">
-            Thank you! We'll be in touch shortly with your personalized quotes.
+            Thank you! We&apos;ll be in touch shortly with your personalized quotes.
           </div>
         )}
 
@@ -266,4 +268,4 @@ const LeadForm = () => {
   );
 };
 
-export default LeadForm; 
+export default LeadForm;
