@@ -10,7 +10,6 @@ const nextConfig = {
     minimumCacheTTL: 60,
   },
   experimental: {
-    optimizeCages: true,
     optimizePackageImports: ['@heroicons/react', 'lodash'],
   },
   compiler: {
