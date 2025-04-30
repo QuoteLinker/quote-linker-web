@@ -38,133 +38,181 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
     switch (insuranceType) {
       case 'AUTO':
         return {
-          heroTitle: 'Auto Insurance Made Simple',
-          heroSubtitle: 'Get comprehensive coverage at competitive rates',
+          heroTitle: 'Minnesota Auto Insurance Made Simple',
+          heroSubtitle: 'Get comprehensive coverage that meets state requirements',
           ctaText: 'Get Your Auto Quote',
           iconItems: [
-            { icon: ShieldCheckIcon, text: 'Comprehensive Coverage' },
-            { icon: CurrencyDollarIcon, text: 'Competitive Rates' },
-            { icon: ClockIcon, text: 'Quick Claims Process' },
+            { icon: ShieldCheckIcon, text: 'Adequate Liability' },
+            { icon: CurrencyDollarIcon, text: 'PIP Coverage' },
+            { icon: ClockIcon, text: 'STDI Connection' },
           ],
           benefits: [
-            'Liability Coverage - Protects you if you cause injury or property damage',
-            'Collision Coverage - Repairs your car after an accident',
-            'Comprehensive Coverage - Protection against theft, vandalism, and natural disasters',
-            'Uninsured/Underinsured Motorist - Covers you if the other driver lacks insurance',
-            'Personal Injury Protection - Medical expenses for you and your passengers',
-            'Roadside Assistance - 24/7 help when you need it most',
+            'Liability Coverage - $30,000/$60,000 bodily injury, $10,000 property damage',
+            'Personal Injury Protection - $40,000 coverage for medical expenses',
+            'Uninsured/Underinsured Motorist - $25,000/$50,000 coverage',
+            'Comprehensive Coverage - Protection against Minnesota weather, theft, and more',
+            'Collision Coverage - Repairs for your vehicle after an accident',
+            'Roadside Assistance - 24/7 help in any weather',
           ],
           eligibility: [
-            'Valid driver\'s license',
-            'Registered vehicle',
+            'Valid Minnesota driver\'s license',
+            'Vehicle registered in Minnesota',
             'Clean driving record preferred',
-            'Must be at least 16 years old',
+            'Must meet state minimum requirements'
           ],
           coverage: {
-            minimum: '$15,000',
-            recommended: '$100,000',
-            maximum: '$500,000'
-          }
+            minimum: '$30,000/$60,000',
+            recommended: '$100,000/$300,000',
+            maximum: '$500,000+'
+          },
+          relatedProducts: [
+            {
+              title: 'Short-Term Disability Insurance',
+              description: 'Protect your income during recovery from an accident',
+              link: '/short-term-disability'
+            },
+            {
+              title: 'Supplemental Health Insurance',
+              description: 'Additional coverage for medical expenses',
+              link: '/supplemental-health'
+            }
+          ]
         };
       case 'HOME':
         return {
-          heroTitle: 'Protect Your Home',
-          heroSubtitle: 'Comprehensive home insurance coverage for your peace of mind',
+          heroTitle: 'Protect Your Minnesota Home',
+          heroSubtitle: 'Coverage designed for Minnesota weather and property needs',
           ctaText: 'Get Your Home Quote',
           iconItems: [
-            { icon: HomeIcon, text: 'Property Protection' },
-            { icon: ShieldCheckIcon, text: 'Liability Coverage' },
-            { icon: SparklesIcon, text: 'Additional Coverage Options' },
+            { icon: HomeIcon, text: 'Adequate Liability' },
+            { icon: ShieldCheckIcon, text: 'Property Coverage' },
+            { icon: SparklesIcon, text: 'STDI Protection' },
           ],
           benefits: [
-            'Dwelling Coverage - Protects your home\'s structure',
-            'Personal Property Coverage - Protects your belongings',
+            'Dwelling Coverage - Full replacement cost for your home',
+            'Winter Damage Protection - Coverage for ice dams and frozen pipes',
+            'Personal Property Coverage - Protection for your belongings',
             'Liability Protection - Coverage for accidents on your property',
-            'Additional Living Expenses - Covers temporary housing if needed',
-            'Medical Payments - For injuries to guests on your property',
-            'Natural Disaster Coverage - Protection against specified perils',
+            'Additional Living Expenses - Temporary housing during repairs',
+            'Storm Coverage - Protection against Minnesota severe weather',
           ],
           eligibility: [
-            'Home ownership or pending purchase',
-            'Property meets safety standards',
+            'Minnesota residential property',
+            'Home meets safety standards',
             'Located in an insurable area',
-            'No recent major claims'
+            'Updated systems and maintenance'
           ],
           coverage: {
-            minimum: '$100,000',
-            recommended: '$300,000',
+            minimum: '$150,000',
+            recommended: '$350,000',
             maximum: '$1,000,000+'
-          }
+          },
+          relatedProducts: [
+            {
+              title: 'Short-Term Disability Insurance',
+              description: 'Ensure you can maintain your home insurance during disability',
+              link: '/short-term-disability'
+            },
+            {
+              title: 'Whole Life Insurance',
+              description: 'Build cash value to help with home expenses',
+              link: '/permanent-life'
+            }
+          ]
         };
       case 'LIFE_TERM':
         return {
           heroTitle: 'Term Life Insurance',
-          heroSubtitle: 'Affordable protection for your loved ones when they need it most',
+          heroSubtitle: 'Affordable protection for your family\'s future',
           ctaText: 'Get Your Term Life Quote',
           iconItems: [
             { icon: HeartIcon, text: 'Family Protection' },
-            { icon: CurrencyDollarIcon, text: 'Affordable Premiums' },
-            { icon: ClockIcon, text: 'Fixed Term Coverage' },
+            { icon: CurrencyDollarIcon, text: 'Level Premiums' },
+            { icon: ClockIcon, text: 'Conversion Options' },
           ],
           benefits: [
-            'Level Premiums - Fixed rates for your chosen term',
-            'Death Benefit - Tax-free payout to your beneficiaries',
-            'Flexible Terms - Choose 10, 20, or 30-year coverage',
-            'Convertible Options - Convert to permanent coverage later',
-            'No Medical Exam Options - Available for qualifying applicants',
-            'Family Protection - Income replacement and debt coverage',
+            'Guaranteed Level Premiums - Rates never increase during your term',
+            'Term Options - Choose 10, 20, or 30-year coverage periods',
+            'High Coverage Amount - Up to $1 million or more available',
+            'Conversion Privilege - Option to convert to permanent coverage',
+            'Simple Application - Quick approval for many applicants',
+            'Affordable Protection - Maximum coverage for your budget',
           ],
           eligibility: [
+            'Minnesota resident',
             'Age 18-65 for most terms',
-            'No terminal illnesses',
-            'U.S. resident',
-            'Meets health requirements'
+            'Basic health requirements',
+            'No medical exam options available'
           ],
           coverage: {
             minimum: '$100,000',
             recommended: '$500,000',
-            maximum: '$2,000,000+'
-          }
+            maximum: '$1,000,000+'
+          },
+          relatedProducts: [
+            {
+              title: 'Whole Life Insurance',
+              description: 'Convert to permanent coverage with cash value',
+              link: '/permanent-life'
+            },
+            {
+              title: 'Short-Term Disability Insurance',
+              description: 'Protect your income while maintaining life insurance',
+              link: '/short-term-disability'
+            }
+          ]
         };
       case 'LIFE_PERMANENT':
         return {
-          heroTitle: 'Permanent Life Insurance',
-          heroSubtitle: 'Lifetime protection with cash value growth potential',
-          ctaText: 'Get Your Permanent Life Quote',
+          heroTitle: 'Whole Life Insurance',
+          heroSubtitle: 'Lifetime protection with guaranteed cash value',
+          ctaText: 'Get Your Whole Life Quote',
           iconItems: [
             { icon: HeartIcon, text: 'Lifetime Coverage' },
             { icon: CurrencyDollarIcon, text: 'Cash Value Growth' },
-            { icon: SparklesIcon, text: 'Living Benefits' },
+            { icon: SparklesIcon, text: 'Dividend Potential' },
           ],
           benefits: [
-            'Lifetime Coverage - Protection that never expires',
-            'Cash Value Growth - Tax-deferred accumulation',
-            'Fixed Premiums - Rates never increase',
+            'Guaranteed Coverage - Protection that never expires',
+            'Level Premiums - Rates never increase',
+            'Guaranteed Cash Value - Tax-deferred growth',
+            'Dividend Potential - Opportunity for additional benefits',
             'Policy Loans - Access to cash value when needed',
-            'Living Benefits - Use for retirement or emergencies',
             'Estate Planning - Tax-efficient wealth transfer',
           ],
           eligibility: [
+            'Minnesota resident',
             'Age 18-75',
-            'No terminal illnesses',
-            'U.S. resident',
-            'Meets financial requirements'
+            'Basic health requirements',
+            'Long-term planning needs'
           ],
           coverage: {
             minimum: '$25,000',
             recommended: '$250,000',
-            maximum: '$5,000,000+'
-          }
+            maximum: '$2,000,000+'
+          },
+          relatedProducts: [
+            {
+              title: 'Short-Term Disability Insurance',
+              description: 'Protect your income while building cash value',
+              link: '/short-term-disability'
+            },
+            {
+              title: 'Supplemental Health Insurance',
+              description: 'Additional protection for medical expenses',
+              link: '/supplemental-health'
+            }
+          ]
         };
       case 'HEALTH_SHORT_TERM_DISABILITY':
         return {
-          heroTitle: 'Short Term Disability Insurance',
+          heroTitle: 'Short-Term Disability Insurance',
           heroSubtitle: 'Protect your income during recovery',
           ctaText: 'Get Your Disability Quote',
           iconItems: [
             { icon: UserGroupIcon, text: 'Income Protection' },
-            { icon: ClockIcon, text: 'Quick Coverage' },
-            { icon: CurrencyDollarIcon, text: 'Affordable Premiums' },
+            { icon: ClockIcon, text: 'Quick Benefits' },
+            { icon: CurrencyDollarIcon, text: 'Portable Coverage' },
           ],
           benefits: [
             'Income Replacement - Up to 60% of your salary',
@@ -184,7 +232,19 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             minimum: '$500/month',
             recommended: '60% of income',
             maximum: '$5,000/month'
-          }
+          },
+          relatedProducts: [
+            {
+              title: 'Supplemental Health Insurance',
+              description: 'Additional coverage for medical expenses',
+              link: '/supplemental-health'
+            },
+            {
+              title: 'Whole Life Insurance',
+              description: 'Build cash value to supplement disability benefits',
+              link: '/permanent-life'
+            }
+          ]
         };
       case 'HEALTH_SUPPLEMENTAL':
         return {
@@ -192,9 +252,9 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroSubtitle: 'Extra protection for unexpected medical expenses',
           ctaText: 'Get Your Health Quote',
           iconItems: [
-            { icon: HeartIcon, text: 'Medical Coverage' },
-            { icon: CurrencyDollarIcon, text: 'Fixed Benefits' },
-            { icon: ShieldCheckIcon, text: 'Guaranteed Acceptance' },
+            { icon: HeartIcon, text: 'Fixed Benefits' },
+            { icon: CurrencyDollarIcon, text: 'No Network Restrictions' },
+            { icon: ShieldCheckIcon, text: 'Guaranteed Renewable' },
           ],
           benefits: [
             'Fixed Cash Benefits - Paid directly to you',
@@ -214,7 +274,19 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
             minimum: '$5,000',
             recommended: '$15,000',
             maximum: '$50,000'
-          }
+          },
+          relatedProducts: [
+            {
+              title: 'Short-Term Disability Insurance',
+              description: 'Protect your income during recovery',
+              link: '/short-term-disability'
+            },
+            {
+              title: 'Whole Life Insurance',
+              description: 'Build cash value for medical expenses',
+              link: '/permanent-life'
+            }
+          ]
         };
       default:
         return {

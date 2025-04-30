@@ -31,137 +31,133 @@ interface InsuranceProduct {
 export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   AUTO: {
     title: 'Auto Insurance',
-    subtitle: 'Find the perfect auto insurance coverage for your needs',
+    subtitle: 'Get the right auto coverage for Minnesota drivers',
     benefits: [
       {
-        title: 'Compare Quotes',
-        description: 'Compare quotes and coverage options provided by licensed agents'
+        title: 'Adequate Liability',
+        description: 'Protect your assets with proper liability limits'
       },
       {
-        title: 'Save Time & Money',
-        description: 'Save time and money on your auto insurance'
+        title: 'PIP Coverage',
+        description: 'Essential medical coverage for Minnesota drivers'
       },
       {
-        title: 'Personalized Coverage',
-        description: 'Get personalized coverage recommendations'
+        title: 'Uninsured Protection',
+        description: 'Coverage when others lack insurance'
       },
       {
-        title: 'Easy Process',
-        description: 'Easy online quote process'
+        title: 'Comprehensive',
+        description: 'Protection against Minnesota weather and theft'
       },
       {
-        title: 'Flexible Payments',
-        description: 'Flexible payment options'
+        title: 'Local Support',
+        description: 'Work with licensed Minnesota agents'
       }
     ],
     faqs: [
       {
-        question: 'What factors affect my auto insurance rates?',
-        answer: 'Several factors can affect your auto insurance rates, including your driving history, age, location, type of vehicle, and coverage options selected.'
+        question: 'Why are higher liability limits important?',
+        answer: 'Minnesota\'s minimum liability limits ($30,000/$60,000) may not be enough to protect your assets in a serious accident. Higher limits help protect your savings, home, and future earnings from lawsuits. We recommend at least $100,000/$300,000 in liability coverage.'
       },
       {
-        question: 'How much auto insurance coverage do I need?',
-        answer: 'The amount of coverage you need depends on your state\'s requirements, your assets, and your risk tolerance. We\'ll help you determine the right coverage for your situation.'
+        question: 'What is PIP coverage and why is it important?',
+        answer: 'Personal Injury Protection (PIP) is required in Minnesota and covers medical expenses, lost wages, and other costs regardless of fault. It works with your health insurance and disability coverage to provide comprehensive protection.'
       },
       {
-        question: 'Can I get a quote without my driver\'s license?',
-        answer: 'While you can start the quote process without your license, you\'ll need it to finalize your policy. Have your license ready for the most accurate quote.'
+        question: 'How does auto insurance connect to disability coverage?',
+        answer: 'While PIP provides immediate coverage after an accident, short-term disability insurance (STDI) provides longer-term income protection. Having both ensures you\'re covered from the moment of injury through recovery.'
       },
       {
-        question: 'How quickly can I get coverage?',
-        answer: 'Most policies can be bound within a few hours of working with a licensed agent. Some providers even offer instant coverage options.'
+        question: 'What discounts are available?',
+        answer: 'Save through multi-policy discounts, safe driver discounts, good student discounts, and by choosing appropriate deductibles. We\'ll help you find all available savings opportunities.'
       }
     ]
   },
   HOME: {
     title: 'Home Insurance',
-    subtitle: 'Protect your home with the right insurance coverage',
+    subtitle: 'Protect your Minnesota home with comprehensive coverage',
     benefits: [
       {
-        title: 'Comprehensive Protection',
-        description: 'Comprehensive home protection'
+        title: 'Adequate Liability',
+        description: 'Protect your assets with proper liability limits'
       },
       {
-        title: 'Competitive Rates',
-        description: 'Competitive rates from licensed agents'
+        title: 'Property Coverage',
+        description: 'Full replacement cost for your home'
       },
       {
-        title: 'Customizable Coverage',
-        description: 'Customizable coverage options'
+        title: 'Weather Protection',
+        description: 'Coverage for Minnesota weather-related damage'
       },
       {
-        title: 'Quick Process',
-        description: 'Quick and easy quote process'
+        title: 'Additional Living',
+        description: 'Coverage for temporary housing if needed'
       },
       {
-        title: 'Expert Guidance',
-        description: 'Expert guidance from licensed agents'
+        title: 'Local Expertise',
+        description: 'Minnesota agents who know your area'
       }
     ],
     faqs: [
       {
-        question: 'What does home insurance cover?',
-        answer: 'Home insurance typically covers damage to your home\'s structure, personal property, liability protection, and additional living expenses if your home becomes uninhabitable.'
+        question: 'Why are higher liability limits important for homeowners?',
+        answer: 'Standard liability limits may not be enough to protect your assets if someone is injured on your property. Higher limits help protect your savings, investments, and future earnings from lawsuits. We recommend at least $300,000 in liability coverage.'
       },
       {
-        question: 'How much home insurance do I need?',
-        answer: 'The amount of coverage you need depends on your home\'s value, location, and your personal property. We\'ll help you assess your needs accurately.'
+        question: 'How does home insurance connect to disability coverage?',
+        answer: 'If you become disabled and can\'t work, maintaining your home insurance is crucial. Having your own STDI policy ensures you can keep your coverage even if you lose employer benefits.'
       },
       {
-        question: 'What factors affect home insurance rates?',
-        answer: 'Factors include your home\'s age, location, construction type, claims history, and the coverage options you select.'
+        question: 'What special coverage do Minnesota homes need?',
+        answer: 'Minnesota homes need protection against ice dams, frozen pipes, and winter storm damage. We recommend comprehensive coverage that includes these specific risks.'
       },
       {
-        question: 'Can I bundle home and auto insurance?',
-        answer: 'Yes, many providers offer discounts for bundling multiple insurance policies together.'
+        question: 'What discounts are available?',
+        answer: 'Save through multi-policy discounts, home security systems, impact-resistant roofing, and new home discounts. We\'ll help you find all eligible discounts.'
       }
     ]
   },
   LIFE: {
     title: 'Life Insurance',
-    subtitle: 'Secure your family\'s future with the right life insurance',
+    subtitle: 'Protect your family\'s future with customized life insurance',
     benefits: [
       {
-        title: 'Financial Protection',
-        description: 'Financial protection for your loved ones'
+        title: 'Term Options',
+        description: 'Affordable term life coverage options'
       },
       {
-        title: 'Flexible Options',
-        description: 'Flexible policy options'
+        title: 'Permanent Coverage',
+        description: 'Whole life insurance with cash value'
       },
       {
-        title: 'Competitive Rates',
-        description: 'Competitive rates that are tailored to your needs'
+        title: 'Flexible Solutions',
+        description: 'Coverage tailored to your needs'
       },
       {
-        title: 'Simple Process',
-        description: 'Simple application process'
+        title: 'Quick Application',
+        description: 'Streamlined application process'
       },
       {
         title: 'Expert Guidance',
-        description: 'Expert guidance from licensed agents'
-      },
-      {
-        title: 'Peace of Mind',
-        description: 'Peace of mind for your family'
+        description: 'Professional insurance guidance'
       }
     ],
     faqs: [
       {
-        question: 'How much life insurance do I need?',
-        answer: 'The amount depends on your income, debts, and your family\'s needs. We\'ll help you calculate the right coverage amount.'
-      },
-      {
         question: 'What types of life insurance are available?',
-        answer: 'Common types include term life, whole life, and universal life insurance. Each has different benefits and costs.'
+        answer: 'We offer both term life insurance for temporary needs and whole life insurance for permanent coverage. Term life provides affordable protection for specific periods, while whole life offers lifetime coverage with cash value growth.'
       },
       {
-        question: 'How quickly can I get coverage?',
-        answer: 'Some policies offer instant coverage, while others may require a simple questionaire and sometimes a basic medical exam. We\'ll help you find the right option for your needs.'
+        question: 'How much life insurance do I need?',
+        answer: 'Coverage needs vary based on your income, debts, family size, and long-term goals. We typically recommend 10-15 times your annual income, but we\'ll help you calculate the right amount for your situation.'
       },
       {
-        question: 'What factors affect life insurance rates?',
-        answer: 'Factors include your age, health, lifestyle, and the type and amount of coverage you select.'
+        question: 'What are the advantages of term vs. whole life?',
+        answer: 'Term life offers affordable coverage for specific periods, ideal for temporary needs like mortgage protection or children\'s education. Whole life provides lifetime coverage and builds cash value you can access, making it suitable for long-term needs and estate planning.'
+      },
+      {
+        question: 'How do I choose the right policy?',
+        answer: 'We\'ll help you evaluate factors like your budget, coverage needs, and long-term goals to find the right policy. We can explain the features of each option and help you make an informed decision.'
       }
     ]
   },
@@ -211,185 +207,177 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   },
   LIFE_TERM: {
     title: 'Term Life Insurance',
-    subtitle: 'Affordable protection for your loved ones',
+    subtitle: 'Affordable protection for your family\'s needs',
     benefits: [
       {
-        title: 'Financial Protection',
-        description: 'Financial protection for your loved ones'
+        title: 'Flexible Terms',
+        description: '10, 20, or 30-year terms available'
       },
       {
-        title: 'Flexible Options',
-        description: 'Flexible policy options'
+        title: 'Level Premiums',
+        description: 'Rates stay the same for your term'
       },
       {
-        title: 'Competitive Rates',
-        description: 'Competitive rates that are tailored to your needs'
+        title: 'High Coverage',
+        description: 'More coverage for your money'
+      },
+      {
+        title: 'Conversion Option',
+        description: 'Convert to permanent coverage later'
       },
       {
         title: 'Simple Process',
-        description: 'Simple application process'
-      },
-      {
-        title: 'Expert Guidance',
-        description: 'Expert guidance from licensed agents'
-      },
-      {
-        title: 'Peace of Mind',
-        description: 'Peace of mind for your family'
+        description: 'Easy application and approval'
       }
     ],
     faqs: [
       {
-        question: 'How much term life insurance do I need?',
-        answer: 'The amount depends on your income, debts, and your family\'s needs. We\'ll help you calculate the right coverage amount.'
-      },
-      {
-        question: 'How long should my term be?',
-        answer: 'Common term lengths are 10, 20, or 30 years. Choose a term that covers your financial obligations and family needs.'
+        question: 'What term lengths are available?',
+        answer: 'We offer 10, 20, and 30-year terms to match your specific needs. Choose a term that aligns with your financial obligations, such as a mortgage or children\'s education.'
       },
       {
         question: 'Can I convert my term policy to permanent insurance?',
-        answer: 'Many term policies offer conversion options. Check with your specific policy for details.'
+        answer: 'Yes, our term policies include a conversion option that allows you to convert to permanent coverage without a new medical exam, regardless of changes in your health.'
+      },
+      {
+        question: 'How much term life insurance should I get?',
+        answer: 'Coverage amounts typically range from $100,000 to over $1 million. We recommend considering your income, debts, and family\'s future needs when determining the right amount.'
       },
       {
         question: 'What happens when my term expires?',
-        answer: 'When your term expires, you can renew your policy (usually at a higher rate), convert to permanent insurance, or let it lapse.'
+        answer: 'When your term ends, you can convert to permanent insurance, renew the term policy (usually at a higher rate), or let the coverage end. We\'ll help you plan ahead for this decision.'
       }
     ]
   },
   LIFE_PERMANENT: {
-    title: 'Permanent Life Insurance',
-    subtitle: 'Lifetime protection with cash value growth',
+    title: 'Whole Life Insurance',
+    subtitle: 'Lifetime protection with guaranteed cash value growth',
     benefits: [
       {
         title: 'Lifetime Coverage',
-        description: 'Lifetime coverage'
+        description: 'Protection that never expires'
       },
       {
-        title: 'Cash Value',
-        description: 'Cash value accumulation'
+        title: 'Guaranteed Cash Value',
+        description: 'Tax-deferred growth you can access'
       },
       {
-        title: 'Tax Benefits',
-        description: 'Tax-deferred growth'
+        title: 'Level Premiums',
+        description: 'Premiums never increase'
       },
       {
-        title: 'Flexible Payments',
-        description: 'Flexible premium payments'
+        title: 'Dividend Potential',
+        description: 'Opportunity for additional benefits'
       },
       {
-        title: 'Policy Loans',
-        description: 'Borrow against your policy'
-      },
-      {
-        title: 'Legacy Planning',
-        description: 'Leave a legacy for your loved ones'
+        title: 'Living Benefits',
+        description: 'Access your policy\'s cash value'
       }
     ],
     faqs: [
       {
-        question: 'What is permanent life insurance?',
-        answer: 'Permanent life insurance provides coverage for your entire life and includes a cash value component that grows over time.'
+        question: 'How does the cash value in whole life insurance work?',
+        answer: 'Your whole life policy builds guaranteed cash value that grows tax-deferred. You can access this value through policy loans or withdrawals for any purpose, such as supplementing retirement income, funding education, or handling emergencies. The cash value continues to grow even when you borrow against it.'
       },
       {
-        question: 'How does the cash value work?',
-        answer: 'A portion of your premium goes into a cash value account that grows tax-deferred. You can borrow against this value or use it to pay premiums.'
+        question: 'What are the advantages of cash value growth?',
+        answer: 'The cash value grows at a guaranteed rate and is not subject to market fluctuations. You can use it to supplement retirement income, fund major expenses, or as an emergency fund. The growth is tax-deferred, and loans against the cash value are tax-free.'
       },
       {
-        question: 'What types of permanent life insurance are available?',
-        answer: 'Common types include whole life, universal life, and variable universal life insurance.'
+        question: 'How do dividends work with whole life insurance?',
+        answer: 'While not guaranteed, our whole life policies are eligible for dividend payments. Dividends can be taken in cash, used to reduce premiums, purchase additional coverage, or left to accumulate interest. This can significantly enhance the policy\'s value over time.'
       },
       {
-        question: 'Is permanent life insurance right for me?',
-        answer: 'Permanent life insurance is ideal for those seeking lifetime coverage and want to build cash value. We\'ll help you determine if it\'s the right choice.'
+        question: 'How does whole life insurance complement disability coverage?',
+        answer: 'Whole life insurance provides a stable financial foundation that can help during disability. The cash value can be accessed tax-free to supplement disability benefits, and the death benefit ensures your family is protected regardless of your health status.'
       }
     ]
   },
   HEALTH_SHORT_TERM_DISABILITY: {
     title: 'Short-Term Disability Insurance',
-    subtitle: 'Protect your income if you can\'t work',
+    subtitle: 'Protect your income during recovery',
     benefits: [
       {
         title: 'Income Protection',
-        description: 'Income protection if you can\'t work'
+        description: 'Replace up to 60% of your income'
+      },
+      {
+        title: 'Quick Benefits',
+        description: 'Benefits start after short waiting period'
       },
       {
         title: 'Flexible Coverage',
-        description: 'Flexible coverage options'
+        description: 'Choose 3, 6, or 12-month terms'
       },
       {
-        title: 'Cash Benefits',
-        description: 'Cash benefits to help you cover living expenses'
+        title: 'Guaranteed Renewable',
+        description: 'Cannot be cancelled if you pay premiums'
       },
       {
-        title: 'Simple Process',
-        description: 'Simple application process'
-      },
-      {
-        title: 'Direct Payment',
-        description: 'Benefits paid directly to you'
+        title: 'Portable Coverage',
+        description: 'Keep your coverage when changing jobs'
       }
     ],
     faqs: [
       {
-        question: 'What does short-term disability insurance cover?',
-        answer: 'It provides income replacement if you become unable to work due to illness or injury for a short period, typically 3-6 months.'
+        question: 'Why do I need my own STDI if I have coverage through work?',
+        answer: 'Employer-provided STDI may not be enough to cover your expenses, and you lose it if you change jobs. Having your own policy ensures continuous coverage, higher benefit amounts, and protection regardless of employment status.'
+      },
+      {
+        question: 'How does STDI work with auto insurance PIP?',
+        answer: 'While PIP provides immediate coverage after an accident, STDI provides longer-term income protection. Having both ensures you\'re covered from the moment of injury through recovery, with STDI kicking in as PIP benefits end.'
+      },
+      {
+        question: 'What conditions does STDI cover?',
+        answer: 'STDI covers both illness and injury that prevent you from working. This includes accidents, surgeries, pregnancy, and serious illnesses. Benefits typically last 3-6 months, depending on your policy.'
       },
       {
         question: 'How much coverage do I need?',
-        answer: 'Coverage amounts typically range from 40-60% of your income. We\'ll help you determine the right amount for your needs.'
-      },
-      {
-        question: 'How long does coverage last?',
-        answer: 'Short-term disability benefits typically last 3-6 months, depending on your policy.'
-      },
-      {
-        question: 'When do benefits start?',
-        answer: 'Benefits usually begin after a waiting period of 0-14 days from the start of your disability.'
+        answer: 'We recommend coverage that replaces 60% of your income. This helps maintain your standard of living while allowing for other income sources and savings.'
       }
     ]
   },
   HEALTH_SUPPLEMENTAL: {
     title: 'Supplemental Health Insurance',
-    subtitle: 'Extra coverage for unexpected medical expenses',
+    subtitle: 'Extra protection for unexpected medical expenses',
     benefits: [
       {
-        title: 'Additional Coverage',
-        description: 'Additional coverage beyond your primary health insurance'
+        title: 'Fixed Benefits',
+        description: 'Cash payments directly to you'
       },
       {
-        title: 'Cost Help',
-        description: 'Help with out-of-pocket costs'
+        title: 'No Network Restrictions',
+        description: 'Use any healthcare provider'
       },
       {
-        title: 'Specific Coverage',
-        description: 'Coverage for specific health conditions'
+        title: 'Guaranteed Renewable',
+        description: 'Keep your coverage as long as you pay'
       },
       {
-        title: 'Flexible Plans',
-        description: 'Flexible plan options'
+        title: 'Critical Illness',
+        description: 'Lump sum payments for serious conditions'
       },
       {
-        title: 'No Restrictions',
-        description: 'No network restrictions'
+        title: 'Accident Coverage',
+        description: 'Emergency and follow-up care benefits'
       }
     ],
     faqs: [
       {
-        question: 'What is supplemental health insurance?',
-        answer: 'It\'s additional coverage that helps pay for costs not covered by your primary health insurance, such as deductibles, copayments, and specific medical conditions.'
+        question: 'Why do I need supplemental health insurance?',
+        answer: 'Supplemental health insurance provides cash benefits to help with out-of-pocket costs, lost income, and other expenses during illness or injury. It works alongside your primary health insurance to provide comprehensive protection.'
       },
       {
-        question: 'Do I need supplemental health insurance?',
-        answer: 'It depends on your healthcare needs and financial situation. We\'ll help you evaluate if it\'s right for you.'
+        question: 'How does supplemental health work with disability coverage?',
+        answer: 'Supplemental health insurance provides immediate cash benefits for medical expenses, while disability insurance replaces lost income. Together, they provide complete financial protection during illness or injury.'
       },
       {
         question: 'What types of supplemental plans are available?',
-        answer: 'Common types include critical illness, accident, hospital indemnity, and dental/vision plans.'
+        answer: 'We offer critical illness, accident, hospital indemnity, and specified disease coverage. These plans provide cash benefits for specific medical events, helping you focus on recovery rather than finances.'
       },
       {
         question: 'Can I have multiple supplemental plans?',
-        answer: 'Yes, you can have multiple supplemental plans to cover different healthcare needs.'
+        answer: 'Yes, you can combine different types of supplemental coverage to create a comprehensive protection plan. We\'ll help you design a package that meets your specific needs and budget.'
       }
     ]
   }
