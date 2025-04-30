@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronDownIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { BriefcaseIcon, AcademicCapIcon } from '@heroicons/react/24/outline';
 
 export default function Navigation() {
   const [lifeDropdownOpen, setLifeDropdownOpen] = useState(false);
@@ -115,11 +116,16 @@ export default function Navigation() {
               Contact
             </Link>
 
-            <Link href="/agents" className="text-gray-700 hover:text-primary-600">
+            <Link href="/agents" className="flex items-center text-gray-700 hover:text-primary-600">
+              <BriefcaseIcon className="h-5 w-5 mr-1" />
               Agents
             </Link>
 
-            <Link href="/education" className="text-gray-700 hover:text-primary-600">
+            <Link
+              href="/education"
+              className="flex items-center text-gray-700 hover:text-primary-600"
+            >
+              <AcademicCapIcon className="h-5 w-5 mr-1" />
               Education
             </Link>
           </div>
@@ -213,14 +219,16 @@ export default function Navigation() {
           </Link>
           <Link
             href="/agents"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+            className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
           >
+            <BriefcaseIcon className="h-5 w-5 mr-2" />
             Agents
           </Link>
           <Link
             href="/education"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
+            className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
           >
+            <AcademicCapIcon className="h-5 w-5 mr-2" />
             Education
           </Link>
         </div>
