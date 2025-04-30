@@ -27,6 +27,7 @@ interface FormErrors {
   zipCode?: string;
   age?: string;
   coverageAmount?: string;
+  insuranceType?: string;
 }
 
 interface QuoteFormProps {
@@ -86,6 +87,7 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
   });
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
@@ -123,6 +125,47 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
     if (formErrors[name as keyof FormErrors]) {
       setFormErrors(prev => ({ ...prev, [name]: undefined }));
     }
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name } = e.target;
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+    
+    // Validate the field on blur
+    const errors: FormErrors = {};
+    
+    switch (name) {
+      case 'firstName':
+        const firstNameError = validateName(formData.firstName);
+        if (firstNameError) errors.firstName = firstNameError;
+        break;
+      case 'lastName':
+        const lastNameError = validateName(formData.lastName);
+        if (lastNameError) errors.lastName = lastNameError;
+        break;
+      case 'email':
+        const emailError = validateEmail(formData.email);
+        if (emailError) errors.email = emailError;
+        break;
+      case 'phone':
+        const phoneError = validatePhone(formData.phone);
+        if (phoneError) errors.phone = phoneError;
+        break;
+      case 'zipCode':
+        const zipError = validateZip(formData.zipCode);
+        if (zipError) errors.zipCode = zipError;
+        break;
+      case 'age':
+        const ageError = validateAge(formData.age);
+        if (ageError) errors.age = ageError;
+        break;
+      case 'coverageAmount':
+        const coverageError = validateCoverageAmount(formData.coverageAmount);
+        if (coverageError) errors.coverageAmount = coverageError;
+        break;
+    }
+    
+    setFormErrors(prev => ({ ...prev, ...errors }));
   };
 
   const validateForm = (): boolean => {
@@ -216,13 +259,28 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               required
               value={formData.insuranceType}
               onChange={handleChange}
-              className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors"
+              onBlur={handleBlur}
+              aria-invalid={!!formErrors.insuranceType}
+              aria-describedby={formErrors.insuranceType ? 'insuranceType-error' : undefined}
+              className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
+                touchedFields.insuranceType && formErrors.insuranceType ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+              }`}
             >
               <option value="AUTO">Auto Insurance</option>
               <option value="HOME">Home Insurance</option>
               <option value="LIFE">Life Insurance</option>
               <option value="HEALTH">Health Insurance</option>
             </select>
+            {touchedFields.insuranceType && formErrors.insuranceType && (
+              <div 
+                id="insuranceType-error"
+                className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                role="alert"
+                aria-live="assertive"
+              >
+                {formErrors.insuranceType}
+              </div>
+            )}
           </div>
 
           {/* Required Fields */}
@@ -237,12 +295,22 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               required
               value={formData.firstName}
               onChange={handleChange}
+              onBlur={handleBlur}
+              aria-invalid={!!formErrors.firstName}
+              aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                formErrors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.firstName && formErrors.firstName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
             />
-            {formErrors.firstName && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
+            {touchedFields.firstName && formErrors.firstName && (
+              <div 
+                id="firstName-error"
+                className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                role="alert"
+                aria-live="assertive"
+              >
+                {formErrors.firstName}
+              </div>
             )}
           </div>
           
@@ -257,12 +325,22 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               required
               value={formData.lastName}
               onChange={handleChange}
+              onBlur={handleBlur}
+              aria-invalid={!!formErrors.lastName}
+              aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                formErrors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.lastName && formErrors.lastName ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
             />
-            {formErrors.lastName && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
+            {touchedFields.lastName && formErrors.lastName && (
+              <div 
+                id="lastName-error"
+                className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                role="alert"
+                aria-live="assertive"
+              >
+                {formErrors.lastName}
+              </div>
             )}
           </div>
 
@@ -277,12 +355,22 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               required
               value={formData.email}
               onChange={handleChange}
+              onBlur={handleBlur}
+              aria-invalid={!!formErrors.email}
+              aria-describedby={formErrors.email ? 'email-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.email && formErrors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
             />
-            {formErrors.email && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
+            {touchedFields.email && formErrors.email && (
+              <div 
+                id="email-error"
+                className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                role="alert"
+                aria-live="assertive"
+              >
+                {formErrors.email}
+              </div>
             )}
           </div>
 
@@ -297,12 +385,22 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
               required
               value={formData.phone}
               onChange={handleChange}
+              onBlur={handleBlur}
+              aria-invalid={!!formErrors.phone}
+              aria-describedby={formErrors.phone ? 'phone-error' : undefined}
               className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
-                formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                touchedFields.phone && formErrors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
             />
-            {formErrors.phone && (
-              <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
+            {touchedFields.phone && formErrors.phone && (
+              <div 
+                id="phone-error"
+                className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+                role="alert"
+                aria-live="assertive"
+              >
+                {formErrors.phone}
+              </div>
             )}
           </div>
 
@@ -313,7 +411,10 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
             required
             value={formData.zipCode}
             onChange={handleChange}
-            error={formErrors.zipCode}
+            onBlur={handleBlur}
+            error={touchedFields.zipCode ? formErrors.zipCode : undefined}
+            aria-invalid={!!formErrors.zipCode}
+            aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
           />
 
           <FieldWithTooltip
@@ -326,7 +427,10 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
             max="120"
             value={formData.age || ''}
             onChange={handleChange}
-            error={formErrors.age}
+            onBlur={handleBlur}
+            error={touchedFields.age ? formErrors.age : undefined}
+            aria-invalid={!!formErrors.age}
+            aria-describedby={formErrors.age ? 'age-error' : undefined}
           />
 
           <FieldWithTooltip
@@ -339,7 +443,10 @@ export default function QuoteForm({ insuranceType, productType, subType }: Quote
             step="1000"
             value={formData.coverageAmount || ''}
             onChange={handleChange}
-            error={formErrors.coverageAmount}
+            onBlur={handleBlur}
+            error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
+            aria-invalid={!!formErrors.coverageAmount}
+            aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
           />
 
           <div className="pt-2">

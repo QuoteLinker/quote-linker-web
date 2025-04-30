@@ -1,74 +1,73 @@
 import React from 'react';
-import { Popover } from '@headlessui/react';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
+import { Tooltip } from './Tooltip';
 
-interface FieldWithTooltipProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface FieldWithTooltipProps {
   label: string;
+  name: string;
   tooltip: string;
+  required?: boolean;
+  type?: string;
+  min?: string | number;
+  max?: string | number;
+  step?: string | number;
+  value: string | number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string;
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
 }
 
 export default function FieldWithTooltip({
   label,
-  tooltip,
-  error,
-  id,
   name,
-  required,
-  className = '',
-  ...props
+  tooltip,
+  required = false,
+  type = 'text',
+  min,
+  max,
+  step,
+  value,
+  onChange,
+  onBlur,
+  error,
+  'aria-invalid': ariaInvalid,
+  'aria-describedby': ariaDescribedby,
 }: FieldWithTooltipProps) {
-  const inputId = id || name;
-  const tooltipId = `${inputId}-tooltip`;
-
   return (
-    <div className="relative">
+    <div>
       <div className="flex items-center gap-1">
-        <label
-          htmlFor={inputId}
-          className="block text-sm font-medium text-gray-700 mb-1"
-        >
+        <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
-        <Popover className="relative">
-          {({ open }) => (
-            <>
-              <Popover.Button
-                className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] rounded-full"
-                aria-describedby={tooltipId}
-              >
-                <InformationCircleIcon
-                  className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-colors ${
-                    open ? 'text-[#00EEFD]' : ''
-                  }`}
-                />
-              </Popover.Button>
-              <Popover.Panel
-                id={tooltipId}
-                role="tooltip"
-                className="absolute z-10 w-72 px-4 mt-3 transform -translate-x-1/2 left-1/2"
-              >
-                <div className="bg-gray-900 text-white text-sm rounded-lg py-2 px-3 shadow-lg">
-                  {tooltip}
-                  <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 rotate-45 w-2 h-2 bg-gray-900" />
-                </div>
-              </Popover.Panel>
-            </>
-          )}
-        </Popover>
+        <Tooltip content={tooltip} />
       </div>
       <input
-        id={inputId}
+        type={type}
+        id={name}
         name={name}
         required={required}
-        aria-describedby={tooltipId}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        aria-invalid={ariaInvalid}
+        aria-describedby={ariaDescribedby}
         className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors ${
           error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
-        } ${className}`}
-        {...props}
+        }`}
       />
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <div 
+          id={`${name}-error`}
+          className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
+          role="alert"
+          aria-live="assertive"
+        >
+          {error}
+        </div>
       )}
     </div>
   );
