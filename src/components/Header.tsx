@@ -191,7 +191,7 @@ export default function Header() {
               <div className="h-5 w-px bg-gray-200 ml-6" />
               <Link
                 href={`/${currentInsuranceType}?quote=true`}
-                className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-[#00ECFF] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
+                className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
                 onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
               >
                 Get My Free Quote
@@ -202,7 +202,7 @@ export default function Header() {
             <div className="flex items-center lg:hidden">
               <Link
                 href={`/${currentInsuranceType}?quote=true`}
-                className="mr-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-[#00ECFF] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
+                className="mr-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
                 onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
               >
                 Get Quote

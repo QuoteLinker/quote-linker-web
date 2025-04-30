@@ -43,7 +43,7 @@ export default function SocialProof() {
   };
 
   return (
-    <section className="py-24 bg-brand-card">
+    <section className="py-12 md:py-16 bg-brand-card">
       <div className="container mx-auto px-6">
         {/* Partner Logos */}
         <div className="mb-16">

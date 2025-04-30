@@ -42,7 +42,7 @@ const features = [
 
 export default function WhyChooseSection() {
   return (
-    <section className="py-24 px-6 bg-brand-background">
+    <section className="py-12 md:py-16 px-6 bg-brand-background">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-brand-headline mb-4">

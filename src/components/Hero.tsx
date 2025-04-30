@@ -43,7 +43,7 @@ export default function Hero({ insuranceType, subType }: HeroProps) {
   return (
     <div className="relative bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white">
       <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-10"></div>
-      <div className="container mx-auto px-4 py-20 relative">
+      <div className="container mx-auto px-4 py-12 md:py-16 relative">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             Get Your {title} Quote Today!
@@ -53,7 +53,7 @@ export default function Hero({ insuranceType, subType }: HeroProps) {
           </p>
           <button
             onClick={scrollToForm}
-            className="inline-flex items-center px-8 py-4 bg-[#00EEFD] text-[#0B0B45] rounded-lg font-bold text-lg hover:bg-[#00DDEB] transition-colors duration-200"
+            className="inline-flex items-center px-8 py-4 bg-[#00EEFD] text-white rounded-lg font-bold text-lg hover:bg-[#00D4E5] transition-colors duration-200"
           >
             Get My Free Quote
             <ArrowDownIcon className="ml-2 h-5 w-5" />

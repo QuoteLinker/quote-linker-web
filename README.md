@@ -1,39 +1,35 @@
-# QuoteLinker: Transforming Insurance Distribution
+# QuoteLinker Web
 
-## Vision Statement
+QuoteLinker is a modern web application that connects users with licensed insurance agents to get personalized quotes for auto, home, life, and health insurance.
 
-QuoteLinker is revolutionizing the insurance distribution landscape by creating the industry's first AI-optimized marketplace that connects high-intent consumers with licensed insurance agents in real-time. Our platform streamlines the quote capture process, eliminates friction in lead distribution, and empowers agencies to scale their operations through data-driven insights and predictive nurturing. By modernizing the entire insurance sales funnel, QuoteLinker is setting a new standard for efficiency, transparency, and growth in the insurance sector.
+## Features
 
-## Live Demo
-
-**[quotelinker.com](https://quotelinker.com)**
-
-## Key Features
-
-- **AI-Optimized Lead Funnels**: Intelligent routing and scoring systems that match consumers with the most qualified agents based on location, expertise, and performance metrics.
-- **Streamlined Quote Capture**: Mobile-optimized forms with smart validation and progressive disclosure that maximize conversion rates while collecting essential information.
-- **CRM-Ready Integration**: Seamless connection with Salesforce and other leading CRM platforms for immediate lead activation and follow-up.
-- **Scalable Infrastructure**: Built on modern cloud architecture with global CDN support for lightning-fast performance and 99.9% uptime.
-- **Advanced Analytics**: Comprehensive dashboards providing real-time insights into lead quality, conversion rates, and ROI metrics.
-- **Compliance-First Design**: Built-in compliance features ensuring adherence to insurance regulations across all jurisdictions.
+- **Multi-step Quote Forms**: User-friendly forms for different insurance types
+- **Page Transitions**: Smooth animations between pages using Framer Motion
+- **Responsive Design**: Fully responsive layout for all device sizes
+- **SEO Optimized**: Proper metadata, structured data, and sitemap
+- **Accessibility**: WCAG AA compliant with proper ARIA attributes
+- **Performance**: Optimized images, fonts, and bundle size
+- **Analytics**: Google Tag Manager and Google Analytics integration
+- **Error Tracking**: Sentry integration for client-side error tracking
+- **PWA Support**: Installable as a Progressive Web App
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14, React, TypeScript, TailwindCSS
-- **Backend**: Node.js, Express, API Routes
-- **Infrastructure**: Vercel, Cloudflare
-- **Analytics**: Google Tag Manager, Google Analytics 4
-- **Marketing**: Google Ads, Facebook Pixel
-- **CRM**: Salesforce API Integration
-- **Lead Management**: Zapier, Custom Webhooks
+- **Framework**: Next.js 14
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Forms**: React Hook Form with Zod validation
+- **Testing**: Jest and React Testing Library
+- **CI/CD**: GitHub Actions and Vercel
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18.x or later
-- npm or yarn
-- Git
+- Node.js 20.x
+- npm 10.x
 
 ### Installation
 
@@ -46,77 +42,73 @@ QuoteLinker is revolutionizing the insurance distribution landscape by creating 
 2. Install dependencies:
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
-3. Set up environment variables:
-   Create a `.env.local` file in the root directory with the following variables:
+3. Create a `.env.local` file with the following variables:
    ```
-   SF_USERNAME=your_salesforce_username
-   SF_PASSWORD=your_salesforce_password
-   SF_SECURITY_TOKEN=your_salesforce_security_token
-   SF_LOGIN_URL=https://login.salesforce.com
-   GTM_ID=GTM-XXXXXXX
-   GOOGLE_ADS_CONVERSION_ID=AW-XXXXXXXXXX
-   NEXT_PUBLIC_BASE_URL=http://localhost:3000
-   ZAPIER_WEBHOOK_URL=your_zapier_webhook_url
+   NEXT_PUBLIC_GTM_ID=your-gtm-id
+   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=your-verification-code
+   NEXT_PUBLIC_API_URL=your-api-url
    ```
 
-4. Run the development server:
+4. Start the development server:
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Development
+
+### Code Quality
+
+- **Linting**: `npm run lint`
+- **Formatting**: `npm run format`
+- **Type Checking**: `npm run type-check`
+
+### Testing
+
+- **Unit Tests**: `npm run test`
+- **Watch Mode**: `npm run test:watch`
+- **Coverage**: `npm run test:coverage`
+- **Smoke Tests**: `npm run smoke-test`
+
+### Building for Production
+
+```bash
+npm run build
+npm start
+```
 
 ## Deployment
 
-### Vercel Deployment (Recommended)
+The application is automatically deployed to Vercel when changes are pushed to the `main` branch. The deployment process includes:
 
-1. Push your code to a Git repository
-2. Connect your repository to Vercel
-3. Configure environment variables in the Vercel dashboard
-4. Deploy with a single click
+1. Linting
+2. Type checking
+3. Unit testing
+4. Building
+5. Deployment to Vercel
 
-### Manual Deployment
+## Contributing
 
-1. Build the application:
-   ```bash
-   npm run build
-   # or
-   yarn build
-   ```
-
-2. Start the production server:
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
-
-## Security & Compliance
-
-- **Data Protection**: All data is encrypted in transit and at rest
-- **Authentication**: Secure authentication mechanisms for all API endpoints
-- **Rate Limiting**: Protection against abuse and DDoS attacks
-- **Compliance**: Built-in features to maintain compliance with insurance regulations
-- **Regular Audits**: Continuous security monitoring and regular penetration testing
-
-## Contribution Guidelines
-
-We welcome contributions from the community. Please read our contribution guidelines (coming soon) before submitting pull requests.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/your-feature-name`
+5. Submit a pull request
 
 ## License
 
-Private - All rights reserved. QuoteLinker is proprietary software and may not be used, copied, or distributed without explicit permission.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Founder's Note
+## Acknowledgments
 
-Founded by Weston Nelson, QuoteLinker is built by licensed insurance producers for producers. Our vision is to create a faster, fairer, and smarter distribution ecosystem — empowering agents and protecting consumers alike.
-
----
-
-© 2025 QuoteLinker. All rights reserved. 
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [React Hook Form](https://react-hook-form.com/)
+- [Zod](https://github.com/colinhacks/zod)
+- [Jest](https://jestjs.io/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- [Vercel](https://vercel.com/) 

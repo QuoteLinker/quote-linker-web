@@ -44,7 +44,7 @@ export default function ProductPageLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Why Trust QuoteLinker Section */}
-      <section className="bg-[#F5F7FA] py-12">
+      <section className="bg-[#F5F7FA] py-12 md:py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-[#0B0B45] mb-8">
             Why Trust QuoteLinker?
@@ -54,7 +54,7 @@ export default function ProductPageLayout({
       </section>
 
       {/* Two-Column Layout */}
-      <section className="py-12">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
             {/* Left Column - Text Content */}
@@ -77,7 +77,7 @@ export default function ProductPageLayout({
                           className={`px-6 py-3 text-sm font-bold rounded-l-lg ${
                             subType === 'term'
                               ? 'bg-[#00EEFD] text-white'
-                              : 'bg-white text-gray-700 hover:bg-gray-100'
+                              : 'bg-white text-[#00EEFD] border border-[#00EEFD] hover:bg-[#00EEFD] hover:text-white'
                           }`}
                           onClick={() => setSubType('term')}
                         >
@@ -88,7 +88,7 @@ export default function ProductPageLayout({
                           className={`px-6 py-3 text-sm font-bold rounded-r-lg ${
                             subType === 'permanent'
                               ? 'bg-[#00EEFD] text-white'
-                              : 'bg-white text-gray-700 hover:bg-gray-100'
+                              : 'bg-white text-[#00EEFD] border border-[#00EEFD] hover:bg-[#00EEFD] hover:text-white'
                           }`}
                           onClick={() => setSubType('permanent')}
                         >
@@ -102,7 +102,7 @@ export default function ProductPageLayout({
                           className={`px-6 py-3 text-sm font-bold rounded-l-lg ${
                             subType === 'std'
                               ? 'bg-[#00EEFD] text-white'
-                              : 'bg-white text-gray-700 hover:bg-gray-100'
+                              : 'bg-white text-[#00EEFD] border border-[#00EEFD] hover:bg-[#00EEFD] hover:text-white'
                           }`}
                           onClick={() => setSubType('std')}
                         >
@@ -113,7 +113,7 @@ export default function ProductPageLayout({
                           className={`px-6 py-3 text-sm font-bold rounded-r-lg ${
                             subType === 'supplemental'
                               ? 'bg-[#00EEFD] text-white'
-                              : 'bg-white text-gray-700 hover:bg-gray-100'
+                              : 'bg-white text-[#00EEFD] border border-[#00EEFD] hover:bg-[#00EEFD] hover:text-white'
                           }`}
                           onClick={() => setSubType('supplemental')}
                         >

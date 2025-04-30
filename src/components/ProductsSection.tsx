@@ -59,7 +59,7 @@ const products = [
 
 export default function ProductsSection() {
   return (
-    <section className="py-24 px-6 bg-brand-card">
+    <section className="py-12 md:py-16 px-6 bg-brand-card">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-brand-headline mb-4">

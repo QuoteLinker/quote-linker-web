@@ -183,7 +183,7 @@ export default function MultiStepForm({
             <button
               type="button"
               onClick={handleBack}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD]"
+              className="px-4 py-2 text-sm font-medium text-[#00EEFD] bg-white border border-[#00EEFD] rounded-md shadow-sm hover:bg-[#00EEFD] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD]"
             >
               Back
             </button>

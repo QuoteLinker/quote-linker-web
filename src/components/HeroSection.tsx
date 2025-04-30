@@ -25,7 +25,7 @@ export default function HeroSection({
   bgColor = 'bg-[#00EEFD]'
 }: HeroSectionProps) {
   return (
-    <section className={`${bgColor} py-16 md:py-24`}>
+    <section className={`${bgColor} py-12 md:py-16`}>
       <div className="container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
           {title}
@@ -35,7 +35,7 @@ export default function HeroSection({
         </p>
         <Link
           href={ctaLink}
-          className="inline-block bg-white text-navy px-8 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
+          className="inline-block bg-[#00EEFD] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#00D4E5] transition-all"
           aria-label={ctaText}
         >
           {ctaText}

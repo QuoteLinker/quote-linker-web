@@ -144,7 +144,7 @@ export default function GeneralQuoteForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-brand-primary text-black font-semibold py-3 px-6 rounded-xl hover:bg-brand-primary-dark transition-colors shadow-brand disabled:opacity-50"
+          className="w-full bg-[#00EEFD] text-white font-semibold py-3 px-6 rounded-xl hover:bg-[#00D4E5] transition-colors shadow-brand disabled:opacity-50"
         >
           {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
         </button>

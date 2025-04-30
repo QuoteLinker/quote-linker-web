@@ -32,7 +32,7 @@ export default function TrustSection() {
   ];
 
   return (
-    <section className="py-24 px-6 bg-gradient-to-b from-brand-card to-brand-background relative overflow-hidden">
+    <section className="py-12 md:py-16 px-6 bg-gradient-to-b from-brand-card to-brand-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('/pattern-grid.svg')] opacity-5"></div>
       <div className="container relative mx-auto">
         <div className="text-center mb-16">
