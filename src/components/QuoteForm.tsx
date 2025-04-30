@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -185,7 +185,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   };
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name, value, type } = e.target;
 
       // Handle checkbox inputs
@@ -211,7 +211,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   );
 
   const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
+    (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name } = e.target;
       setTouchedFields(prev => ({ ...prev, [name]: true }));
 
@@ -341,19 +341,19 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               </label>
               <Select
                 name="insuranceType"
-                id="insuranceType"
-                required
                 value={formData.insuranceType}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touchedFields.insuranceType ? formErrors.insuranceType : undefined}
-                options={INSURANCE_OPTIONS}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                  touchedFields.insuranceType && formErrors.insuranceType
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : ''
-                }`}
-              />
+                onValueChange={value =>
+                  handleChange({
+                    target: { name: 'insuranceType', value },
+                  } as ChangeEvent<HTMLInputElement>)
+                }
+              >
+                {INSURANCE_OPTIONS.map(type => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </Select>
               {touchedFields.insuranceType && formErrors.insuranceType && (
                 <div
                   id="insuranceType-error"
@@ -375,19 +375,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="firstName"
-                  id="firstName"
                   required
                   value={formData.firstName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touchedFields.firstName ? formErrors.firstName : undefined}
-                  aria-invalid={!!formErrors.firstName}
-                  aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
-                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                    touchedFields.firstName && formErrors.firstName
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                      : ''
-                  }`}
+                  className={`w-full ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.firstName && formErrors.firstName && (
                   <div
@@ -408,19 +400,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="lastName"
-                  id="lastName"
                   required
                   value={formData.lastName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touchedFields.lastName ? formErrors.lastName : undefined}
-                  aria-invalid={!!formErrors.lastName}
-                  aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
-                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                    touchedFields.lastName && formErrors.lastName
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                      : ''
-                  }`}
+                  className={`w-full ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.lastName && formErrors.lastName && (
                   <div
@@ -442,19 +426,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               <Input
                 type="email"
                 name="email"
-                id="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={touchedFields.email ? formErrors.email : undefined}
-                aria-invalid={!!formErrors.email}
-                aria-describedby={formErrors.email ? 'email-error' : undefined}
-                className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                  touchedFields.email && formErrors.email
-                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                    : ''
-                }`}
+                className={`w-full ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
               />
               {touchedFields.email && formErrors.email && (
                 <div
@@ -476,19 +452,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="tel"
                   name="phone"
-                  id="phone"
                   required
                   value={formData.phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touchedFields.phone ? formErrors.phone : undefined}
-                  aria-invalid={!!formErrors.phone}
-                  aria-describedby={formErrors.phone ? 'phone-error' : undefined}
-                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                    touchedFields.phone && formErrors.phone
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                      : ''
-                  }`}
+                  className={`w-full ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.phone && formErrors.phone && (
                   <div
@@ -509,19 +477,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="zipCode"
-                  id="zipCode"
                   required
                   value={formData.zipCode}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touchedFields.zipCode ? formErrors.zipCode : undefined}
-                  aria-invalid={!!formErrors.zipCode}
-                  aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
-                  className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-[#00EEFD] focus:ring-[#00EEFD] sm:text-sm transition-colors h-10 ${
-                    touchedFields.zipCode && formErrors.zipCode
-                      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                      : ''
-                  }`}
+                  className={`w-full ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.zipCode && formErrors.zipCode && (
                   <div

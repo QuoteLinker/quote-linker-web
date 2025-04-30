@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import PageTransition from './PageTransition';
 
 describe('PageTransition', () => {
@@ -13,14 +14,14 @@ describe('PageTransition', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
-  it('applies motion div wrapper', () => {
+  it('applies motion div with correct attributes', () => {
     const { container } = render(
       <PageTransition>
         <div>Test Content</div>
       </PageTransition>
     );
 
-    // The motion.div should be the first child
-    expect(container.firstChild).toHaveAttribute('data-testid', 'motion-div');
+    const motionDiv = container.firstChild as HTMLElement;
+    expect(motionDiv).toHaveAttribute('data-testid', 'motion-div');
   });
-}); 
+});
