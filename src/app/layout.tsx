@@ -21,26 +21,26 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icons/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icons/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/favicon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/favicon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
   openGraph: {
-    title: 'QuoteLinker - Insurance Quotes Made Easy',
-    description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+    title: 'QuoteLinker — Fast, Free Insurance Quotes',
+    description: 'Get instant quotes for Auto, Home, Life & Health insurance.',
     url: 'https://www.quotelinker.com',
     siteName: 'QuoteLinker',
     images: [
       {
-        url: '/quotelinker_logo_1280x640.png',
-        width: 1280,
-        height: 640,
+        url: '/icons/og-image.png',
+        width: 1200,
+        height: 630,
         alt: 'QuoteLinker Logo',
       },
     ],
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'QuoteLinker - Insurance Quotes Made Easy',
-    description: 'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
-    images: ['/quotelinker_logo_1280x640.png'],
+    title: 'QuoteLinker — Fast, Free Insurance Quotes',
+    description: 'Get instant quotes for Auto, Home, Life & Health insurance.',
+    images: ['/icons/og-image.png'],
   },
   robots: {
     index: true,
@@ -104,48 +104,50 @@ function GoogleTagManagerBody() {
   );
 }
 
-// Add JSON-LD structured data
 function OrganizationSchema() {
   return (
-    <script
+    <Script
+      id="organization-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "QuoteLinker",
-          "url": "https://www.quotelinker.com",
-          "logo": "https://www.quotelinker.com/quotelinker_logo_1280x640.png",
-          "description": "Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.",
-          "sameAs": [
-            "https://www.facebook.com/quotelinker",
-            "https://www.linkedin.com/company/quotelinker",
-            "https://twitter.com/quotelinker"
-          ]
-        })
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'QuoteLinker',
+          url: 'https://www.quotelinker.com',
+          logo: 'https://www.quotelinker.com/quotelinker_logo.png',
+          sameAs: [
+            'https://www.facebook.com/quotelinker',
+            'https://twitter.com/quotelinker',
+            'https://www.linkedin.com/company/quotelinker',
+          ],
+        }),
       }}
     />
-  )
+  );
 }
 
 function BreadcrumbSchema() {
   return (
-    <script
+    <Script
+      id="breadcrumb-schema"
       type="application/ld+json"
       dangerouslySetInnerHTML={{
         __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [{
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://www.quotelinker.com"
-          }]
-        })
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Home',
+              item: 'https://www.quotelinker.com',
+            },
+          ],
+        }),
       }}
     />
-  )
+  );
 }
 
 export default function RootLayout({
@@ -154,19 +156,30 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
-
+  
   return (
     <html lang="en">
       <head>
-        {gtmId && <GoogleTagManager gtmId={gtmId} />}
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <meta name="theme-color" content="#00EEFD" />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="QuoteLinker — Fast, Free Insurance Quotes" />
+        <meta property="og:description" content="Get instant quotes for Auto, Home, Life & Health insurance." />
+        <meta property="og:image" content="https://www.quotelinker.com/icons/og-image.png" />
+        <meta property="og:url" content="https://www.quotelinker.com" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <GoogleTagManagerHead />
         <OrganizationSchema />
         <BreadcrumbSchema />
       </head>
       <body className={inter.className}>
-        <GoogleTagManagerHead />
         <GoogleTagManagerBody />
         <Header />
-        <main className="min-h-screen">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
