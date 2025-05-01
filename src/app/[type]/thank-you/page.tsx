@@ -1,24 +1,24 @@
 import Link from 'next/link';
 import { ShieldCheckIcon, ClockIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { InsuranceType } from '@/utils/insuranceCopy';
 
 interface ThankYouPageProps {
   params: {
-    type: string;
+    type: InsuranceType;
   };
 }
 
 const insuranceTypeTitles = {
-  auto: 'Auto Insurance',
-  home: 'Home Insurance',
-  life: 'Life Insurance',
-  health: 'Health Insurance',
-  'short-term-disability': 'Short-Term Disability Insurance',
-  'supplemental-health': 'Supplemental Health Insurance'
+  AUTO: 'Auto Insurance',
+  HOME: 'Home Insurance',
+  LIFE_TERM: 'Term Life Insurance',
+  LIFE_PERMANENT: 'Whole Life Insurance',
+  HEALTH_SHORT_TERM_DISABILITY: 'Short-Term Disability Insurance',
+  HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance'
 };
 
 export default function ThankYouPage({ params }: ThankYouPageProps) {
-  const insuranceType = params.type.toLowerCase();
-  const title = insuranceTypeTitles[insuranceType as keyof typeof insuranceTypeTitles] || 'Insurance';
+  const title = insuranceTypeTitles[params.type] || 'Insurance';
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
