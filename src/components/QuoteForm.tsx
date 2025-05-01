@@ -684,7 +684,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
             {/* Privacy Note */}
             <p className="text-xs text-gray-500 text-center mt-4">
-              We respect your privacy. Your information is secure.
+              Your privacy is our priority. Your information is encrypted and securely transmitted. We never share your data without your consent.
             </p>
 
             {/* Success/Error Messages */}
@@ -702,7 +702,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-green-800">
-                      Thank you! We&apos;ll reach out to you shortly.
+                      Thank you! Your quote request has been received. A licensed insurance agent will contact you within 24 hours.
                     </p>
                   </div>
                 </div>
@@ -722,9 +722,16 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-red-800">
-                      Sorry, there was an error submitting your form. Please try again.
-                    </p>
+                    <div className="text-sm font-medium text-red-800">
+                      We encountered an issue while submitting your form. This could be due to:
+                    </div>
+                    <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
+                      <li>A temporary connection issue</li>
+                      <li>High server traffic</li>
+                    </ul>
+                    <div className="mt-2 text-sm text-red-800">
+                      Please try again or call us directly at (888) 123-4567 for immediate assistance.
+                    </div>
                   </div>
                 </div>
               </div>
