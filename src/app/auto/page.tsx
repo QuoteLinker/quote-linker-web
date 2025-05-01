@@ -1,6 +1,6 @@
 import ProductPage from '@/components/ProductPage';
-import { InsuranceType } from '@/utils/insuranceCopy';
+import type { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function AutoInsurancePage() {
-  return <ProductPage params={{ type: InsuranceType.AUTO }} />;
+  return <ProductPage params={{ type: 'AUTO' as InsuranceType }} />;
 } 
