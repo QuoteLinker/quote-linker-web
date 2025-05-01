@@ -4,19 +4,19 @@ import { getProductContent, InsuranceType } from '@/utils/insuranceCopy';
 
 export async function generateStaticParams() {
   return [
-    { insuranceType: 'auto' },
-    { insuranceType: 'home' },
-    { insuranceType: 'term-life' },
-    { insuranceType: 'permanent-life' },
-    { insuranceType: 'short-term-disability' },
-    { insuranceType: 'supplemental-health' },
+    { type: 'auto' },
+    { type: 'home' },
+    { type: 'term-life' },
+    { type: 'permanent-life' },
+    { type: 'short-term-disability' },
+    { type: 'supplemental-health' },
   ];
 }
 
-export default function Page({ params }: { params: { insuranceType: string } }) {
+export default function Page({ params }: { params: { type: string } }) {
   // Convert URL-friendly format to InsuranceType
   let insuranceType: InsuranceType;
-  switch (params.insuranceType) {
+  switch (params.type) {
     case 'auto':
       insuranceType = 'AUTO';
       break;
@@ -39,5 +39,5 @@ export default function Page({ params }: { params: { insuranceType: string } }) 
       return notFound();
   }
 
-  return <ProductPage insuranceType={insuranceType} />;
+  return <ProductPage params={{ type: insuranceType }} />;
 } 
