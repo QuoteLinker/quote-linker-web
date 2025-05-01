@@ -330,18 +330,42 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       // Log the submission attempt
       console.log('Submitting form data:', formData);
 
-      const response = await fetch('/api/submit-quote', {
+      // Construct the payload with all required fields
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        zipCode: formData.zipCode,
+        insuranceType: formData.insuranceType,
+        // Add product-specific fields
+        ...(formData.insuranceType === 'LIFE' && {
+          age: formData.age,
+          coverageAmount: formData.coverageAmount,
+        }),
+        ...(formData.insuranceType === 'HOME' && {
+          propertyType: formData.propertyType,
+          propertyValue: formData.propertyValue,
+        }),
+        ...(formData.insuranceType === 'AUTO' && {
+          vehicleUse: formData.vehicleUse,
+        }),
+        ...(formData.insuranceType === 'HEALTH' && {
+          coverageType: formData.coverageType,
+        }),
+        // Add honeypot and metadata
+        website: formData.website || '',
+        submittedAt: new Date().toISOString(),
+        source: 'web_form',
+        page: pathname,
+      };
+
+      const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || '/api/submit-quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          // Ensure website field is included for honeypot
-          website: formData.website || '',
-          // Add timestamp
-          submittedAt: new Date().toISOString(),
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -354,7 +378,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       console.log('Form submitted successfully:', data);
       
       setSubmitStatus('success');
-      toast.success('Your quote request has been submitted successfully! We will contact you shortly.');
+      toast.success('Thanks! Your quote request was submitted successfully.');
 
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
@@ -368,11 +392,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
-      toast.error(
-        error instanceof Error 
-          ? error.message 
-          : 'An error occurred while submitting your request. Please try again.'
-      );
+      toast.error('Something went wrong. Please try again or call us directly.');
     } finally {
       setIsSubmitting(false);
     }
