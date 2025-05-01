@@ -26,20 +26,20 @@ import { toast } from 'react-hot-toast';
 import InsuranceTip from './InsuranceTip';
 
 interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  zipCode: string;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  phone: string | null;
+  zipCode: string | null;
   insuranceType: MainInsuranceType;
-  age?: string;
-  coverageAmount?: string;
-  website?: string;
-  honeypot?: string;
-  propertyType?: string;
-  propertyValue?: string;
-  vehicleUse?: string;
-  coverageType?: string;
+  age?: string | null;
+  coverageAmount?: string | null;
+  website?: string | null;
+  honeypot?: string | null;
+  propertyType?: string | null;
+  propertyValue?: string | null;
+  vehicleUse?: string | null;
+  coverageType?: string | null;
 }
 
 interface FormErrors {
@@ -113,11 +113,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       return saved;
     }
     return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      zipCode: '',
+      firstName: null,
+      lastName: null,
+      email: null,
+      phone: null,
+      zipCode: null,
       insuranceType: getMainType(initialType),
     };
   });
@@ -154,58 +154,56 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     }
   }, []); // Only run once on mount
 
-  const validateField = (name: string, value: string | null): string | undefined => {
-    switch (name) {
-      case 'firstName': {
-        return validateName(value);
+  const validateField = (name: string, value: string | null | undefined): string | undefined => {
+    if (value === null || value === undefined) {
+      if (['firstName', 'lastName', 'email', 'phone', 'zipCode', 'insuranceType'].includes(name)) {
+        return 'This field is required';
       }
+      return undefined;
+    }
+    
+    switch (name) {
+      case 'firstName':
       case 'lastName': {
-        return validateName(value);
+        if (value.length < 2) return 'Must be at least 2 characters';
+        return undefined;
       }
       case 'email': {
-        return validateEmail(value);
+        if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Please enter a valid email';
+        return undefined;
       }
       case 'phone': {
-        return validatePhone(value);
+        if (!value.match(/^\d{10}$/)) return 'Please enter a valid 10-digit phone number';
+        return undefined;
       }
       case 'zipCode': {
-        return validateZip(value);
+        if (!value.match(/^\d{5}$/)) return 'Please enter a valid 5-digit ZIP code';
+        return undefined;
       }
       case 'age': {
-        return validateAge(value);
-      }
-      case 'coverageAmount': {
-        return validateCoverageAmount(value);
-      }
-      case 'insuranceType': {
-        if (!value) {
-          return 'Please select an insurance type';
+        const numValue = Number(value);
+        if (isNaN(numValue) || numValue < 18 || numValue > 120) {
+          return 'Please enter a valid age between 18 and 120';
         }
         return undefined;
       }
-      case 'propertyType': {
-        if (!value) {
-          return 'Please select a property type';
+      case 'coverageAmount': {
+        const numValue = Number(value);
+        if (isNaN(numValue) || numValue < 0) {
+          return 'Please enter a valid coverage amount';
         }
         return undefined;
       }
       case 'propertyValue': {
-        if (!value) return undefined;
         const numValue = Number(value);
         if (isNaN(numValue) || numValue < 0) {
           return 'Property value must be non-negative';
         }
         return undefined;
       }
-      case 'vehicleUse': {
+      case 'insuranceType': {
         if (!value) {
-          return 'Please select a vehicle use';
-        }
-        return undefined;
-      }
-      case 'coverageType': {
-        if (!value) {
-          return 'Please select a coverage type';
+          return 'Please select an insurance type';
         }
         return undefined;
       }
@@ -244,9 +242,8 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name } = e.target;
       setTouchedFields(prev => ({ ...prev, [name]: true }));
-
-      // Validate on blur
-      const error = validateField(name, formData[name as keyof FormData]);
+      const value = formData[name as keyof FormData] as string | null | undefined;
+      const error = validateField(name, value);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
       }
@@ -257,9 +254,8 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   const handleSelectBlur = useCallback(
     (name: string) => {
       setTouchedFields(prev => ({ ...prev, [name]: true }));
-
-      // Validate on blur
-      const error = validateField(name, formData[name as keyof FormData]);
+      const value = formData[name as keyof FormData] as string | null | undefined;
+      const error = validateField(name, value);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
       }
@@ -269,62 +265,14 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
   const validateForm = (): boolean => {
     const errors: FormErrors = {};
-
-    {
-      const firstNameError = validateName(formData.firstName);
-      if (firstNameError) errors.firstName = firstNameError;
-    }
-
-    {
-      const lastNameError = validateName(formData.lastName);
-      if (lastNameError) errors.lastName = lastNameError;
-    }
-
-    {
-      const emailError = validateEmail(formData.email);
-      if (emailError) errors.email = emailError;
-    }
-
-    {
-      const phoneError = validatePhone(formData.phone);
-      if (phoneError) errors.phone = phoneError;
-    }
-
-    {
-      const zipError = validateZip(formData.zipCode);
-      if (zipError) errors.zipCode = zipError;
-    }
-
-    if (formData.age) {
-      const ageError = validateAge(formData.age);
-      if (ageError) errors.age = ageError;
-    }
-
-    if (formData.coverageAmount) {
-      const coverageError = validateCoverageAmount(formData.coverageAmount);
-      if (coverageError) errors.coverageAmount = coverageError;
-    }
-
-    if (!formData.insuranceType) {
-      errors.insuranceType = 'Please select an insurance type';
-    }
-
-    if (!formData.propertyType) {
-      errors.propertyType = 'Please select a property type';
-    }
-
-    if (formData.propertyValue && formData.propertyValue < 0) {
-      errors.propertyValue = 'Property value must be non-negative';
-    }
-
-    if (!formData.vehicleUse) {
-      errors.vehicleUse = 'Please select a vehicle use';
-    }
-
-    if (!formData.coverageType) {
-      errors.coverageType = 'Please select a coverage type';
-    }
-
+    
+    Object.entries(formData).forEach(([name, value]) => {
+      const error = validateField(name, value as string | null | undefined);
+      if (error) {
+        errors[name as keyof FormErrors] = error;
+      }
+    });
+    
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -450,7 +398,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   name="firstName"
                   required
                   placeholder="Enter your first name"
-                  value={formData.firstName}
+                  value={formData.firstName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500 dark:border-red-400' : ''}`}
@@ -471,7 +419,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   name="lastName"
                   required
                   placeholder="Enter your last name"
-                  value={formData.lastName}
+                  value={formData.lastName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500 dark:border-red-400' : ''}`}
@@ -494,7 +442,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 name="email"
                 required
                 placeholder="Enter your email address"
-                value={formData.email}
+                value={formData.email || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500 dark:border-red-400' : ''}`}
@@ -516,7 +464,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   name="phone"
                   required
                   placeholder="Enter your phone number"
-                  value={formData.phone}
+                  value={formData.phone || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500 dark:border-red-400' : ''}`}
@@ -537,7 +485,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   name="zipCode"
                   required
                   placeholder="Enter your ZIP code"
-                  value={formData.zipCode}
+                  value={formData.zipCode || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500 dark:border-red-400' : ''}`}
