@@ -104,22 +104,33 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
   // Auto-scroll to form on product-specific pages
   useEffect(() => {
-    if (isProductSpecificPage) {
-      // Small delay to ensure DOM is ready and any animations have completed
-      const timer = setTimeout(() => {
-        const formElement = document.getElementById('quote-form');
-        if (formElement) {
-          formElement.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest'
-          });
-        }
-      }, 100);
+    // Small delay to ensure DOM is ready and any animations have completed
+    const timer = setTimeout(() => {
+      const formElement = document.getElementById('quote-form');
+      if (formElement) {
+        formElement.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
 
-      return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Update insurance type based on route when component mounts
+  useEffect(() => {
+    if (isProductSpecificPage) {
+      const routeType = pathname?.substring(1).toUpperCase() as MainInsuranceType;
+      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
+        setFormData(prev => ({
+          ...prev,
+          insuranceType: routeType
+        }));
+      }
     }
-  }, [isProductSpecificPage]);
+  }, [pathname, isProductSpecificPage]);
 
   // Default to the first main insurance type if none provided
   const defaultType: MainInsuranceType = 'AUTO';
@@ -167,19 +178,6 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       insuranceType: getMainType(initialType),
     };
   });
-
-  // Update insurance type based on route when component mounts
-  useEffect(() => {
-    if (isProductSpecificPage) {
-      const routeType = pathname?.substring(1).toUpperCase() as MainInsuranceType;
-      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
-        setFormData(prev => ({
-          ...prev,
-          insuranceType: routeType
-        }));
-      }
-    }
-  }, [pathname, isProductSpecificPage]);
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
@@ -349,9 +347,6 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     setSubmitStatus('idle');
 
     try {
-      // Log the submission attempt
-      console.log('Submitting form data:', formData);
-
       // Construct the payload with all required fields
       const payload = {
         firstName: formData.firstName,
@@ -396,16 +391,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit form');
+        throw new Error('Failed to submit form');
       }
 
-      // Log successful submission
-      console.log('Form submitted successfully:', data);
-      
-      setSubmitStatus('success');
+      // Show success toast
       toast.success('Thanks! Your quote request was submitted successfully.');
 
       // Clear saved form data on successful submission
@@ -419,7 +409,6 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       }, 1500);
     } catch (error) {
       console.error('Error submitting form:', error);
-      setSubmitStatus('error');
       toast.error('Something went wrong. Please try again or call us directly.');
     } finally {
       setIsSubmitting(false);
@@ -437,65 +426,13 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
           className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
           aria-label="Insurance Quote Request Form"
         >
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-8 text-gray-800">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
             Get Your Free Quote
           </h2>
 
-          <div className="space-y-4 sm:space-y-6">
-            {/* Insurance Type Selection - Only show on generic quote page */}
-            {!isProductSpecificPage && (
-              <div className="space-y-2">
-                <label
-                  htmlFor="insuranceType"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Insurance Type <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Select
-                    value={formData.insuranceType}
-                    onValueChange={value =>
-                      handleChange({
-                        target: { name: 'insuranceType', value },
-                      } as ChangeEvent<HTMLInputElement>)
-                    }
-                    onOpenChange={() => handleSelectBlur('insuranceType')}
-                  >
-                    <SelectTrigger 
-                      className="w-full h-11 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-900 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
-                      aria-label="Select insurance type"
-                    >
-                      <SelectValue placeholder="Select insurance type" className="text-gray-500" />
-                    </SelectTrigger>
-                    <SelectContent 
-                      className="absolute z-[100] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
-                      position="popper"
-                      sideOffset={5}
-                    >
-                      <div className="py-1">
-                        {INSURANCE_OPTIONS.map(type => (
-                          <SelectItem 
-                            key={type.value} 
-                            value={type.value}
-                            className="px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors duration-150 focus:bg-blue-50 focus:text-blue-600 outline-none"
-                          >
-                            {type.label}
-                          </SelectItem>
-                        ))}
-                      </div>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {touchedFields.insuranceType && formErrors.insuranceType && (
-                  <p className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.insuranceType}
-                  </p>
-                )}
-              </div>
-            )}
-
+          <div className="space-y-6">
             {/* Required Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   First Name <span className="text-red-500">*</span>
@@ -548,86 +485,88 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             </div>
 
             {/* Email and Phone/Zip section */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                required
-                placeholder="Enter your email address"
-                value={formData.email || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
-                aria-required="true"
-                aria-invalid={!!formErrors.email}
-                aria-describedby={formErrors.email ? 'email-error' : undefined}
-              />
-              {touchedFields.email && formErrors.email && (
-                <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
-                  {formErrors.email}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-6">
               <div className="space-y-2">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                  Phone Number <span className="text-red-500">*</span>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <Input
-                  type="tel"
-                  name="phone"
-                  id="phone"
+                  type="email"
+                  name="email"
+                  id="email"
                   required
-                  placeholder="Enter your phone number"
-                  value={formData.phone || ''}
+                  placeholder="Enter your email address"
+                  value={formData.email || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                  className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
                   aria-required="true"
-                  aria-invalid={!!formErrors.phone}
-                  aria-describedby={formErrors.phone ? 'phone-error' : undefined}
+                  aria-invalid={!!formErrors.email}
+                  aria-describedby={formErrors.email ? 'email-error' : undefined}
                 />
-                {touchedFields.phone && formErrors.phone && (
-                  <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.phone}
+                {touchedFields.email && formErrors.email && (
+                  <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {formErrors.email}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-                  ZIP Code <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="text"
-                  name="zipCode"
-                  id="zipCode"
-                  required
-                  placeholder="Enter your ZIP code"
-                  value={formData.zipCode || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
-                  aria-required="true"
-                  aria-invalid={!!formErrors.zipCode}
-                  aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
-                />
-                {touchedFields.zipCode && formErrors.zipCode && (
-                  <p id="zipCode-error" className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.zipCode}
-                  </p>
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                    Phone Number <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    type="tel"
+                    name="phone"
+                    id="phone"
+                    required
+                    placeholder="Enter your phone number"
+                    value={formData.phone || ''}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                    aria-required="true"
+                    aria-invalid={!!formErrors.phone}
+                    aria-describedby={formErrors.phone ? 'phone-error' : undefined}
+                  />
+                  {touchedFields.phone && formErrors.phone && (
+                    <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {formErrors.phone}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
+                    ZIP Code <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    type="text"
+                    name="zipCode"
+                    id="zipCode"
+                    required
+                    placeholder="Enter your ZIP code"
+                    value={formData.zipCode || ''}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
+                    aria-required="true"
+                    aria-invalid={!!formErrors.zipCode}
+                    aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
+                  />
+                  {touchedFields.zipCode && formErrors.zipCode && (
+                    <p id="zipCode-error" className="mt-1 text-sm text-red-600" role="alert">
+                      {formErrors.zipCode}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Product-specific fields */}
             {formData.insuranceType === 'LIFE' && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <FieldWithTooltip
                   label="Age"
                   name="age"
@@ -667,7 +606,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {formData.insuranceType === 'HOME' && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700">
                     Property Type <span className="text-red-500">*</span>
@@ -716,7 +655,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {formData.insuranceType === 'AUTO' && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="vehicleUse" className="block text-sm font-medium text-gray-700">
                     Vehicle Use <span className="text-red-500">*</span>
@@ -749,7 +688,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {formData.insuranceType === 'HEALTH' && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="coverageType" className="block text-sm font-medium text-gray-700">
                     Coverage Type <span className="text-red-500">*</span>
@@ -805,11 +744,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             </div>
 
             {/* Submit Button */}
-            <div className="mt-6 sm:mt-8">
+            <div className="mt-8">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full h-12 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                className={`w-full h-12 text-base font-medium text-white bg-[#007BFF] hover:bg-[#0056b3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 aria-label="Submit quote request"
