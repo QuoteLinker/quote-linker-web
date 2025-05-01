@@ -28,6 +28,14 @@ const agentSchema = z.object({
 // Force mock mode for testing
 const mockMode = process.env.NODE_ENV === 'development';
 
+interface SalesforceContactResponse {
+  data: {
+    id: string;
+    success: boolean;
+    errors: string[];
+  };
+}
+
 async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
   try {
     // Authenticate with Salesforce
@@ -49,15 +57,15 @@ async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
     };
 
     const contactResponse = await axios.post(
-      `${instance_url}/services/data/v57.0/sobjects/Contact`,
+      `${instance_url}/services/data/v58.0/sobjects/Contact`,
       contactData,
       {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${access_token}`,
-        },
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/json'
+        }
       }
-    );
+    ) as SalesforceContactResponse;
 
     console.log('Agent Contact created successfully in Salesforce');
     const { id: contactId } = contactResponse.data;
