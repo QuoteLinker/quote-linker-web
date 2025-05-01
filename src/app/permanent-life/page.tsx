@@ -1,10 +1,11 @@
 import ProductPage from '@/components/ProductPage';
+import type { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function PermanentLifePage() {
-  return <ProductPage insuranceType="LIFE_PERMANENT" />;
+  return <ProductPage params={{ type: 'LIFE_PERMANENT' as InsuranceType }} />;
 }
 
 export const metadata = {
-  title: 'Permanent Life Insurance - QuoteLinker',
-  description: 'Secure lifelong protection with permanent life insurance coverage.',
+  title: 'Permanent Life Insurance | QuoteLinker',
+  description: 'Build lasting financial security with permanent life insurance from QuoteLinker. Compare quotes from top-rated carriers and get expert guidance.',
 }; 
