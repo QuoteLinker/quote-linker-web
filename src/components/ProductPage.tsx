@@ -155,23 +155,23 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
         };
       case 'LIFE_TERM':
         return {
-          heroTitle: 'Term Life Insurance',
-          heroSubtitle: 'Affordable protection for your family\'s future',
-          ctaText: 'Get Your Term Life Quote',
-          primaryCTA: 'Ensure your Minnesota family\'s financial security, no matter what life brings. Get matched with a local expert now.',
-          secondaryCTA: 'Use our life insurance needs calculator to determine your ideal coverage amount',
+          heroTitle: 'Protect Your Minnesota Family',
+          heroSubtitle: 'Affordable term life insurance that grows with your family',
+          ctaText: 'Get Your Family Protection Quote',
+          primaryCTA: 'Ensure your Minnesota family\'s future is secure, no matter what life brings. Get matched with a local expert who understands Minnesota families.',
+          secondaryCTA: 'Use our Minnesota family needs calculator to determine your ideal coverage amount',
           iconItems: [
             { icon: HeartIcon, text: 'Family Protection' },
             { icon: CurrencyDollarIcon, text: 'Level Premiums' },
             { icon: ClockIcon, text: 'Conversion Options' },
           ],
           benefits: [
-            'Guaranteed Level Premiums - Rates never increase during your term',
-            'Term Options - Choose 10, 20, or 30-year coverage periods',
-            'High Coverage Amount - Up to $1 million or more available',
-            'Conversion Privilege - Option to convert to permanent coverage',
-            'Simple Application - Quick approval for many applicants',
-            'Affordable Protection - Maximum coverage for your budget',
+            'Family Protection - Coverage that grows with your children\'s needs',
+            'College Fund Protection - Ensure your kids\' education is secure',
+            'Mortgage Protection - Keep your family in their Minnesota home',
+            'Income Replacement - Maintain your family\'s lifestyle',
+            'Final Expenses - Cover medical bills and funeral costs',
+            'Debt Protection - Prevent financial burden on your loved ones',
           ],
           eligibility: [
             'Minnesota resident',
@@ -187,7 +187,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
           relatedProducts: [
             {
               title: 'Whole Life Insurance',
-              description: 'Convert to permanent coverage with cash value',
+              description: 'Build cash value to help with future family expenses',
               link: '/permanent-life'
             },
             {
@@ -243,26 +243,26 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
         };
       case 'HEALTH_SHORT_TERM_DISABILITY':
         return {
-          heroTitle: 'Short-Term Disability Insurance',
-          heroSubtitle: 'Protect your income during recovery',
-          ctaText: 'Get Your Disability Quote',
-          primaryCTA: 'Don\'t let an injury or illness disrupt your Minnesota lifestyle. Secure your income protection today.',
+          heroTitle: 'Protect Your Family\'s Income',
+          heroSubtitle: 'Short-term disability insurance for Minnesota working parents',
+          ctaText: 'Get Your Income Protection Quote',
+          primaryCTA: 'Don\'t let an injury or illness disrupt your Minnesota family\'s lifestyle. Secure your income protection today.',
           secondaryCTA: 'Calculate your potential disability benefits with our Minnesota-specific calculator',
           iconItems: [
-            { icon: UserGroupIcon, text: 'Income Protection' },
+            { icon: UserGroupIcon, text: 'Family Income Protection' },
             { icon: ClockIcon, text: 'Quick Benefits' },
             { icon: CurrencyDollarIcon, text: 'Portable Coverage' },
           ],
           benefits: [
-            'Income Replacement - Up to 60% of your salary',
+            'Income Protection - Keep paying your Minnesota mortgage and bills',
+            'Family Support - Maintain your children\'s activities and education',
             'Quick Benefits - Payments start after short waiting period',
             'Flexible Coverage - Choose 3, 6, or 12-month terms',
             'Guaranteed Renewable - Cannot be cancelled if you pay premiums',
-            'Coverage for Most Disabilities - Illness and injury',
-            'Easy Claims Process - Streamlined documentation',
+            'Easy Claims Process - Streamlined documentation for busy parents',
           ],
           eligibility: [
-            'Employed full-time',
+            'Employed full-time in Minnesota',
             'Age 18-65',
             'U.S. resident',
             'No pre-existing conditions'
@@ -275,7 +275,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
           relatedProducts: [
             {
               title: 'Supplemental Health Insurance',
-              description: 'Additional coverage for medical expenses',
+              description: 'Additional coverage for medical expenses and family care',
               link: '/supplemental-health'
             },
             {
@@ -287,23 +287,23 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
         };
       case 'HEALTH_SUPPLEMENTAL':
         return {
-          heroTitle: 'Supplemental Health Insurance',
-          heroSubtitle: 'Extra protection for unexpected medical expenses',
-          ctaText: 'Get Your Health Quote',
+          heroTitle: 'Extra Protection for Your Minnesota Family',
+          heroSubtitle: 'Supplemental health insurance for unexpected medical expenses',
+          ctaText: 'Get Your Family Health Quote',
           primaryCTA: 'Avoid surprise medical bills and protect your Minnesota family\'s health. Get matched with a local expert now.',
           secondaryCTA: 'Learn about Minnesota-specific health insurance options and requirements',
           iconItems: [
-            { icon: HeartIcon, text: 'Fixed Benefits' },
+            { icon: HeartIcon, text: 'Family Health Protection' },
             { icon: CurrencyDollarIcon, text: 'No Network Restrictions' },
             { icon: ShieldCheckIcon, text: 'Guaranteed Renewable' },
           ],
           benefits: [
-            'Fixed Cash Benefits - Paid directly to you',
-            'No Network Restrictions - Use any provider',
-            'Guaranteed Renewable - Keep your coverage',
-            'Critical Illness Coverage - Lump sum payments',
-            'Accident Coverage - Emergency and follow-up care',
-            'Hospital Benefits - Daily cash payments',
+            'Family Health Protection - Coverage for you and your children',
+            'Fixed Cash Benefits - Paid directly to you for flexibility',
+            'No Network Restrictions - Use any Minnesota provider',
+            'Critical Illness Coverage - Lump sum payments for major illnesses',
+            'Accident Coverage - Emergency and follow-up care for active families',
+            'Hospital Benefits - Daily cash payments during hospital stays',
           ],
           eligibility: [
             'Age 18-65',
@@ -611,6 +611,53 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
               <p className="text-gray-600">{faq.answer}</p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Add this section after the FAQ section for both insurance types */}
+      <div className="mt-16 bg-blue-50 rounded-lg p-8">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Minnesota Family Protection</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Why Minnesota Families Choose Us</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <div className="flex-shrink-0">
+                  <CheckIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <p className="ml-3 text-gray-600">Helped over 5,000 Minnesota families secure their future</p>
+              </li>
+              <li className="flex items-start">
+                <div className="flex-shrink-0">
+                  <CheckIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <p className="ml-3 text-gray-600">Local agents who understand Minnesota family needs</p>
+              </li>
+              <li className="flex items-start">
+                <div className="flex-shrink-0">
+                  <CheckIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <p className="ml-3 text-gray-600">Policies designed for Minnesota's cost of living</p>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">Family-Focused Coverage</h3>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h4 className="font-medium text-gray-900">Income Protection</h4>
+                <p className="text-sm text-gray-600">Keep your family's lifestyle secure during recovery</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h4 className="font-medium text-gray-900">Medical Expenses</h4>
+                <p className="text-sm text-gray-600">Cover unexpected medical bills and treatments</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <h4 className="font-medium text-gray-900">Family Support</h4>
+                <p className="text-sm text-gray-600">Maintain your children's activities and education</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
