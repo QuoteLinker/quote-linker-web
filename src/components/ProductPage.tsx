@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, Suspense } from 'react';
-import { InsuranceType } from '@/utils/insuranceCopy';
+import { InsuranceType, insuranceProducts } from '../utils/insuranceCopy';
 import QuoteForm from './QuoteForm';
 import {
   ShieldCheckIcon,
@@ -13,16 +13,45 @@ import {
   TruckIcon,
   SparklesIcon,
   CheckIcon,
+  StarIcon,
 } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 import StickyCTA from './StickyCTA';
+import { generateProductMetadata, generateProductSchema, getAltText } from '../utils/productMetadata';
+import { Metadata } from 'next';
 
 interface ProductPageProps {
-  insuranceType: InsuranceType;
+  params: {
+    type: InsuranceType;
+  };
 }
 
-function ProductPageContent({ insuranceType }: ProductPageProps) {
+interface Benefit {
+  title: string;
+  description: string;
+}
+
+function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType }) {
   const searchParams = useSearchParams();
+
+  const getMinnesotaFact = (type: InsuranceType): string => {
+    switch (type) {
+      case 'AUTO':
+        return "Minnesota requires $30,000/$60,000 in bodily injury liability coverage, but experts recommend at least $100,000/$300,000 to protect your assets.";
+      case 'HOME':
+        return "Minnesota homes need special coverage for ice dams and frozen pipes. Standard policies may not cover these winter-specific risks.";
+      case 'LIFE_TERM':
+        return "Minnesota residents can save up to 40% on term life insurance by purchasing before age 40 and maintaining good health.";
+      case 'LIFE_PERMANENT':
+        return "Whole life insurance cash value grows tax-deferred in Minnesota, making it a smart addition to your retirement strategy.";
+      case 'HEALTH_SHORT_TERM_DISABILITY':
+        return "Minnesota employers aren't required to provide short-term disability coverage, making personal STDI essential for income protection.";
+      case 'HEALTH_SUPPLEMENTAL':
+        return "Supplemental health insurance can help cover Minnesota's rising healthcare costs, including out-of-pocket expenses and lost income.";
+      default:
+        return "Minnesota residents can save money by bundling multiple insurance policies with the same provider.";
+    }
+  };
 
   useEffect(() => {
     // Check if we should scroll to the form
@@ -41,6 +70,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Minnesota Auto Insurance Made Simple',
           heroSubtitle: 'Get comprehensive coverage that meets state requirements',
           ctaText: 'Get Your Auto Quote',
+          primaryCTA: 'Protect your family and vehicle from Minnesota\'s unpredictable weather and road conditions. Get matched with a local expert now.',
+          secondaryCTA: 'Calculate your potential savings with our Minnesota auto insurance calculator',
           iconItems: [
             { icon: ShieldCheckIcon, text: 'Adequate Liability' },
             { icon: CurrencyDollarIcon, text: 'PIP Coverage' },
@@ -83,6 +114,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Protect Your Minnesota Home',
           heroSubtitle: 'Coverage designed for Minnesota weather and property needs',
           ctaText: 'Get Your Home Quote',
+          primaryCTA: 'Don\'t let Minnesota\'s harsh winters catch you unprepared. Secure your home\'s future with comprehensive coverage today.',
+          secondaryCTA: 'Learn how to winter-proof your home with our Minnesota home maintenance guide',
           iconItems: [
             { icon: HomeIcon, text: 'Adequate Liability' },
             { icon: ShieldCheckIcon, text: 'Property Coverage' },
@@ -125,6 +158,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Term Life Insurance',
           heroSubtitle: 'Affordable protection for your family\'s future',
           ctaText: 'Get Your Term Life Quote',
+          primaryCTA: 'Ensure your Minnesota family\'s financial security, no matter what life brings. Get matched with a local expert now.',
+          secondaryCTA: 'Use our life insurance needs calculator to determine your ideal coverage amount',
           iconItems: [
             { icon: HeartIcon, text: 'Family Protection' },
             { icon: CurrencyDollarIcon, text: 'Level Premiums' },
@@ -167,6 +202,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Whole Life Insurance',
           heroSubtitle: 'Lifetime protection with guaranteed cash value',
           ctaText: 'Get Your Whole Life Quote',
+          primaryCTA: 'Build lasting financial security for your Minnesota family while protecting their future. Connect with a local expert today.',
+          secondaryCTA: 'Explore how whole life insurance can help with Minnesota estate planning',
           iconItems: [
             { icon: HeartIcon, text: 'Lifetime Coverage' },
             { icon: CurrencyDollarIcon, text: 'Cash Value Growth' },
@@ -209,6 +246,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Short-Term Disability Insurance',
           heroSubtitle: 'Protect your income during recovery',
           ctaText: 'Get Your Disability Quote',
+          primaryCTA: 'Don\'t let an injury or illness disrupt your Minnesota lifestyle. Secure your income protection today.',
+          secondaryCTA: 'Calculate your potential disability benefits with our Minnesota-specific calculator',
           iconItems: [
             { icon: UserGroupIcon, text: 'Income Protection' },
             { icon: ClockIcon, text: 'Quick Benefits' },
@@ -251,6 +290,8 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
           heroTitle: 'Supplemental Health Insurance',
           heroSubtitle: 'Extra protection for unexpected medical expenses',
           ctaText: 'Get Your Health Quote',
+          primaryCTA: 'Avoid surprise medical bills and protect your Minnesota family\'s health. Get matched with a local expert now.',
+          secondaryCTA: 'Learn about Minnesota-specific health insurance options and requirements',
           iconItems: [
             { icon: HeartIcon, text: 'Fixed Benefits' },
             { icon: CurrencyDollarIcon, text: 'No Network Restrictions' },
@@ -389,12 +430,81 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
               Get Your Free Quote Today
             </h2>
             <p className="mt-4 text-lg text-gray-500">
-              Fill out the form below to get started with your personalized quote.
+              {config.primaryCTA}
             </p>
+            <div className="mt-6">
+              <a
+                href="#quote-form"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const formElement = document.getElementById('quote-form');
+                  if (formElement) {
+                    formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+                className="inline-block bg-[#00EEFD] text-white px-6 py-3 rounded-lg hover:bg-[#00D4E5] transition-colors"
+              >
+                {config.ctaText}
+              </a>
+            </div>
+            <div className="mt-8">
+              <a
+                href="#"
+                className="text-[#00EEFD] hover:text-[#00D4E5] font-medium"
+              >
+                {config.secondaryCTA}
+              </a>
+            </div>
           </div>
           <div className="mt-12">
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               <div id="quote-form">
+                <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-[#00EEFD] text-white flex items-center justify-center">
+                        1
+                      </div>
+                      <span className="ml-2 text-sm font-medium text-gray-900">Get Your Quote</span>
+                    </div>
+                    <div className="flex-1 h-1 mx-4 bg-gray-200">
+                      <div className="h-1 bg-[#00EEFD] w-1/3"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center">
+                        2
+                      </div>
+                      <span className="ml-2 text-sm font-medium text-gray-400">Compare Options</span>
+                    </div>
+                    <div className="flex-1 h-1 mx-4 bg-gray-200">
+                      <div className="h-1 bg-gray-200"></div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center">
+                        3
+                      </div>
+                      <span className="ml-2 text-sm font-medium text-gray-400">Get Covered</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-center justify-items-center">
+                    <div className="text-center">
+                      <ShieldCheckIcon className="h-8 w-8 text-[#00EEFD] mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Licensed Minnesota Agents</p>
+                    </div>
+                    <div className="text-center">
+                      <ClockIcon className="h-8 w-8 text-[#00EEFD] mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">3-Minute Quotes</p>
+                    </div>
+                    <div className="text-center">
+                      <CurrencyDollarIcon className="h-8 w-8 text-[#00EEFD] mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">Best Rates Guaranteed</p>
+                    </div>
+                    <div className="text-center">
+                      <StarIcon className="h-8 w-8 text-[#00EEFD] mx-auto mb-2" />
+                      <p className="text-sm text-gray-600">4.8/5 Customer Rating</p>
+                    </div>
+                  </div>
+                </div>
                 <QuoteForm insuranceType={insuranceType} />
               </div>
               <div className="space-y-8">
@@ -415,6 +525,18 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
                       <span className="font-medium">{config.coverage.maximum}</span>
                     </div>
                   </div>
+                  <div className="mt-4 p-4 bg-[#F5F7FA] rounded-lg">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <SparklesIcon className="h-5 w-5 text-[#00EEFD]" />
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-sm text-gray-600">
+                          <span className="font-medium">Did You Know?</span> {getMinnesotaFact(insuranceType)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Benefits */}
@@ -429,6 +551,33 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
                         <p className="ml-3 text-base text-gray-500">{benefit}</p>
                       </li>
                     ))}
+                  </ul>
+                </div>
+
+                {/* Application Checklist */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 text-center mb-4">What You'll Need</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-center">
+                      <CheckIcon className="h-5 w-5 text-[#00EEFD] mr-2" />
+                      <span className="text-sm text-gray-600">Basic personal information</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckIcon className="h-5 w-5 text-[#00EEFD] mr-2" />
+                      <span className="text-sm text-gray-600">Minnesota driver's license (for auto)</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckIcon className="h-5 w-5 text-[#00EEFD] mr-2" />
+                      <span className="text-sm text-gray-600">Vehicle information (for auto)</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckIcon className="h-5 w-5 text-[#00EEFD] mr-2" />
+                      <span className="text-sm text-gray-600">Home details (for home)</span>
+                    </li>
+                    <li className="flex items-center">
+                      <CheckIcon className="h-5 w-5 text-[#00EEFD] mr-2" />
+                      <span className="text-sm text-gray-600">Health history (for life/health)</span>
+                    </li>
                   </ul>
                 </div>
 
@@ -452,16 +601,136 @@ function ProductPageContent({ insuranceType }: ProductPageProps) {
         </div>
       </div>
 
+      {/* FAQ Section */}
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Frequently Asked Questions</h2>
+        <div className="max-w-3xl mx-auto space-y-6">
+          {insuranceProducts[insuranceType].faqs.map((faq, index) => (
+            <div key={index} className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{faq.question}</h3>
+              <p className="text-gray-600">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Minnesota-Specific Testimonials */}
+      <div className="mt-16">
+        <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">What Minnesota Residents Say</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src="/testimonials/minnesota-1.jpg"
+                  alt="Sarah from Minneapolis"
+                />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">Sarah M.</p>
+                <p className="text-sm text-gray-500">Minneapolis</p>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              "QuoteLinker helped me find the perfect auto insurance coverage for Minnesota winters. The agent was knowledgeable about our specific needs."
+            </p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src="/testimonials/minnesota-2.jpg"
+                  alt="Michael from St. Paul"
+                />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">Michael R.</p>
+                <p className="text-sm text-gray-500">St. Paul</p>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              "As a Minnesota homeowner, I needed coverage that understood our unique weather challenges. QuoteLinker delivered exactly what I needed."
+            </p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src="/testimonials/minnesota-3.jpg"
+                  alt="Jennifer from Duluth"
+                />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">Jennifer L.</p>
+                <p className="text-sm text-gray-500">Duluth</p>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              "The process was so easy, and I saved over $300 on my life insurance. The Minnesota-based agent was incredibly helpful."
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Sticky CTA */}
       <StickyCTA ctaText={config.ctaText} />
     </div>
   );
 }
 
-export default function ProductPage(props: ProductPageProps) {
+export async function generateMetadata({ params }: { params: { type: InsuranceType } }): Promise<Metadata> {
+  return generateProductMetadata(params.type);
+}
+
+export default function ProductPage({ params }: { params: { type: InsuranceType } }) {
+  const product = insuranceProducts[params.type];
+  const schema = generateProductSchema(params.type);
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProductPageContent {...props} />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: schema }}
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-6">{product.title}</h1>
+        <p className="text-xl text-gray-600 mb-8">{product.subtitle}</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Coverage Options</h2>
+            <div className="space-y-4">
+              {product.benefits.map((benefit: Benefit, index: number) => (
+                <div key={index} className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={`/icons/${benefit.title.toLowerCase().replace(/\s+/g, '-')}.svg`}
+                      alt={`${benefit.title} icon`}
+                      className="h-6 w-6"
+                    />
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-lg font-medium text-gray-900">{benefit.title}</h3>
+                    <p className="mt-1 text-gray-600">{benefit.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Get Your Quote</h2>
+            <div className="bg-white shadow rounded-lg p-6">
+              <form className="space-y-4">
+                {/* Form fields */}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 } 
