@@ -11,8 +11,10 @@ interface ThankYouPageProps {
 const insuranceTypeTitles: Record<InsuranceType, string> = {
   AUTO: 'Auto Insurance',
   HOME: 'Home Insurance',
+  LIFE: 'Life Insurance',
   LIFE_TERM: 'Term Life Insurance',
   LIFE_PERMANENT: 'Whole Life Insurance',
+  HEALTH: 'Health Insurance',
   HEALTH_SHORT_TERM_DISABILITY: 'Short-Term Disability Insurance',
   HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance'
 };
