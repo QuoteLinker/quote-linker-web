@@ -424,7 +424,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         <form
           onSubmit={handleSubmit}
           id="quote-form"
-          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
+          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100 relative"
           aria-label="Insurance Quote Request Form"
         >
           <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
@@ -624,7 +624,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     <SelectTrigger className="w-full h-11" aria-label="Select property type">
                       <SelectValue placeholder="Select property type" />
                     </SelectTrigger>
-                    <SelectContent className="z-[100]">
+                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
                       <SelectItem value="single_family">Single Family Home</SelectItem>
                       <SelectItem value="condo">Condo/Townhouse</SelectItem>
                       <SelectItem value="multi_family">Multi-Family Home</SelectItem>
@@ -673,7 +673,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     <SelectTrigger className="w-full h-11" aria-label="Select vehicle use">
                       <SelectValue placeholder="Select vehicle use" />
                     </SelectTrigger>
-                    <SelectContent className="z-[100]">
+                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
                       <SelectItem value="personal">Personal Use</SelectItem>
                       <SelectItem value="commute">Commuting</SelectItem>
                       <SelectItem value="business">Business Use</SelectItem>
@@ -706,7 +706,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     <SelectTrigger className="w-full h-11" aria-label="Select coverage type">
                       <SelectValue placeholder="Select coverage type" />
                     </SelectTrigger>
-                    <SelectContent className="z-[100]">
+                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
                       <SelectItem value="individual">Individual Coverage</SelectItem>
                       <SelectItem value="family">Family Coverage</SelectItem>
                       <SelectItem value="medicare_supplement">Medicare Supplement</SelectItem>
