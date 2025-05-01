@@ -15,7 +15,7 @@ const LeadForm = () => {
     subLine: '',
     zipCode: '',
     heardAboutUs: '',
-    notes: '',
+    notes: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,23 +33,21 @@ const LeadForm = () => {
     { value: 'Auto', label: 'Auto' },
     { value: 'Home', label: 'Home' },
     { value: 'Life', label: 'Life' },
-    { value: 'Health', label: 'Health' },
+    { value: 'Health', label: 'Health' }
   ];
 
   const subLineOptions = {
     Life: [
       { value: 'Term', label: 'Term' },
-      { value: 'Permanent', label: 'Permanent' },
+      { value: 'Permanent', label: 'Permanent' }
     ],
     Health: [
       { value: 'Short-Term Disability', label: 'Short-Term Disability' },
-      { value: 'Supplemental Health', label: 'Supplemental Health' },
-    ],
+      { value: 'Supplemental Health', label: 'Supplemental Health' }
+    ]
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -63,13 +61,13 @@ const LeadForm = () => {
     try {
       await axios.post('/api/submit-lead', formData);
       setSuccess(true);
-
+      
       // Scroll to form with consistent behavior
       const formElement = document.getElementById('lead-form');
       if (formElement) {
         formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-
+      
       // Redirect after a short delay to allow the user to see the success message
       setTimeout(() => {
         router.push('/thank-you');
@@ -96,6 +94,7 @@ const LeadForm = () => {
             type="text"
             name="firstName"
             required
+            placeholder="Enter your first name"
             value={formData.firstName}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -112,6 +111,7 @@ const LeadForm = () => {
             type="text"
             name="lastName"
             required
+            placeholder="Enter your last name"
             value={formData.lastName}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -128,6 +128,7 @@ const LeadForm = () => {
             type="tel"
             name="phone"
             required
+            placeholder="(555) 555-5555"
             value={formData.phone}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -144,6 +145,7 @@ const LeadForm = () => {
             type="email"
             name="email"
             required
+            placeholder="your.email@example.com"
             value={formData.email}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -163,7 +165,7 @@ const LeadForm = () => {
             onChange={handleChange}
             className="w-full border p-2 rounded"
           >
-            <option value="">Select</option>
+            <option value="">Select insurance type</option>
             {insuranceTypeOptions.map(opt => (
               <option key={opt.value} value={opt.value}>
                 {opt.label}
@@ -185,7 +187,7 @@ const LeadForm = () => {
               onChange={handleChange}
               className="w-full border p-2 rounded"
             >
-              <option value="">Select</option>
+              <option value="">Select sub type</option>
               {subLineOptions[formData.insuranceType as keyof typeof subLineOptions]?.map(opt => (
                 <option key={opt.value} value={opt.value}>
                   {opt.label}
@@ -205,6 +207,7 @@ const LeadForm = () => {
             type="text"
             name="zipCode"
             required
+            placeholder="Enter your ZIP code"
             value={formData.zipCode}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -223,7 +226,7 @@ const LeadForm = () => {
             onChange={handleChange}
             className="w-full border p-2 rounded"
           >
-            <option value="">Select</option>
+            <option value="">Select an option</option>
             <option value="Google">Google</option>
             <option value="Facebook">Facebook</option>
             <option value="Referral">Referral</option>
@@ -239,6 +242,7 @@ const LeadForm = () => {
           <textarea
             id="notes"
             name="notes"
+            placeholder="Any specific requirements or questions?"
             value={formData.notes}
             onChange={handleChange}
             className="w-full border p-2 rounded"
@@ -247,13 +251,18 @@ const LeadForm = () => {
 
         {/* Error Message */}
         {error && <p className="text-red-500 p-3 bg-red-50 rounded">{error}</p>}
-
+        
         {/* Success Message */}
         {success && (
           <div className="p-3 bg-green-50 text-green-800 rounded">
-            Thank you! We&apos;ll be in touch shortly with your personalized quotes.
+            Thank you! We'll be in touch shortly with your personalized quotes.
           </div>
         )}
+
+        {/* Privacy Message */}
+        <p className="text-sm text-gray-600 text-center">
+          Your information is secure. We never share your data without permission.
+        </p>
 
         {/* Submit Button */}
         <button
@@ -268,4 +277,4 @@ const LeadForm = () => {
   );
 };
 
-export default LeadForm;
+export default LeadForm; 
