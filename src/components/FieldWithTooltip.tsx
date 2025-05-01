@@ -17,6 +17,7 @@ interface FieldWithTooltipProps {
   'aria-invalid'?: boolean;
   'aria-describedby'?: string;
   className?: string;
+  placeholder?: string;
 }
 
 export default function FieldWithTooltip({
@@ -35,6 +36,7 @@ export default function FieldWithTooltip({
   'aria-invalid': ariaInvalid,
   'aria-describedby': ariaDescribedby,
   className = '',
+  placeholder,
 }: FieldWithTooltipProps) {
   return (
     <div>
@@ -57,6 +59,7 @@ export default function FieldWithTooltip({
         onBlur={onBlur}
         aria-invalid={ariaInvalid}
         aria-describedby={ariaDescribedby}
+        placeholder={placeholder}
         className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm sm:text-sm transition-colors ${
           error ? 'border-red-500' : ''
         } ${className}`}

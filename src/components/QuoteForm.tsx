@@ -336,25 +336,25 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   };
 
   return (
-    <div>
+    <div className="w-full">
       <InsuranceTip productType={formData.insuranceType.toLowerCase()} />
 
       <div className="flex justify-center items-center py-4 sm:py-8">
         <form
           onSubmit={handleSubmit}
           id="quote-form"
-          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
+          className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700"
         >
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6 text-gray-800">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800 dark:text-white">
             Get Your Free Quote
           </h2>
 
-          <div className="space-y-4 sm:space-y-5">
+          <div className="space-y-6">
             {/* Insurance Type Selection */}
-            <div>
+            <div className="space-y-2">
               <label
                 htmlFor="insuranceType"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Insurance Type <span className="text-red-500">*</span>
               </label>
@@ -367,10 +367,10 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 }
                 onOpenChange={() => handleSelectBlur('insuranceType')}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full h-11">
                   <SelectValue placeholder="Select insurance type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[100]">
                   {INSURANCE_OPTIONS.map(type => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
@@ -379,143 +379,118 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 </SelectContent>
               </Select>
               {touchedFields.insuranceType && formErrors.insuranceType && (
-                <div
-                  id="insuranceType-error"
-                  className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                  role="alert"
-                  aria-live="assertive"
-                >
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {formErrors.insuranceType}
-                </div>
+                </p>
               )}
             </div>
 
             {/* Required Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   First Name <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
                   name="firstName"
                   required
+                  placeholder="Enter your first name"
                   value={formData.firstName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
+                  className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500 dark:border-red-400' : ''}`}
                 />
                 {touchedFields.firstName && formErrors.firstName && (
-                  <div
-                    id="firstName-error"
-                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                    role="alert"
-                    aria-live="assertive"
-                  >
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                     {formErrors.firstName}
-                  </div>
+                  </p>
                 )}
               </div>
 
-              <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="space-y-2">
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Last Name <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
                   name="lastName"
                   required
+                  placeholder="Enter your last name"
                   value={formData.lastName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
+                  className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500 dark:border-red-400' : ''}`}
                 />
                 {touchedFields.lastName && formErrors.lastName && (
-                  <div
-                    id="lastName-error"
-                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                    role="alert"
-                    aria-live="assertive"
-                  >
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                     {formErrors.lastName}
-                  </div>
+                  </p>
                 )}
               </div>
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <Input
                 type="email"
                 name="email"
                 required
+                placeholder="Enter your email address"
                 value={formData.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`w-full ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
+                className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500 dark:border-red-400' : ''}`}
               />
               {touchedFields.email && formErrors.email && (
-                <div
-                  id="email-error"
-                  className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                  role="alert"
-                  aria-live="assertive"
-                >
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                   {formErrors.email}
-                </div>
+                </p>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="tel"
                   name="phone"
                   required
+                  placeholder="Enter your phone number"
                   value={formData.phone}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                  className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500 dark:border-red-400' : ''}`}
                 />
                 {touchedFields.phone && formErrors.phone && (
-                  <div
-                    id="phone-error"
-                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                    role="alert"
-                    aria-live="assertive"
-                  >
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                     {formErrors.phone}
-                  </div>
+                  </p>
                 )}
               </div>
 
-              <div>
-                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="space-y-2">
+                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   ZIP Code <span className="text-red-500">*</span>
                 </label>
                 <Input
                   type="text"
                   name="zipCode"
                   required
+                  placeholder="Enter your ZIP code"
                   value={formData.zipCode}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`w-full ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
+                  className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500 dark:border-red-400' : ''}`}
                 />
                 {touchedFields.zipCode && formErrors.zipCode && (
-                  <div
-                    id="zipCode-error"
-                    className="mt-1 text-sm text-red-600 transition-opacity duration-200 ease-in-out"
-                    role="alert"
-                    aria-live="assertive"
-                  >
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
                     {formErrors.zipCode}
-                  </div>
+                  </p>
                 )}
               </div>
             </div>
@@ -542,13 +517,14 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               type="number"
               min="18"
               max="120"
+              placeholder="Enter your age"
               value={formData.age || ''}
               onChange={handleChange}
               onBlur={handleBlur}
               error={touchedFields.age ? formErrors.age : undefined}
               aria-invalid={!!formErrors.age}
               aria-describedby={formErrors.age ? 'age-error' : undefined}
-              className="h-10"
+              className="h-11"
             />
 
             <FieldWithTooltip
@@ -559,33 +535,34 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               type="number"
               min="0"
               step="1000"
+              placeholder="Enter coverage amount"
               value={formData.coverageAmount || ''}
               onChange={handleChange}
               onBlur={handleBlur}
               error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
               aria-invalid={!!formErrors.coverageAmount}
               aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
-              className="h-10"
+              className="h-11"
             />
 
             <div className="pt-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#00EEFD] hover:bg-[#00D4E5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00EEFD] transition-all duration-200 transform hover:scale-[1.02] h-12"
+                className="w-full h-12 text-base font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? 'Submitting...' : 'Get Your Free Quote'}
+                {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
               </Button>
             </div>
 
             {/* Privacy Note */}
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
               We respect your privacy. Your information is secure.
             </p>
 
             {submitStatus === 'success' && (
-              <div className="rounded-lg bg-green-50 p-4 mt-4 border border-green-100">
-                <div className="flex">
+              <div className="rounded-lg bg-green-50 dark:bg-green-900/30 p-4 mt-4 border border-green-100 dark:border-green-800">
+                <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
                       <path
@@ -596,7 +573,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800">
+                    <p className="text-sm font-medium text-green-800 dark:text-green-200">
                       Thank you! We&apos;ll reach out to you shortly.
                     </p>
                   </div>
@@ -605,8 +582,8 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {submitStatus === 'error' && (
-              <div className="rounded-lg bg-red-50 p-4 mt-4 border border-red-100">
-                <div className="flex">
+              <div className="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 mt-4 border border-red-100 dark:border-red-800">
+                <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                       <path
@@ -617,7 +594,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-red-800">
+                    <p className="text-sm font-medium text-red-800 dark:text-red-200">
                       Sorry, there was an error submitting your form. Please try again.
                     </p>
                   </div>
