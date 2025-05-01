@@ -7,8 +7,10 @@ import { InsuranceType } from '@/utils/insuranceCopy';
 type SubType = 'term' | 'permanent' | 'std' | 'supplemental' | 'auto' | 'home';
 
 interface ProductLayoutProps {
-  insuranceType: InsuranceType;
-  _subType?: SubType;
+  params: {
+    type: InsuranceType;
+  };
+  subType?: SubType;
   heroTitle: string;
   heroSubtitle: string;
   heroCTA: string;
@@ -22,27 +24,29 @@ interface ProductLayoutProps {
     title: string;
     description: string;
   }>;
-  _showToggle?: boolean;
-  _toggleOptions?: Array<{
+  showToggle?: boolean;
+  toggleOptions?: Array<{
     value: string;
     label: string;
   }>;
-  _onToggleChange?: (value: string) => void;
+  onToggleChange?: (value: string) => void;
 }
 
 export default function ProductLayout({
-  insuranceType,
-  _subType,
+  params,
+  subType,
   heroTitle,
   heroSubtitle,
   heroCTA,
   heroIconItems,
   benefitsTitle,
   benefits,
-  _showToggle,
-  _toggleOptions,
-  _onToggleChange,
+  showToggle,
+  toggleOptions,
+  onToggleChange,
 }: ProductLayoutProps) {
+  const { type } = params;
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -71,7 +75,7 @@ export default function ProductLayout({
             </button>
           </div>
           <div>
-            <QuoteForm insuranceType={insuranceType} />
+            <QuoteForm productType={type} />
           </div>
         </div>
 
@@ -90,4 +94,4 @@ export default function ProductLayout({
       </div>
     </div>
   );
-}
+} 

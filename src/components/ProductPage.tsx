@@ -31,7 +31,14 @@ interface Benefit {
   description: string;
 }
 
-function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType }) {
+interface ProductPageContentProps {
+  params: {
+    type: InsuranceType;
+  };
+}
+
+function ProductPageContent({ params }: ProductPageContentProps) {
+  const { type } = params;
   const searchParams = useSearchParams();
 
   const getMinnesotaFact = (type: InsuranceType): string => {
@@ -64,7 +71,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
   }, [searchParams]);
 
   const getProductConfig = () => {
-    switch (insuranceType) {
+    switch (type) {
       case 'AUTO':
         return {
           heroTitle: 'Minnesota Auto Insurance Made Simple',
@@ -403,7 +410,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
           <div className="text-center">
             <h2 className="text-base text-[#00EEFD] font-semibold tracking-wide uppercase">Features</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Why Choose Our {insuranceType.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ')} Insurance
+              Why Choose Our {type.split('_').map(word => word.charAt(0) + word.slice(1).toLowerCase()).join(' ')} Insurance
             </p>
           </div>
 
@@ -505,7 +512,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
                     </div>
                   </div>
                 </div>
-                <QuoteForm insuranceType={insuranceType} />
+                <QuoteForm productType={type} />
               </div>
               <div className="space-y-8">
                 {/* Coverage Information */}
@@ -532,7 +539,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
                       </div>
                       <div className="ml-3">
                         <p className="text-sm text-gray-600">
-                          <span className="font-medium">Did You Know?</span> {getMinnesotaFact(insuranceType)}
+                          <span className="font-medium">Did You Know?</span> {getMinnesotaFact(type)}
                         </p>
                       </div>
                     </div>
@@ -605,7 +612,7 @@ function ProductPageContent({ insuranceType }: { insuranceType: InsuranceType })
       <div className="mt-16">
         <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">Frequently Asked Questions</h2>
         <div className="max-w-3xl mx-auto space-y-6">
-          {insuranceProducts[insuranceType].faqs.map((faq, index) => (
+          {insuranceProducts[type].faqs.map((faq, index) => (
             <div key={index} className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">{faq.question}</h3>
               <p className="text-gray-600">{faq.answer}</p>
@@ -732,52 +739,10 @@ export async function generateMetadata({ params }: { params: { type: InsuranceTy
   return generateProductMetadata(params.type);
 }
 
-export default function ProductPage({ params }: { params: { type: InsuranceType } }) {
-  const product = insuranceProducts[params.type];
-  const schema = generateProductSchema(params.type);
-
+export default function ProductPage({ params }: ProductPageProps) {
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: schema }}
-      />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-6">{product.title}</h1>
-        <p className="text-xl text-gray-600 mb-8">{product.subtitle}</p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Coverage Options</h2>
-            <div className="space-y-4">
-              {product.benefits.map((benefit: Benefit, index: number) => (
-                <div key={index} className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={`/icons/${benefit.title.toLowerCase().replace(/\s+/g, '-')}.svg`}
-                      alt={`${benefit.title} icon`}
-                      className="h-6 w-6"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-lg font-medium text-gray-900">{benefit.title}</h3>
-                    <p className="mt-1 text-gray-600">{benefit.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Get Your Quote</h2>
-            <div className="bg-white shadow rounded-lg p-6">
-              <form className="space-y-4">
-                {/* Form fields */}
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+    <div className="min-h-screen bg-white">
+      <ProductPageContent params={params} />
+    </div>
   );
 } 

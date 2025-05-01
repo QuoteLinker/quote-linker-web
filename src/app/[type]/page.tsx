@@ -39,5 +39,5 @@ export default function Page({ params }: { params: { type: string } }) {
       return notFound();
   }
 
-  return <ProductPage params={{ type: insuranceType }} />;
+  return <ProductPage params={{ type: insuranceType as InsuranceType }} />;
 } 
