@@ -80,6 +80,25 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
   const isProductSpecificPage = pathname?.startsWith('/') && 
     ['/home', '/life', '/health', '/auto'].includes(pathname);
 
+  // Auto-scroll to form on product-specific pages
+  useEffect(() => {
+    if (isProductSpecificPage) {
+      // Small delay to ensure DOM is ready and any animations have completed
+      const timer = setTimeout(() => {
+        const formElement = document.getElementById('quote-form');
+        if (formElement) {
+          formElement.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isProductSpecificPage]);
+
   // Default to the first main insurance type if none provided
   const defaultType: MainInsuranceType = 'AUTO';
   const initialType = insuranceType || productType || defaultType;
