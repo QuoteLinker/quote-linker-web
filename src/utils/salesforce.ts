@@ -93,8 +93,8 @@ export async function authenticateWithSalesforce(): Promise<SalesforceAuthRespon
 
     console.log('Salesforce authentication successful');
     return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
+  } catch (error: any) {
+    if (error?.response) {
       console.error('Salesforce Authentication Error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
@@ -136,8 +136,8 @@ export async function createSalesforceLead(
     );
 
     console.log('Lead creation response:', response.data);
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
+  } catch (error: any) {
+    if (error?.response) {
       console.error('Salesforce Lead Creation Error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,

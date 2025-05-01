@@ -742,7 +742,9 @@ export async function generateMetadata({ params }: { params: { type: InsuranceTy
 export default function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="min-h-screen bg-white">
-      <ProductPageContent params={params} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ProductPageContent params={params} />
+      </Suspense>
     </div>
   );
 } 

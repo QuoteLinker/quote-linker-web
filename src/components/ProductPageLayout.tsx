@@ -64,7 +64,7 @@ export default function ProductPageLayout({
                 <div className="mb-8">
                   <div className="flex justify-center md:justify-start space-x-4">
                     <button
-                      onClick={() => setSubType('term')}
+                      onClick={() => setSubType?.('term')}
                       className={`px-4 py-2 rounded-lg ${
                         subType === 'term'
                           ? 'bg-[#00EEFD] text-white'
@@ -74,7 +74,7 @@ export default function ProductPageLayout({
                       Term Life
                     </button>
                     <button
-                      onClick={() => setSubType('whole')}
+                      onClick={() => setSubType?.('whole')}
                       className={`px-4 py-2 rounded-lg ${
                         subType === 'whole'
                           ? 'bg-[#00EEFD] text-white'
@@ -91,7 +91,7 @@ export default function ProductPageLayout({
                 <div className="mb-8">
                   <div className="flex justify-center md:justify-start space-x-4">
                     <button
-                      onClick={() => setSubType('short-term')}
+                      onClick={() => setSubType?.('short-term')}
                       className={`px-4 py-2 rounded-lg ${
                         subType === 'short-term'
                           ? 'bg-[#00EEFD] text-white'
@@ -101,7 +101,7 @@ export default function ProductPageLayout({
                       Short-Term
                     </button>
                     <button
-                      onClick={() => setSubType('supplemental')}
+                      onClick={() => setSubType?.('supplemental')}
                       className={`px-4 py-2 rounded-lg ${
                         subType === 'supplemental'
                           ? 'bg-[#00EEFD] text-white'

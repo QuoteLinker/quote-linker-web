@@ -190,6 +190,66 @@ const productMetadata: Record<InsuranceType, ProductMetadata> = {
       "dollar": "Fixed benefits icon",
       "star": "Top-rated service icon"
     }
+  },
+  LIFE: {
+    title: 'Minnesota Life Insurance Quotes | Protect Your Family | QuoteLinker',
+    description: 'Get Minnesota life insurance quotes with flexible coverage options. Choose from term and whole life policies to protect your family\'s future.',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Minnesota Life Insurance",
+      "description": "Comprehensive life insurance coverage for Minnesota residents",
+      "brand": {
+        "@type": "Brand",
+        "name": "QuoteLinker"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "offerCount": "5"
+      },
+      "areaServed": {
+        "@type": "State",
+        "name": "Minnesota"
+      }
+    },
+    altText: {
+      "shield": "Life insurance protection icon",
+      "clock": "Quick quote process icon",
+      "dollar": "Competitive rates icon",
+      "star": "Top-rated service icon"
+    }
+  },
+  HEALTH: {
+    title: 'Minnesota Health Insurance Quotes | Comprehensive Coverage | QuoteLinker',
+    description: 'Get Minnesota health insurance quotes with flexible coverage options. Compare plans and rates from top providers for your healthcare needs.',
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Minnesota Health Insurance",
+      "description": "Comprehensive health insurance coverage for Minnesota residents",
+      "brand": {
+        "@type": "Brand",
+        "name": "QuoteLinker"
+      },
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "offerCount": "5"
+      },
+      "areaServed": {
+        "@type": "State",
+        "name": "Minnesota"
+      }
+    },
+    altText: {
+      "shield": "Health insurance protection icon",
+      "clock": "Quick enrollment icon",
+      "dollar": "Affordable rates icon",
+      "star": "Top-rated service icon"
+    }
   }
 };
 
