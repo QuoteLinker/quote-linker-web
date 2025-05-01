@@ -343,9 +343,9 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         <form
           onSubmit={handleSubmit}
           id="quote-form"
-          className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100 dark:bg-gray-800 dark:border-gray-700"
+          className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100"
         >
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800 dark:text-white">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
             Get Your Free Quote
           </h2>
 
@@ -354,32 +354,38 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             <div className="space-y-2">
               <label
                 htmlFor="insuranceType"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="block text-sm font-medium text-gray-700"
               >
                 Insurance Type <span className="text-red-500">*</span>
               </label>
-              <Select
-                value={formData.insuranceType}
-                onValueChange={value =>
-                  handleChange({
-                    target: { name: 'insuranceType', value },
-                  } as ChangeEvent<HTMLInputElement>)
-                }
-                onOpenChange={() => handleSelectBlur('insuranceType')}
-              >
-                <SelectTrigger className="w-full h-11">
-                  <SelectValue placeholder="Select insurance type" />
-                </SelectTrigger>
-                <SelectContent className="z-[100]">
-                  {INSURANCE_OPTIONS.map(type => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="relative">
+                <Select
+                  value={formData.insuranceType}
+                  onValueChange={value =>
+                    handleChange({
+                      target: { name: 'insuranceType', value },
+                    } as ChangeEvent<HTMLInputElement>)
+                  }
+                  onOpenChange={() => handleSelectBlur('insuranceType')}
+                >
+                  <SelectTrigger className="w-full h-11 bg-white border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <SelectValue placeholder="Select insurance type" />
+                  </SelectTrigger>
+                  <SelectContent className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
+                    {INSURANCE_OPTIONS.map(type => (
+                      <SelectItem 
+                        key={type.value} 
+                        value={type.value}
+                        className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                      >
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               {touchedFields.insuranceType && formErrors.insuranceType && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                <p className="mt-1 text-sm text-red-600">
                   {formErrors.insuranceType}
                 </p>
               )}
