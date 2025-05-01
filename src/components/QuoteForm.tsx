@@ -32,10 +32,14 @@ interface FormData {
   phone: string;
   zipCode: string;
   insuranceType: MainInsuranceType;
-  age?: number;
-  coverageAmount?: number;
+  age?: string;
+  coverageAmount?: string;
   website?: string;
   honeypot?: string;
+  propertyType?: string;
+  propertyValue?: string;
+  vehicleUse?: string;
+  coverageType?: string;
 }
 
 interface FormErrors {
@@ -47,6 +51,10 @@ interface FormErrors {
   age?: string;
   coverageAmount?: string;
   insuranceType?: string;
+  propertyType?: string;
+  propertyValue?: string;
+  vehicleUse?: string;
+  coverageType?: string;
 }
 
 interface QuoteFormProps {
@@ -146,42 +154,58 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     }
   }, []); // Only run once on mount
 
-  const validateField = (
-    name: keyof FormData,
-    value: FormData[keyof FormData]
-  ): string | undefined => {
+  const validateField = (name: string, value: string | null): string | undefined => {
     switch (name) {
       case 'firstName': {
-        const error = validateName(value as string);
-        return error || undefined;
+        return validateName(value);
       }
       case 'lastName': {
-        const error = validateName(value as string);
-        return error || undefined;
+        return validateName(value);
       }
       case 'email': {
-        const error = validateEmail(value as string);
-        return error || undefined;
+        return validateEmail(value);
       }
       case 'phone': {
-        const error = validatePhone(value as string);
-        return error || undefined;
+        return validatePhone(value);
       }
       case 'zipCode': {
-        const error = validateZip(value as string);
-        return error || undefined;
+        return validateZip(value);
       }
       case 'age': {
-        const error = validateAge(value as number);
-        return error || undefined;
+        return validateAge(value);
       }
       case 'coverageAmount': {
-        const error = validateCoverageAmount(value as number);
-        return error || undefined;
+        return validateCoverageAmount(value);
       }
       case 'insuranceType': {
         if (!value) {
           return 'Please select an insurance type';
+        }
+        return undefined;
+      }
+      case 'propertyType': {
+        if (!value) {
+          return 'Please select a property type';
+        }
+        return undefined;
+      }
+      case 'propertyValue': {
+        if (!value) return undefined;
+        const numValue = Number(value);
+        if (isNaN(numValue) || numValue < 0) {
+          return 'Property value must be non-negative';
+        }
+        return undefined;
+      }
+      case 'vehicleUse': {
+        if (!value) {
+          return 'Please select a vehicle use';
+        }
+        return undefined;
+      }
+      case 'coverageType': {
+        if (!value) {
+          return 'Please select a coverage type';
         }
         return undefined;
       }
@@ -208,7 +232,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       }
 
       // Validate on change
-      const error = validateField(name as keyof FormData, value);
+      const error = validateField(name, value);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
       }
@@ -222,7 +246,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       setTouchedFields(prev => ({ ...prev, [name]: true }));
 
       // Validate on blur
-      const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
+      const error = validateField(name, formData[name as keyof FormData]);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
       }
@@ -235,7 +259,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       setTouchedFields(prev => ({ ...prev, [name]: true }));
 
       // Validate on blur
-      const error = validateField(name as keyof FormData, formData[name as keyof FormData]);
+      const error = validateField(name, formData[name as keyof FormData]);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
       }
@@ -283,6 +307,22 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
     if (!formData.insuranceType) {
       errors.insuranceType = 'Please select an insurance type';
+    }
+
+    if (!formData.propertyType) {
+      errors.propertyType = 'Please select a property type';
+    }
+
+    if (formData.propertyValue && formData.propertyValue < 0) {
+      errors.propertyValue = 'Property value must be non-negative';
+    }
+
+    if (!formData.vehicleUse) {
+      errors.vehicleUse = 'Please select a vehicle use';
+    }
+
+    if (!formData.coverageType) {
+      errors.coverageType = 'Please select a coverage type';
     }
 
     setFormErrors(errors);
@@ -444,6 +484,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               </div>
             </div>
 
+            {/* Email and Phone/Zip section */}
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Email Address <span className="text-red-500">*</span>
@@ -509,7 +550,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               </div>
             </div>
 
-            {/* Honeypot field - hidden from users but visible to bots */}
+            {/* Honeypot field */}
             <div className="hidden">
               <label htmlFor="website">Website</label>
               <Input
@@ -523,59 +564,184 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               />
             </div>
 
-            <FieldWithTooltip
-              label="Age"
-              name="age"
-              tooltip="Your age helps us determine the most appropriate coverage options and rates for you."
-              required
-              type="number"
-              min="18"
-              max="120"
-              placeholder="Enter your age"
-              value={formData.age || ''}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touchedFields.age ? formErrors.age : undefined}
-              aria-invalid={!!formErrors.age}
-              aria-describedby={formErrors.age ? 'age-error' : undefined}
-              className="h-11"
-            />
+            {/* Conditional Fields Based on Insurance Type */}
+            {formData.insuranceType === 'LIFE' && (
+              <>
+                <FieldWithTooltip
+                  label="Age"
+                  name="age"
+                  tooltip="Your age helps us determine the most appropriate coverage options and rates for you."
+                  required
+                  type="number"
+                  min="18"
+                  max="120"
+                  placeholder="Enter your age"
+                  value={formData.age || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.age ? formErrors.age : undefined}
+                  aria-invalid={!!formErrors.age}
+                  aria-describedby={formErrors.age ? 'age-error' : undefined}
+                  className="h-11"
+                />
 
-            <FieldWithTooltip
-              label="Coverage Amount"
-              name="coverageAmount"
-              tooltip="The amount of coverage you need. This helps us calculate your premium and ensure adequate protection."
-              required
-              type="number"
-              min="0"
-              step="1000"
-              placeholder="Enter coverage amount"
-              value={formData.coverageAmount || ''}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
-              aria-invalid={!!formErrors.coverageAmount}
-              aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
-              className="h-11"
-            />
+                <FieldWithTooltip
+                  label="Coverage Amount"
+                  name="coverageAmount"
+                  tooltip="The amount of coverage you need. This helps us calculate your premium and ensure adequate protection."
+                  required
+                  type="number"
+                  min="0"
+                  step="1000"
+                  placeholder="Enter coverage amount"
+                  value={formData.coverageAmount || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
+                  aria-invalid={!!formErrors.coverageAmount}
+                  aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
+                  className="h-11"
+                />
+              </>
+            )}
+
+            {formData.insuranceType === 'HOME' && (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700">
+                    Property Type <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    value={formData.propertyType || ''}
+                    onValueChange={value =>
+                      handleChange({
+                        target: { name: 'propertyType', value },
+                      } as ChangeEvent<HTMLInputElement>)
+                    }
+                    onOpenChange={() => handleSelectBlur('propertyType')}
+                  >
+                    <SelectTrigger className="w-full h-11">
+                      <SelectValue placeholder="Select property type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="single_family">Single Family Home</SelectItem>
+                      <SelectItem value="condo">Condo/Townhouse</SelectItem>
+                      <SelectItem value="multi_family">Multi-Family Home</SelectItem>
+                      <SelectItem value="mobile_home">Mobile Home</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {touchedFields.propertyType && formErrors.propertyType && (
+                    <p className="mt-1 text-sm text-red-600">{formErrors.propertyType}</p>
+                  )}
+                </div>
+
+                <FieldWithTooltip
+                  label="Property Value"
+                  name="propertyValue"
+                  tooltip="Estimated value of your property."
+                  required
+                  type="number"
+                  min={0}
+                  step={1000}
+                  placeholder="Enter property value"
+                  value={formData.propertyValue || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="h-11"
+                />
+              </div>
+            )}
+
+            {formData.insuranceType === 'AUTO' && (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="vehicleUse" className="block text-sm font-medium text-gray-700">
+                    Vehicle Use <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    value={formData.vehicleUse || ''}
+                    onValueChange={value =>
+                      handleChange({
+                        target: { name: 'vehicleUse', value },
+                      } as ChangeEvent<HTMLInputElement>)
+                    }
+                    onOpenChange={() => handleSelectBlur('vehicleUse')}
+                  >
+                    <SelectTrigger className="w-full h-11">
+                      <SelectValue placeholder="Select vehicle use" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="personal">Personal Use</SelectItem>
+                      <SelectItem value="commute">Commuting</SelectItem>
+                      <SelectItem value="business">Business Use</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {touchedFields.vehicleUse && formErrors.vehicleUse && (
+                    <p className="mt-1 text-sm text-red-600">{formErrors.vehicleUse}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {formData.insuranceType === 'HEALTH' && (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="coverageType" className="block text-sm font-medium text-gray-700">
+                    Coverage Type <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    value={formData.coverageType || ''}
+                    onValueChange={value =>
+                      handleChange({
+                        target: { name: 'coverageType', value },
+                      } as ChangeEvent<HTMLInputElement>)
+                    }
+                    onOpenChange={() => handleSelectBlur('coverageType')}
+                  >
+                    <SelectTrigger className="w-full h-11">
+                      <SelectValue placeholder="Select coverage type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="individual">Individual Coverage</SelectItem>
+                      <SelectItem value="family">Family Coverage</SelectItem>
+                      <SelectItem value="medicare_supplement">Medicare Supplement</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {touchedFields.coverageType && formErrors.coverageType && (
+                    <p className="mt-1 text-sm text-red-600">{formErrors.coverageType}</p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="pt-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-12 text-base font-medium rounded-lg shadow-sm transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-12 text-base font-medium bg-[#1D4ED8] hover:bg-[#1e40af] active:bg-[#1e3a8a] text-white rounded-lg shadow-sm transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                {isSubmitting ? 'Submitting...' : 'Get My Free Quote'}
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Submitting...
+                  </div>
+                ) : (
+                  'Get My Free Quote'
+                )}
               </Button>
             </div>
 
             {/* Privacy Note */}
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
+            <p className="text-xs text-gray-500 text-center mt-4">
               We respect your privacy. Your information is secure.
             </p>
 
+            {/* Success/Error Messages */}
             {submitStatus === 'success' && (
-              <div className="rounded-lg bg-green-50 dark:bg-green-900/30 p-4 mt-4 border border-green-100 dark:border-green-800">
+              <div className="rounded-lg bg-green-50 p-4 mt-4 border border-green-100">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -587,7 +753,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800 dark:text-green-200">
+                    <p className="text-sm font-medium text-green-800">
                       Thank you! We&apos;ll reach out to you shortly.
                     </p>
                   </div>
@@ -596,7 +762,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {submitStatus === 'error' && (
-              <div className="rounded-lg bg-red-50 dark:bg-red-900/30 p-4 mt-4 border border-red-100 dark:border-red-800">
+              <div className="rounded-lg bg-red-50 p-4 mt-4 border border-red-100">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
@@ -608,7 +774,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                    <p className="text-sm font-medium text-red-800">
                       Sorry, there was an error submitting your form. Please try again.
                     </p>
                   </div>
