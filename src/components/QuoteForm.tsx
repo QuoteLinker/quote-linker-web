@@ -339,7 +339,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
     // Validate form before submission
     if (!validateForm()) {
-      toast.error('Please fix the errors in the form');
+      toast.error('Please check all required fields and try again');
       return;
     }
 
@@ -392,11 +392,12 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to submit form. Please try again.');
       }
 
       // Show success toast
-      toast.success('Thanks! Your quote request was submitted successfully.');
+      toast.success('Thanks! Your quote request was submitted successfully. We\'ll be in touch shortly.');
 
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
@@ -409,7 +410,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       }, 1500);
     } catch (error) {
       console.error('Error submitting form:', error);
-      toast.error('Something went wrong. Please try again or call us directly.');
+      toast.error(error instanceof Error ? error.message : 'Something went wrong. Please try again or call us directly.');
     } finally {
       setIsSubmitting(false);
     }
