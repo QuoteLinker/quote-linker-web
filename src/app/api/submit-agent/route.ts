@@ -36,6 +36,14 @@ interface SalesforceContactResponse {
   };
 }
 
+interface SalesforceOpportunityResponse {
+  data: {
+    id: string;
+    success: boolean;
+    errors: string[];
+  };
+}
+
 async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
   try {
     // Authenticate with Salesforce
@@ -81,15 +89,15 @@ async function createSalesforceAgentRecord(data: z.infer<typeof agentSchema>) {
     };
 
     const opportunityResponse = await axios.post(
-      `${instance_url}/services/data/v57.0/sobjects/Opportunity`,
+      `${instance_url}/services/data/v58.0/sobjects/Opportunity`,
       opportunityData,
       {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${access_token}`,
-        },
+          'Authorization': `Bearer ${access_token}`,
+          'Content-Type': 'application/json'
+        }
       }
-    );
+    ) as SalesforceOpportunityResponse;
 
     console.log('Agent Opportunity created successfully in Salesforce');
     const { id: opportunityId } = opportunityResponse.data;
