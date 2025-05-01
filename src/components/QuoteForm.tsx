@@ -435,6 +435,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
           onSubmit={handleSubmit}
           id="quote-form"
           className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
+          aria-label="Insurance Quote Request Form"
         >
           <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-8 text-gray-800">
             Get Your Free Quote
@@ -462,6 +463,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   >
                     <SelectTrigger 
                       className="w-full h-11 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-900 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                      aria-label="Select insurance type"
                     >
                       <SelectValue placeholder="Select insurance type" className="text-gray-500" />
                     </SelectTrigger>
@@ -485,7 +487,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   </Select>
                 </div>
                 {touchedFields.insuranceType && formErrors.insuranceType && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-red-600" role="alert">
                     {formErrors.insuranceType}
                   </p>
                 )}
@@ -501,15 +503,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="firstName"
+                  id="firstName"
                   required
                   placeholder="Enter your first name"
                   value={formData.firstName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
+                  aria-required="true"
+                  aria-invalid={!!formErrors.firstName}
+                  aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
                 />
                 {touchedFields.firstName && formErrors.firstName && (
-                  <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
+                  <p id="firstName-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {formErrors.firstName}
+                  </p>
                 )}
               </div>
 
@@ -520,15 +528,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="lastName"
+                  id="lastName"
                   required
                   placeholder="Enter your last name"
                   value={formData.lastName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
+                  aria-required="true"
+                  aria-invalid={!!formErrors.lastName}
+                  aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
                 />
                 {touchedFields.lastName && formErrors.lastName && (
-                  <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
+                  <p id="lastName-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {formErrors.lastName}
+                  </p>
                 )}
               </div>
             </div>
@@ -541,15 +555,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               <Input
                 type="email"
                 name="email"
+                id="email"
                 required
                 placeholder="Enter your email address"
                 value={formData.email || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
+                aria-required="true"
+                aria-invalid={!!formErrors.email}
+                aria-describedby={formErrors.email ? 'email-error' : undefined}
               />
               {touchedFields.email && formErrors.email && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
+                <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                  {formErrors.email}
+                </p>
               )}
             </div>
 
@@ -561,15 +581,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="tel"
                   name="phone"
+                  id="phone"
                   required
                   placeholder="Enter your phone number"
                   value={formData.phone || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                  aria-required="true"
+                  aria-invalid={!!formErrors.phone}
+                  aria-describedby={formErrors.phone ? 'phone-error' : undefined}
                 />
                 {touchedFields.phone && formErrors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
+                  <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {formErrors.phone}
+                  </p>
                 )}
               </div>
 
@@ -580,45 +606,28 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 <Input
                   type="text"
                   name="zipCode"
+                  id="zipCode"
                   required
                   placeholder="Enter your ZIP code"
                   value={formData.zipCode || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
+                  aria-required="true"
+                  aria-invalid={!!formErrors.zipCode}
+                  aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
                 />
                 {touchedFields.zipCode && formErrors.zipCode && (
-                  <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
+                  <p id="zipCode-error" className="mt-1 text-sm text-red-600" role="alert">
+                    {formErrors.zipCode}
+                  </p>
                 )}
               </div>
             </div>
 
-            {/* Hidden attribution fields */}
-            <div className="hidden">
-              <input type="hidden" name="utmSource" value={attributionData.utmSource} />
-              <input type="hidden" name="utmMedium" value={attributionData.utmMedium} />
-              <input type="hidden" name="utmCampaign" value={attributionData.utmCampaign} />
-              <input type="hidden" name="utmTerm" value={attributionData.utmTerm} />
-              <input type="hidden" name="referrer" value={attributionData.referrer} />
-            </div>
-
-            {/* Honeypot field */}
-            <div className="hidden">
-              <label htmlFor="website">Website</label>
-              <Input
-                type="text"
-                name="website"
-                id="website"
-                tabIndex={-1}
-                autoComplete="off"
-                value={formData.website || ''}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Conditional Fields Based on Insurance Type */}
+            {/* Product-specific fields */}
             {formData.insuranceType === 'LIFE' && (
-              <>
+              <div className="space-y-4">
                 <FieldWithTooltip
                   label="Age"
                   name="age"
@@ -654,11 +663,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
                   className="h-11"
                 />
-              </>
+              </div>
             )}
 
             {formData.insuranceType === 'HOME' && (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700">
                     Property Type <span className="text-red-500">*</span>
@@ -672,10 +681,10 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     }
                     onOpenChange={() => handleSelectBlur('propertyType')}
                   >
-                    <SelectTrigger className="w-full h-11">
+                    <SelectTrigger className="w-full h-11" aria-label="Select property type">
                       <SelectValue placeholder="Select property type" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="single_family">Single Family Home</SelectItem>
                       <SelectItem value="condo">Condo/Townhouse</SelectItem>
                       <SelectItem value="multi_family">Multi-Family Home</SelectItem>
@@ -683,7 +692,9 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </SelectContent>
                   </Select>
                   {touchedFields.propertyType && formErrors.propertyType && (
-                    <p className="mt-1 text-sm text-red-600">{formErrors.propertyType}</p>
+                    <p className="mt-1 text-sm text-red-600" role="alert">
+                      {formErrors.propertyType}
+                    </p>
                   )}
                 </div>
 
@@ -705,7 +716,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
             )}
 
             {formData.insuranceType === 'AUTO' && (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="vehicleUse" className="block text-sm font-medium text-gray-700">
                     Vehicle Use <span className="text-red-500">*</span>
@@ -719,24 +730,26 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     }
                     onOpenChange={() => handleSelectBlur('vehicleUse')}
                   >
-                    <SelectTrigger className="w-full h-11">
+                    <SelectTrigger className="w-full h-11" aria-label="Select vehicle use">
                       <SelectValue placeholder="Select vehicle use" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="personal">Personal Use</SelectItem>
                       <SelectItem value="commute">Commuting</SelectItem>
                       <SelectItem value="business">Business Use</SelectItem>
                     </SelectContent>
                   </Select>
                   {touchedFields.vehicleUse && formErrors.vehicleUse && (
-                    <p className="mt-1 text-sm text-red-600">{formErrors.vehicleUse}</p>
+                    <p className="mt-1 text-sm text-red-600" role="alert">
+                      {formErrors.vehicleUse}
+                    </p>
                   )}
                 </div>
               </div>
             )}
 
             {formData.insuranceType === 'HEALTH' && (
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="coverageType" className="block text-sm font-medium text-gray-700">
                     Coverage Type <span className="text-red-500">*</span>
@@ -750,22 +763,48 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     }
                     onOpenChange={() => handleSelectBlur('coverageType')}
                   >
-                    <SelectTrigger className="w-full h-11">
+                    <SelectTrigger className="w-full h-11" aria-label="Select coverage type">
                       <SelectValue placeholder="Select coverage type" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[100]">
                       <SelectItem value="individual">Individual Coverage</SelectItem>
                       <SelectItem value="family">Family Coverage</SelectItem>
                       <SelectItem value="medicare_supplement">Medicare Supplement</SelectItem>
                     </SelectContent>
                   </Select>
                   {touchedFields.coverageType && formErrors.coverageType && (
-                    <p className="mt-1 text-sm text-red-600">{formErrors.coverageType}</p>
+                    <p className="mt-1 text-sm text-red-600" role="alert">
+                      {formErrors.coverageType}
+                    </p>
                   )}
                 </div>
               </div>
             )}
 
+            {/* Hidden attribution fields */}
+            <div className="hidden">
+              <input type="hidden" name="utmSource" value={attributionData.utmSource} />
+              <input type="hidden" name="utmMedium" value={attributionData.utmMedium} />
+              <input type="hidden" name="utmCampaign" value={attributionData.utmCampaign} />
+              <input type="hidden" name="utmTerm" value={attributionData.utmTerm} />
+              <input type="hidden" name="referrer" value={attributionData.referrer} />
+            </div>
+
+            {/* Honeypot field */}
+            <div className="hidden">
+              <label htmlFor="website">Website</label>
+              <Input
+                type="text"
+                name="website"
+                id="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData.website || ''}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Submit Button */}
             <div className="mt-6 sm:mt-8">
               <Button
                 type="submit"
@@ -773,6 +812,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 className={`w-full h-12 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
+                aria-label="Submit quote request"
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
@@ -787,61 +827,6 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 )}
               </Button>
             </div>
-
-            {/* Privacy Note */}
-            <p className="text-xs text-gray-500 text-center mt-4">
-              Your privacy is our priority. Your information is encrypted and securely transmitted. We never share your data without your consent.
-            </p>
-
-            {/* Success/Error Messages */}
-            {submitStatus === 'success' && (
-              <div className="rounded-lg bg-green-50 p-4 mt-4 border border-green-100">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-green-800">
-                      Thank you! Your quote request has been received. A licensed insurance agent will contact you within 24 hours.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {submitStatus === 'error' && (
-              <div className="rounded-lg bg-red-50 p-4 mt-4 border border-red-100">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <div className="text-sm font-medium text-red-800">
-                      We encountered an issue while submitting your form. This could be due to:
-                    </div>
-                    <ul className="mt-2 text-sm text-red-700 list-disc list-inside">
-                      <li>A temporary connection issue</li>
-                      <li>High server traffic</li>
-                    </ul>
-                    <div className="mt-2 text-sm text-red-800">
-                      Please try again or call us directly at (888) 123-4567 for immediate assistance.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </form>
       </div>
