@@ -8,7 +8,7 @@ interface ThankYouPageProps {
   };
 }
 
-const insuranceTypeTitles = {
+const insuranceTypeTitles: Record<InsuranceType, string> = {
   AUTO: 'Auto Insurance',
   HOME: 'Home Insurance',
   LIFE_TERM: 'Term Life Insurance',
