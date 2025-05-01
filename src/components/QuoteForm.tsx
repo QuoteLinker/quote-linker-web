@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -74,6 +74,11 @@ const FORM_KEY = 'savedQuoteForm';
 
 export default function QuoteForm({ insuranceType, productType, _subType }: QuoteFormProps) {
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Determine if we're on a product-specific page
+  const isProductSpecificPage = pathname?.startsWith('/') && 
+    ['/home', '/life', '/health', '/auto'].includes(pathname);
 
   // Default to the first main insurance type if none provided
   const defaultType: MainInsuranceType = 'AUTO';
@@ -121,6 +126,19 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       insuranceType: getMainType(initialType),
     };
   });
+
+  // Update insurance type based on route when component mounts
+  useEffect(() => {
+    if (isProductSpecificPage) {
+      const routeType = pathname?.substring(1).toUpperCase() as MainInsuranceType;
+      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
+        setFormData(prev => ({
+          ...prev,
+          insuranceType: routeType
+        }));
+      }
+    }
+  }, [pathname, isProductSpecificPage]);
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
@@ -290,12 +308,21 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     setSubmitStatus('idle');
 
     try {
+      // Log the submission attempt
+      console.log('Submitting form data:', formData);
+
       const response = await fetch('/api/submit-quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          // Ensure website field is included for honeypot
+          website: formData.website || '',
+          // Add timestamp
+          submittedAt: new Date().toISOString(),
+        }),
       });
 
       const data = await response.json();
@@ -304,7 +331,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         throw new Error(data.error || 'Failed to submit form');
       }
 
+      // Log successful submission
+      console.log('Form submitted successfully:', data);
+      
       setSubmitStatus('success');
+      toast.success('Your quote request has been submitted successfully! We will contact you shortly.');
 
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
@@ -318,6 +349,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : 'An error occurred while submitting your request. Please try again.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -331,66 +367,68 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         <form
           onSubmit={handleSubmit}
           id="quote-form"
-          className="w-full max-w-md bg-white p-6 sm:p-8 rounded-xl shadow-lg border border-gray-100"
+          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100"
         >
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
+          <h2 className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-8 text-gray-800">
             Get Your Free Quote
           </h2>
 
-          <div className="space-y-6">
-            {/* Insurance Type Selection */}
-            <div className="space-y-2">
-              <label
-                htmlFor="insuranceType"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Insurance Type <span className="text-red-500">*</span>
-              </label>
-              <div className="relative">
-                <Select
-                  value={formData.insuranceType}
-                  onValueChange={value =>
-                    handleChange({
-                      target: { name: 'insuranceType', value },
-                    } as ChangeEvent<HTMLInputElement>)
-                  }
-                  onOpenChange={() => handleSelectBlur('insuranceType')}
+          <div className="space-y-4 sm:space-y-6">
+            {/* Insurance Type Selection - Only show on generic quote page */}
+            {!isProductSpecificPage && (
+              <div className="space-y-2">
+                <label
+                  htmlFor="insuranceType"
+                  className="block text-sm font-medium text-gray-700"
                 >
-                  <SelectTrigger 
-                    className="w-full h-11 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-900 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                  Insurance Type <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Select
+                    value={formData.insuranceType}
+                    onValueChange={value =>
+                      handleChange({
+                        target: { name: 'insuranceType', value },
+                      } as ChangeEvent<HTMLInputElement>)
+                    }
+                    onOpenChange={() => handleSelectBlur('insuranceType')}
                   >
-                    <SelectValue placeholder="Select insurance type" className="text-gray-500" />
-                  </SelectTrigger>
-                  <SelectContent 
-                    className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
-                    position="popper"
-                    sideOffset={5}
-                  >
-                    <div className="py-1">
-                      {INSURANCE_OPTIONS.map(type => (
-                        <SelectItem 
-                          key={type.value} 
-                          value={type.value}
-                          className="px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors duration-150 focus:bg-blue-50 focus:text-blue-600 outline-none"
-                        >
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </div>
-                  </SelectContent>
-                </Select>
+                    <SelectTrigger 
+                      className="w-full h-11 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-900 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                    >
+                      <SelectValue placeholder="Select insurance type" className="text-gray-500" />
+                    </SelectTrigger>
+                    <SelectContent 
+                      className="absolute z-[100] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+                      position="popper"
+                      sideOffset={5}
+                    >
+                      <div className="py-1">
+                        {INSURANCE_OPTIONS.map(type => (
+                          <SelectItem 
+                            key={type.value} 
+                            value={type.value}
+                            className="px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors duration-150 focus:bg-blue-50 focus:text-blue-600 outline-none"
+                          >
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </div>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {touchedFields.insuranceType && formErrors.insuranceType && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {formErrors.insuranceType}
+                  </p>
+                )}
               </div>
-              {touchedFields.insuranceType && formErrors.insuranceType && (
-                <p className="mt-1 text-sm text-red-600">
-                  {formErrors.insuranceType}
-                </p>
-              )}
-            </div>
+            )}
 
             {/* Required Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   First Name <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -401,17 +439,15 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   value={formData.firstName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.firstName && formErrors.firstName && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                    {formErrors.firstName}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                   Last Name <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -422,19 +458,17 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   value={formData.lastName || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.lastName && formErrors.lastName && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                    {formErrors.lastName}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
                 )}
               </div>
             </div>
 
             {/* Email and Phone/Zip section */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <Input
@@ -445,18 +479,16 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                 value={formData.email || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500 dark:border-red-400' : ''}`}
+                className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
               />
               {touchedFields.email && formErrors.email && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                  {formErrors.email}
-                </p>
+                <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
               )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -467,17 +499,15 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   value={formData.phone || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.phone && formErrors.phone && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                    {formErrors.phone}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
                   ZIP Code <span className="text-red-500">*</span>
                 </label>
                 <Input
@@ -488,12 +518,10 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   value={formData.zipCode || ''}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500 dark:border-red-400' : ''}`}
+                  className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
                 />
                 {touchedFields.zipCode && formErrors.zipCode && (
-                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                    {formErrors.zipCode}
-                  </p>
+                  <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
                 )}
               </div>
             </div>
@@ -662,11 +690,13 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
               </div>
             )}
 
-            <div className="pt-2">
+            <div className="mt-6 sm:mt-8">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full h-12 text-base font-medium bg-[#1D4ED8] hover:bg-[#1e40af] active:bg-[#1e3a8a] text-white rounded-lg shadow-sm transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className={`w-full h-12 text-base font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
