@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -75,6 +75,28 @@ const FORM_KEY = 'savedQuoteForm';
 export default function QuoteForm({ insuranceType, productType, _subType }: QuoteFormProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Track UTM parameters and referrer
+  const [attributionData, setAttributionData] = useState({
+    utmSource: '',
+    utmMedium: '',
+    utmCampaign: '',
+    utmTerm: '',
+    referrer: '',
+  });
+
+  // Capture UTM parameters and referrer on component mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setAttributionData({
+      utmSource: params.get('utm_source') || '',
+      utmMedium: params.get('utm_medium') || '',
+      utmCampaign: params.get('utm_campaign') || '',
+      utmTerm: params.get('utm_term') || '',
+      referrer: document.referrer || '',
+    });
+  }, []);
 
   // Determine if we're on a product-specific page
   const isProductSpecificPage = pathname?.startsWith('/') && 
@@ -358,6 +380,12 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         submittedAt: new Date().toISOString(),
         source: 'web_form',
         page: pathname,
+        // Add attribution data
+        utmSource: attributionData.utmSource,
+        utmMedium: attributionData.utmMedium,
+        utmCampaign: attributionData.utmCampaign,
+        utmTerm: attributionData.utmTerm,
+        referrer: attributionData.referrer,
       };
 
       const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || '/api/submit-quote', {
@@ -563,6 +591,15 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   <p className="mt-1 text-sm text-red-600">{formErrors.zipCode}</p>
                 )}
               </div>
+            </div>
+
+            {/* Hidden attribution fields */}
+            <div className="hidden">
+              <input type="hidden" name="utmSource" value={attributionData.utmSource} />
+              <input type="hidden" name="utmMedium" value={attributionData.utmMedium} />
+              <input type="hidden" name="utmCampaign" value={attributionData.utmCampaign} />
+              <input type="hidden" name="utmTerm" value={attributionData.utmTerm} />
+              <input type="hidden" name="referrer" value={attributionData.referrer} />
             </div>
 
             {/* Honeypot field */}
