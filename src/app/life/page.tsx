@@ -1,10 +1,11 @@
 import ProductPage from '@/components/ProductPage';
+import type { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function LifeInsurancePage() {
-  return <ProductPage insuranceType="LIFE" />;
+  return <ProductPage params={{ type: 'LIFE' as InsuranceType }} />;
 }
 
 export const metadata = {
-  title: 'Life Insurance - QuoteLinker',
-  description: 'Get the life insurance coverage you need to protect your loved ones.',
+  title: 'Life Insurance | QuoteLinker',
+  description: 'Protect your family\'s future with customized life insurance from QuoteLinker. Compare quotes from top-rated carriers and get expert guidance.',
 }; 
