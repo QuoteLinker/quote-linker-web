@@ -40,6 +40,9 @@ interface FormData {
   propertyValue?: string | null;
   vehicleUse?: string | null;
   coverageType?: string | null;
+  monthlyIncome?: string | null;
+  occupation?: string | null;
+  currentCoverage?: string | null;
 }
 
 interface FormErrors {
@@ -55,6 +58,9 @@ interface FormErrors {
   propertyValue?: string;
   vehicleUse?: string;
   coverageType?: string;
+  monthlyIncome?: string;
+  occupation?: string;
+  currentCoverage?: string;
 }
 
 interface QuoteFormProps {
@@ -369,6 +375,13 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         }),
         ...(formData.insuranceType === 'HEALTH' && {
           coverageType: formData.coverageType,
+        }),
+        ...(formData.insuranceType === 'DISABILITY' && {
+          monthlyIncome: formData.monthlyIncome,
+          occupation: formData.occupation,
+        }),
+        ...(formData.insuranceType === 'SUPPLEMENTAL' && {
+          currentCoverage: formData.currentCoverage,
         }),
         // Add honeypot and metadata
         website: formData.website || '',
@@ -718,6 +731,64 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                     </p>
                   )}
                 </div>
+              </div>
+            )}
+
+            {formData.insuranceType === 'DISABILITY' && (
+              <div className="space-y-6">
+                <FieldWithTooltip
+                  label="Monthly Income"
+                  name="monthlyIncome"
+                  tooltip="Your current monthly income helps us determine appropriate coverage amounts."
+                  required
+                  type="number"
+                  min="0"
+                  step="100"
+                  placeholder="Enter your monthly income"
+                  value={formData.monthlyIncome || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.monthlyIncome ? formErrors.monthlyIncome : undefined}
+                  aria-invalid={!!formErrors.monthlyIncome}
+                  aria-describedby={formErrors.monthlyIncome ? 'monthlyIncome-error' : undefined}
+                  className="h-11"
+                />
+
+                <FieldWithTooltip
+                  label="Occupation"
+                  name="occupation"
+                  tooltip="Your occupation helps us assess risk factors and determine appropriate coverage."
+                  required
+                  type="text"
+                  placeholder="Enter your occupation"
+                  value={formData.occupation || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.occupation ? formErrors.occupation : undefined}
+                  aria-invalid={!!formErrors.occupation}
+                  aria-describedby={formErrors.occupation ? 'occupation-error' : undefined}
+                  className="h-11"
+                />
+              </div>
+            )}
+
+            {formData.insuranceType === 'SUPPLEMENTAL' && (
+              <div className="space-y-6">
+                <FieldWithTooltip
+                  label="Current Coverage"
+                  name="currentCoverage"
+                  tooltip="Tell us about your current insurance coverage to help us recommend appropriate supplemental options."
+                  required
+                  type="text"
+                  placeholder="Describe your current coverage"
+                  value={formData.currentCoverage || ''}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touchedFields.currentCoverage ? formErrors.currentCoverage : undefined}
+                  aria-invalid={!!formErrors.currentCoverage}
+                  aria-describedby={formErrors.currentCoverage ? 'currentCoverage-error' : undefined}
+                  className="h-11"
+                />
               </div>
             )}
 

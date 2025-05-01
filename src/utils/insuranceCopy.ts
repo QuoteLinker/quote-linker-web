@@ -1,4 +1,4 @@
-export type MainInsuranceType = 'AUTO' | 'HOME' | 'LIFE' | 'HEALTH';
+export type MainInsuranceType = 'AUTO' | 'HOME' | 'LIFE' | 'HEALTH' | 'DISABILITY' | 'SUPPLEMENTAL';
 export type LifeSubType = 'TERM' | 'PERMANENT';
 export type HealthSubType = 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL';
 export type InsuranceType = 
