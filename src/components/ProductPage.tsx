@@ -76,9 +76,9 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         return {
           heroTitle: 'Minnesota Auto Insurance Made Simple',
           heroSubtitle: 'Get comprehensive coverage that meets state requirements',
-          ctaText: 'Get Your Auto Quote',
-          primaryCTA: 'Protect your family and vehicle from Minnesota\'s unpredictable weather and road conditions. Get matched with a local expert now.',
-          secondaryCTA: 'Calculate your potential savings with our Minnesota auto insurance calculator',
+          ctaText: 'Get Your Minnesota Auto Quote',
+          primaryCTA: 'Protect your family and vehicle from Minnesota\'s unpredictable weather and road conditions. Get matched with a local expert who understands our unique driving needs.',
+          secondaryCTA: 'Calculate your potential savings with our Minnesota auto insurance calculator - see how much you could save on your Twin Cities commute',
           iconItems: [
             { icon: ShieldCheckIcon, text: 'Adequate Liability' },
             { icon: CurrencyDollarIcon, text: 'PIP Coverage' },
@@ -120,9 +120,9 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         return {
           heroTitle: 'Protect Your Minnesota Home',
           heroSubtitle: 'Coverage designed for Minnesota weather and property needs',
-          ctaText: 'Get Your Home Quote',
-          primaryCTA: 'Don\'t let Minnesota\'s harsh winters catch you unprepared. Secure your home\'s future with comprehensive coverage today.',
-          secondaryCTA: 'Learn how to winter-proof your home with our Minnesota home maintenance guide',
+          ctaText: 'Get Your Minnesota Home Quote',
+          primaryCTA: 'Don\'t let Minnesota\'s harsh winters catch you unprepared. Secure your home\'s future with comprehensive coverage that includes ice dam and frozen pipe protection.',
+          secondaryCTA: 'Learn how to winter-proof your Minnesota home with our local maintenance guide',
           iconItems: [
             { icon: HomeIcon, text: 'Adequate Liability' },
             { icon: ShieldCheckIcon, text: 'Property Coverage' },
@@ -164,9 +164,9 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         return {
           heroTitle: 'Protect Your Minnesota Family',
           heroSubtitle: 'Affordable term life insurance that grows with your family',
-          ctaText: 'Get Your Family Protection Quote',
-          primaryCTA: 'Ensure your Minnesota family\'s future is secure, no matter what life brings. Get matched with a local expert who understands Minnesota families.',
-          secondaryCTA: 'Use our Minnesota family needs calculator to determine your ideal coverage amount',
+          ctaText: 'Get Your Minnesota Family Protection Quote',
+          primaryCTA: 'Ensure your Minnesota family\'s future is secure, no matter what life brings. Get matched with a local expert who understands Minnesota families and our unique needs.',
+          secondaryCTA: 'Use our Minnesota family needs calculator to determine your ideal coverage amount - perfect for Twin Cities families',
           iconItems: [
             { icon: HeartIcon, text: 'Family Protection' },
             { icon: CurrencyDollarIcon, text: 'Level Premiums' },
@@ -206,11 +206,11 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         };
       case 'LIFE_PERMANENT':
         return {
-          heroTitle: 'Whole Life Insurance',
+          heroTitle: 'Whole Life Insurance for Minnesotans',
           heroSubtitle: 'Lifetime protection with guaranteed cash value',
-          ctaText: 'Get Your Whole Life Quote',
-          primaryCTA: 'Build lasting financial security for your Minnesota family while protecting their future. Connect with a local expert today.',
-          secondaryCTA: 'Explore how whole life insurance can help with Minnesota estate planning',
+          ctaText: 'Get Your Minnesota Whole Life Quote',
+          primaryCTA: 'Build lasting financial security for your Minnesota family while protecting their future. Connect with a local expert who understands Minnesota estate planning needs.',
+          secondaryCTA: 'Explore how whole life insurance can help with Minnesota estate planning and tax benefits',
           iconItems: [
             { icon: HeartIcon, text: 'Lifetime Coverage' },
             { icon: CurrencyDollarIcon, text: 'Cash Value Growth' },
@@ -250,11 +250,11 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         };
       case 'HEALTH_SHORT_TERM_DISABILITY':
         return {
-          heroTitle: 'Protect Your Family\'s Income',
+          heroTitle: 'Protect Your Minnesota Family\'s Income',
           heroSubtitle: 'Short-term disability insurance for Minnesota working parents',
-          ctaText: 'Get Your Income Protection Quote',
-          primaryCTA: 'Don\'t let an injury or illness disrupt your Minnesota family\'s lifestyle. Secure your income protection today.',
-          secondaryCTA: 'Calculate your potential disability benefits with our Minnesota-specific calculator',
+          ctaText: 'Get Your Minnesota Income Protection Quote',
+          primaryCTA: 'Don\'t let an injury or illness disrupt your Minnesota family\'s lifestyle. Secure your income protection today with coverage designed for Minnesota workers.',
+          secondaryCTA: 'Calculate your potential disability benefits with our Minnesota-specific calculator - perfect for Twin Cities professionals',
           iconItems: [
             { icon: UserGroupIcon, text: 'Family Income Protection' },
             { icon: ClockIcon, text: 'Quick Benefits' },
@@ -296,9 +296,9 @@ function ProductPageContent({ params }: ProductPageContentProps) {
         return {
           heroTitle: 'Extra Protection for Your Minnesota Family',
           heroSubtitle: 'Supplemental health insurance for unexpected medical expenses',
-          ctaText: 'Get Your Family Health Quote',
-          primaryCTA: 'Avoid surprise medical bills and protect your Minnesota family\'s health. Get matched with a local expert now.',
-          secondaryCTA: 'Learn about Minnesota-specific health insurance options and requirements',
+          ctaText: 'Get Your Minnesota Family Health Quote',
+          primaryCTA: 'Avoid surprise medical bills and protect your Minnesota family\'s health. Get matched with a local expert who understands our healthcare landscape.',
+          secondaryCTA: 'Learn about Minnesota-specific health insurance options and requirements - perfect for Twin Cities families',
           iconItems: [
             { icon: HeartIcon, text: 'Family Health Protection' },
             { icon: CurrencyDollarIcon, text: 'No Network Restrictions' },
@@ -675,56 +675,65 @@ function ProductPageContent({ params }: ProductPageContentProps) {
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src="/testimonials/minnesota-1.jpg"
-                  alt="Sarah from Minneapolis"
-                />
+                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                  <span className="text-blue-600 font-semibold text-lg">SM</span>
+                </div>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Sarah M.</p>
                 <p className="text-sm text-gray-500">Minneapolis</p>
               </div>
             </div>
-            <p className="text-gray-600">
-              "QuoteLinker helped me find the perfect auto insurance coverage for Minnesota winters. The agent was knowledgeable about our specific needs."
-            </p>
+            <div className="relative">
+              <svg className="absolute top-0 left-0 transform -translate-x-3 -translate-y-2 h-8 w-8 text-gray-200" fill="currentColor" viewBox="0 0 32 32">
+                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+              <p className="relative text-gray-600 pl-6">
+                "QuoteLinker helped me find the perfect auto insurance coverage for Minnesota winters. The agent was knowledgeable about our specific needs."
+              </p>
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src="/testimonials/minnesota-2.jpg"
-                  alt="Michael from St. Paul"
-                />
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                  <span className="text-green-600 font-semibold text-lg">MR</span>
+                </div>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Michael R.</p>
                 <p className="text-sm text-gray-500">St. Paul</p>
               </div>
             </div>
-            <p className="text-gray-600">
-              "As a Minnesota homeowner, I needed coverage that understood our unique weather challenges. QuoteLinker delivered exactly what I needed."
-            </p>
+            <div className="relative">
+              <svg className="absolute top-0 left-0 transform -translate-x-3 -translate-y-2 h-8 w-8 text-gray-200" fill="currentColor" viewBox="0 0 32 32">
+                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+              <p className="relative text-gray-600 pl-6">
+                "As a Minnesota homeowner, I needed coverage that understood our unique weather challenges. QuoteLinker delivered exactly what I needed."
+              </p>
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6">
             <div className="flex items-center mb-4">
               <div className="flex-shrink-0">
-                <img
-                  className="h-10 w-10 rounded-full"
-                  src="/testimonials/minnesota-3.jpg"
-                  alt="Jennifer from Duluth"
-                />
+                <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                  <span className="text-purple-600 font-semibold text-lg">JL</span>
+                </div>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Jennifer L.</p>
                 <p className="text-sm text-gray-500">Duluth</p>
               </div>
             </div>
-            <p className="text-gray-600">
-              "The process was so easy, and I saved over $300 on my life insurance. The Minnesota-based agent was incredibly helpful."
-            </p>
+            <div className="relative">
+              <svg className="absolute top-0 left-0 transform -translate-x-3 -translate-y-2 h-8 w-8 text-gray-200" fill="currentColor" viewBox="0 0 32 32">
+                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+              <p className="relative text-gray-600 pl-6">
+                "The process was so easy, and I saved over $300 on my life insurance. The Minnesota-based agent was incredibly helpful."
+              </p>
+            </div>
           </div>
         </div>
       </div>

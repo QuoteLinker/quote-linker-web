@@ -368,19 +368,27 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
                   }
                   onOpenChange={() => handleSelectBlur('insuranceType')}
                 >
-                  <SelectTrigger className="w-full h-11 bg-white border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                    <SelectValue placeholder="Select insurance type" />
+                  <SelectTrigger 
+                    className="w-full h-11 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-900 hover:border-blue-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-colors duration-200"
+                  >
+                    <SelectValue placeholder="Select insurance type" className="text-gray-500" />
                   </SelectTrigger>
-                  <SelectContent className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
-                    {INSURANCE_OPTIONS.map(type => (
-                      <SelectItem 
-                        key={type.value} 
-                        value={type.value}
-                        className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
-                      >
-                        {type.label}
-                      </SelectItem>
-                    ))}
+                  <SelectContent 
+                    className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+                    position="popper"
+                    sideOffset={5}
+                  >
+                    <div className="py-1">
+                      {INSURANCE_OPTIONS.map(type => (
+                        <SelectItem 
+                          key={type.value} 
+                          value={type.value}
+                          className="px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors duration-150 focus:bg-blue-50 focus:text-blue-600 outline-none"
+                        >
+                          {type.label}
+                        </SelectItem>
+                      ))}
+                    </div>
                   </SelectContent>
                 </Select>
               </div>
