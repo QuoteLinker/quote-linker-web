@@ -97,8 +97,8 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
   // Update insurance type based on route when component mounts
   useEffect(() => {
     if (isProductSpecificPage) {
-      const routeType = pathname?.substring(1).toLowerCase() as InsuranceType;
-      if (routeType && ['auto', 'home', 'life', 'health'].includes(routeType)) {
+      const routeType = pathname?.substring(1).toUpperCase() as InsuranceType;
+      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
         setFormData(prev => ({
           ...prev,
           insuranceType: routeType
@@ -109,7 +109,7 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
 
   // Default to the first main insurance type if none provided
   const defaultType: InsuranceType = 'AUTO';
-  const initialType = insuranceType || defaultType;
+  const initialType = insuranceType ? insuranceType.toUpperCase() as InsuranceType : defaultType;
 
   // Convert to main insurance type if it's a subtype
   const getMainType = (type: InsuranceType): InsuranceType => {
@@ -145,7 +145,7 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
       email: '',
       phone: '',
       zip: '',
-      insuranceType: insuranceType,
+      insuranceType: insuranceType.toUpperCase() as InsuranceType,
     };
   });
 

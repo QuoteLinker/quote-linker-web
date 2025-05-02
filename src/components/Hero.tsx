@@ -17,7 +17,7 @@ const productTitles: Record<InsuranceType, string> = {
   HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance',
   LIFE: 'Life Insurance',
   HEALTH: 'Health Insurance',
-  DISABILITY: 'Protect Your Paycheck with Disability Insurance',
+  DISABILITY: 'Disability Insurance',
 };
 
 const productSubtitles: Record<InsuranceType, string> = {
@@ -29,12 +29,12 @@ const productSubtitles: Record<InsuranceType, string> = {
   HEALTH_SUPPLEMENTAL: 'Get additional health coverage for extra peace of mind.',
   LIFE: 'Protect your loved ones with the right life insurance coverage.',
   HEALTH: 'Find comprehensive health insurance that fits your needs and budget.',
-  DISABILITY: 'Short-term disability coverage for life\'s what-ifs',
+  DISABILITY: 'Protect your income with comprehensive disability coverage.',
 };
 
 export default function Hero({ insuranceType }: HeroProps) {
-  const title = productTitles[insuranceType];
-  const subtitle = productSubtitles[insuranceType];
+  const title = productTitles[insuranceType] || 'Insurance Coverage';
+  const subtitle = productSubtitles[insuranceType] || 'Find the right coverage for your needs.';
 
   const scrollToForm = () => {
     const formElement = document.getElementById('quote-form');
@@ -49,7 +49,7 @@ export default function Hero({ insuranceType }: HeroProps) {
       <div className="container mx-auto px-4 py-12 md:py-16 relative">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Get Your {title} Quote Today!
+            {title}
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-200">
             {subtitle}

@@ -49,7 +49,7 @@ export default function DisabilityInsurancePage() {
   return (
     <>
       <InsuranceProductSchema />
-      <ProductPage params={{ type: 'DISABILITY' as InsuranceType }} />
+      <ProductPage params={{ type: 'disability' }} />
     </>
   );
 } 
