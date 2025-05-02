@@ -32,7 +32,7 @@ export default function Header() {
   const handleLifeMouseLeave = () => {
     const timeout = setTimeout(() => {
       setLifeDropdownOpen(false);
-    }, 500); // Increased to 500ms
+    }, 500);
     setLifeTimeout(timeout);
   };
 
@@ -44,7 +44,7 @@ export default function Header() {
   const handleHealthMouseLeave = () => {
     const timeout = setTimeout(() => {
       setHealthDropdownOpen(false);
-    }, 500); // Increased to 500ms
+    }, 500);
     setHealthTimeout(timeout);
   };
 
@@ -81,7 +81,7 @@ export default function Header() {
     if (path === 'auto' || path === 'home') return path;
     if (path === 'term-life' || path === 'permanent-life') return 'life';
     if (path === 'short-term-disability' || path === 'supplemental-health') return 'health';
-    return 'auto'; // default to auto insurance
+    return 'life'; // default to life insurance
   };
 
   const currentInsuranceType = getCurrentInsuranceType();
@@ -89,7 +89,7 @@ export default function Header() {
   return (
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+        <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
           <div className="relative flex items-center justify-between">
             {/* Logo */}
             <div className="flex-shrink-0">
@@ -97,119 +97,135 @@ export default function Header() {
                 href="/" 
                 className="block transform transition-transform hover:scale-105 duration-200" 
                 onClick={() => handleNavClick('Logo', '/')}
+                aria-label="QuoteLinker Home"
               >
                 <Logo showText={true} className="h-8 w-auto" />
               </Link>
             </div>
 
             {/* Desktop navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-x-6">
+            <div className="hidden lg:flex lg:items-center lg:gap-x-8">
               {/* Insurance Types - More Prominent */}
-              {insuranceTypes.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-900 hover:text-[#00ECFF] transition-all duration-200 text-base font-medium hover:scale-105 transform"
-                  onClick={() => handleNavClick(item.name, item.href)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              
-              {/* Life Insurance Dropdown */}
-              <div className="relative">
-                <button
-                  className="flex items-center text-gray-900 hover:text-[#00ECFF] transition-all duration-200 text-base font-medium hover:scale-105 transform"
-                  onMouseEnter={handleLifeMouseEnter}
-                  onMouseLeave={handleLifeMouseLeave}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      setLifeDropdownOpen(!lifeDropdownOpen);
-                    }
-                  }}
-                  aria-expanded={lifeDropdownOpen}
-                  aria-haspopup="true"
-                  tabIndex={0}
-                >
-                  Life Insurance
-                  <ChevronDownIcon className="h-4 w-4 ml-1" />
-                </button>
+              <div className="flex items-center gap-x-6">
+                {insuranceTypes.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
+                    onClick={() => handleNavClick(item.name, item.href)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
                 
-                {lifeDropdownOpen && (
-                  <div 
-                    className="absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg py-1 z-10"
+                {/* Life Insurance Dropdown */}
+                <div className="relative">
+                  <button
+                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
                     onMouseEnter={handleLifeMouseEnter}
                     onMouseLeave={handleLifeMouseLeave}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setLifeDropdownOpen(!lifeDropdownOpen);
+                      }
+                    }}
+                    aria-expanded={lifeDropdownOpen}
+                    aria-haspopup="true"
+                    tabIndex={0}
                   >
-                    {lifeInsuranceTypes.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#00ECFF]"
-                        onClick={() => handleNavClick(item.name, item.href)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              {/* Health Insurance Dropdown */}
-              <div className="relative">
-                <button
-                  className="flex items-center text-gray-900 hover:text-[#00ECFF] transition-all duration-200 text-base font-medium hover:scale-105 transform"
-                  onMouseEnter={handleHealthMouseEnter}
-                  onMouseLeave={handleHealthMouseLeave}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      setHealthDropdownOpen(!healthDropdownOpen);
-                    }
-                  }}
-                  aria-expanded={healthDropdownOpen}
-                  aria-haspopup="true"
-                  tabIndex={0}
-                >
-                  Health Insurance
-                  <ChevronDownIcon className="h-4 w-4 ml-1" />
-                </button>
+                    Life Insurance
+                    <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
+                  </button>
+                  
+                  {lifeDropdownOpen && (
+                    <div 
+                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
+                      onMouseEnter={handleLifeMouseEnter}
+                      onMouseLeave={handleLifeMouseLeave}
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="life-insurance-menu"
+                    >
+                      {lifeInsuranceTypes.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue"
+                          onClick={() => handleNavClick(item.name, item.href)}
+                          role="menuitem"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 
-                {healthDropdownOpen && (
-                  <div 
-                    className="absolute top-full left-0 mt-1 w-56 bg-white rounded-md shadow-lg py-1 z-10"
+                {/* Health Insurance Dropdown */}
+                <div className="relative">
+                  <button
+                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
                     onMouseEnter={handleHealthMouseEnter}
                     onMouseLeave={handleHealthMouseLeave}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setHealthDropdownOpen(!healthDropdownOpen);
+                      }
+                    }}
+                    aria-expanded={healthDropdownOpen}
+                    aria-haspopup="true"
+                    tabIndex={0}
                   >
-                    {healthInsuranceTypes.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-[#00ECFF]"
-                        onClick={() => handleNavClick(item.name, item.href)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                    Health Insurance
+                    <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
+                  </button>
+                  
+                  {healthDropdownOpen && (
+                    <div 
+                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
+                      onMouseEnter={handleHealthMouseEnter}
+                      onMouseLeave={handleHealthMouseLeave}
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="health-insurance-menu"
+                    >
+                      {healthInsuranceTypes.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue"
+                          onClick={() => handleNavClick(item.name, item.href)}
+                          role="menuitem"
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div className="h-5 w-px bg-gray-200" />
+              
               {/* About and Contact - Less Prominent */}
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-500 hover:text-[#00ECFF] transition-all duration-200 text-sm hover:scale-105 transform"
-                  onClick={() => handleNavClick(item.name, item.href)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="h-5 w-px bg-gray-200 ml-6" />
+              <div className="flex items-center gap-x-6">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-gray-500 hover:text-electric-blue transition-all duration-200 text-sm hover:scale-105 transform"
+                    onClick={() => handleNavClick(item.name, item.href)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              
+              <div className="h-5 w-px bg-gray-200" />
+              
               <Link
-                href={`/${currentInsuranceType}?quote=true`}
-                className="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
+                href={`/${currentInsuranceType}`}
+                className="inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
                 onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
               >
                 Get My Free Quote
@@ -217,28 +233,25 @@ export default function Header() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="flex items-center lg:hidden">
+            <div className="flex items-center gap-x-4 lg:hidden">
               <Link
-                href={`/${currentInsuranceType}?quote=true`}
-                className="mr-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-all duration-200 hover:scale-105 transform shadow-sm hover:shadow-md"
+                href={`/${currentInsuranceType}`}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
                 onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
               >
                 Get Quote
               </Link>
               <button
                 type="button"
-                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200"
+                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-electric-blue hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    setMobileMenuOpen(!mobileMenuOpen);
-                  }
-                }}
                 aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-menu"
                 aria-label="Toggle navigation menu"
-                tabIndex={0}
               >
-                <span className="sr-only">Open main menu</span>
+                <span className="sr-only">
+                  {mobileMenuOpen ? 'Close main menu' : 'Open main menu'}
+                </span>
                 {mobileMenuOpen ? (
                   <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                 ) : (
@@ -248,91 +261,76 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile menu backdrop */}
+          {/* Mobile menu */}
           {mobileMenuOpen && (
             <div 
-              className="fixed inset-0 bg-black/30 z-[90] lg:hidden"
-              onClick={() => setMobileMenuOpen(false)}
-            />
-          )}
-
-          {/* Mobile menu */}
-          <div 
-            className={`lg:hidden fixed left-0 right-0 bg-white/95 backdrop-blur-sm transition-all duration-300 z-[100] ${
-              mobileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
-            }`}
-            style={{
-              top: '64px', // Height of the header
-              maxHeight: 'calc(100vh - 64px)',
-              overflowY: 'auto',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-            }}
-          >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col space-y-2">
-              {/* Insurance Types First */}
-              {insuranceTypes.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 rounded-lg text-gray-900 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200 font-medium"
-                  onClick={() => handleNavClick(item.name, item.href)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              
-              {/* Life Insurance Mobile */}
-              <div className="px-3 py-2">
-                <div className="font-medium text-gray-900">Life Insurance</div>
-                <div className="mt-1 pl-4 space-y-1">
+              className="lg:hidden"
+              id="mobile-menu"
+              role="navigation"
+              aria-label="Mobile navigation"
+            >
+              <div className="px-2 pt-2 pb-3 space-y-1">
+                {insuranceTypes.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50 hover:text-electric-blue"
+                    onClick={() => handleNavClick(item.name, item.href)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                
+                {/* Life Insurance Section */}
+                <div className="px-3 py-2">
+                  <div className="font-medium text-gray-900 mb-2">Life Insurance</div>
                   {lifeInsuranceTypes.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block py-1 text-gray-600 hover:text-[#00ECFF] transition-all duration-200"
+                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
                       onClick={() => handleNavClick(item.name, item.href)}
                     >
                       {item.name}
                     </Link>
                   ))}
                 </div>
-              </div>
-              
-              {/* Health Insurance Mobile */}
-              <div className="px-3 py-2">
-                <div className="font-medium text-gray-900">Health Insurance</div>
-                <div className="mt-1 pl-4 space-y-1">
+                
+                {/* Health Insurance Section */}
+                <div className="px-3 py-2">
+                  <div className="font-medium text-gray-900 mb-2">Health Insurance</div>
                   {healthInsuranceTypes.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="block py-1 text-gray-600 hover:text-[#00ECFF] transition-all duration-200"
+                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
                       onClick={() => handleNavClick(item.name, item.href)}
                     >
                       {item.name}
                     </Link>
                   ))}
                 </div>
+                
+                <div className="border-t border-gray-200 my-2" />
+                
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 rounded-md text-base text-gray-500 hover:bg-gray-50 hover:text-electric-blue"
+                    onClick={() => handleNavClick(item.name, item.href)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
               </div>
-              
-              <div className="h-px bg-gray-200 my-2" />
-              {/* About and Contact Last */}
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block px-3 py-2 rounded-lg text-gray-500 hover:text-[#00ECFF] hover:bg-gray-100 transition-all duration-200"
-                  onClick={() => handleNavClick(item.name, item.href)}
-                >
-                  {item.name}
-                </Link>
-              ))}
             </div>
-          </div>
+          )}
         </nav>
       </header>
-      {/* Spacer to prevent content from hiding under fixed header */}
-      <div className="h-[64px]" />
+      {/* Spacer to prevent content from being hidden under fixed header */}
+      <div className="h-14" />
     </>
   );
+} 
 } 

@@ -49,15 +49,19 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
+    <footer className="bg-gray-50" aria-labelledby="footer-heading">
+      <h2 id="footer-heading" className="sr-only">Footer</h2>
+      <div className="container max-w-screen-xl mx-auto px-4 py-12 sm:py-16">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Products</h3>
-            <ul className="mt-4 space-y-3">
+            <ul role="list" className="mt-4 space-y-3">
               {navigation.products.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                  <Link 
+                    href={item.href} 
+                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -66,10 +70,13 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Company</h3>
-            <ul className="mt-4 space-y-3">
+            <ul role="list" className="mt-4 space-y-3">
               {navigation.company.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                  <Link 
+                    href={item.href} 
+                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -78,10 +85,13 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
-            <ul className="mt-4 space-y-3">
+            <ul role="list" className="mt-4 space-y-3">
               {navigation.resources.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                  <Link 
+                    href={item.href} 
+                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -90,10 +100,13 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Legal</h3>
-            <ul className="mt-4 space-y-3">
+            <ul role="list" className="mt-4 space-y-3">
               {navigation.legal.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                  <Link 
+                    href={item.href} 
+                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+                  >
                     {item.name}
                   </Link>
                 </li>
@@ -102,31 +115,41 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
-          <div className="flex flex-col items-center justify-between md:flex-row">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex flex-col items-center space-y-2 md:items-start">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
               </p>
-              <p className="text-sm text-gray-500">
-                400 S 4th St Ste 410 PMB 629080, Minneapolis, MN 55415
-              </p>
-              <a href="mailto:support@quotelinker.com" className="text-sm text-gray-500 hover:text-[#00EEFD]">
+              <div className="flex flex-col items-center md:items-start space-y-1">
+                <p className="text-sm text-muted-foreground">
+                  400 S 4th St Ste 410 PMB 629080
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Minneapolis, MN 55415
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-6">
+              <a 
+                href="mailto:support@quotelinker.com" 
+                className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+              >
                 support@quotelinker.com
               </a>
-            </div>
-            <div className="mt-4 flex space-x-6 md:mt-0">
-              {socialLinks.map(item => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-400 hover:text-[#00EEFD] transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="sr-only">{item.name}</span>
-                  <item.icon className="h-6 w-6" aria-hidden="true" />
-                </a>
-              ))}
+              <div className="flex space-x-6">
+                {socialLinks.map(item => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="text-muted-foreground hover:text-electric-blue transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.name}
+                  >
+                    <item.icon className="h-6 w-6" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </div>
