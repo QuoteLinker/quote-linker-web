@@ -1,5 +1,5 @@
 import ProductPage from '@/components/ProductPage';
-import type { InsuranceType } from '@/utils/insuranceCopy';
+import type { InsuranceType } from '@/types/insurance';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
