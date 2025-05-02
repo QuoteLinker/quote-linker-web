@@ -12,6 +12,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { usePathname } from 'next/navigation';
 import { getIntent } from '@/utils/getIntent';
+import QuoteForm from '@/components/QuoteForm';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -190,6 +191,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ErrorBoundary>
                 <Header />
               </ErrorBoundary>
+              <QuoteForm intent={intent} />
               <PageTransition>
                 <main className="min-h-screen bg-gray-50">
                   <ErrorBoundary>

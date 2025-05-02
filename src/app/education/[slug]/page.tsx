@@ -134,10 +134,10 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 Back to Education Hub
               </Link>
               <Link
-                href="/get-quote"
+                href="/education"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-lg text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-colors duration-200"
               >
-                Get a Free Quote
+                Get a Quote
               </Link>
             </div>
           </div>

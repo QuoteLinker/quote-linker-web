@@ -3,6 +3,7 @@ export function getIntent(path: string): string {
     '/life': 'life',
     '/home': 'home',
     '/auto': 'auto',
+    '/education': 'education',
     // add more routes as needed
   };
   return map[path] ?? 'general';

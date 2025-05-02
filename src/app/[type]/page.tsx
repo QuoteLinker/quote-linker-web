@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-import QuoteForm from '@/components/QuoteForm';
 
 interface InsurancePageProps {
   params: {
@@ -35,9 +34,7 @@ export default function InsurancePage({ params }: InsurancePageProps) {
 
         <div className="max-w-3xl mx-auto">
           <div className="bg-white shadow-xl rounded-lg overflow-hidden">
-            <div className="p-6 sm:p-8">
-              <QuoteForm intent={insuranceType} />
-            </div>
+            {/* Remove <QuoteForm intent={insuranceType} /> from the render tree */}
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
