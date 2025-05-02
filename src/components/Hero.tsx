@@ -53,9 +53,9 @@ export default function Hero({ insuranceType }: HeroProps) {
   };
 
   return (
-    <div className="relative bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white">
+    <div className="relative bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white pt-16 md:pt-24 pb-16">
       <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-10"></div>
-      <div className="container mx-auto px-4 py-12 md:py-16 relative">
+      <div className="container mx-auto px-4 relative">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {title}

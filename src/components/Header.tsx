@@ -100,9 +100,9 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
-          <div className="relative flex items-center justify-between gap-x-6">
+          <div className="relative flex items-center justify-between gap-x-8">
             {/* Logo */}
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 flex items-center">
               <Link 
                 href="/" 
                 className="block transform transition-transform hover:scale-105 duration-200" 
@@ -114,24 +114,23 @@ export default function Header() {
             </div>
 
             {/* Desktop navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-x-6">
+            <div className="hidden lg:flex lg:items-center lg:gap-x-8 w-full">
               {/* Insurance Types - More Prominent */}
-              <div className="flex items-center gap-x-6">
+              <div className="flex items-center gap-x-8">
                 {insuranceTypes.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
+                    className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onClick={() => handleNavClick(item.name, item.href)}
                   >
                     {item.name}
                   </Link>
                 ))}
-                
                 {/* Life Insurance Dropdown */}
                 <div className="relative">
                   <button
-                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
+                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onMouseEnter={handleLifeMouseEnter}
                     onMouseLeave={handleLifeMouseLeave}
                     onKeyDown={(e) => {
@@ -146,7 +145,6 @@ export default function Header() {
                     Life Insurance
                     <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
                   </button>
-                  
                   {lifeDropdownOpen && (
                     <div 
                       className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
@@ -160,7 +158,7 @@ export default function Header() {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue"
+                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
                           onClick={() => handleNavClick(item.name, item.href)}
                           role="menuitem"
                         >
@@ -170,11 +168,10 @@ export default function Header() {
                     </div>
                   )}
                 </div>
-                
                 {/* Health Insurance Dropdown */}
                 <div className="relative">
                   <button
-                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-medium hover:scale-105 transform"
+                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onMouseEnter={handleHealthMouseEnter}
                     onMouseLeave={handleHealthMouseLeave}
                     onKeyDown={(e) => {
@@ -189,7 +186,6 @@ export default function Header() {
                     Health Insurance
                     <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
                   </button>
-                  
                   {healthDropdownOpen && (
                     <div 
                       className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
@@ -203,7 +199,7 @@ export default function Header() {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue"
+                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
                           onClick={() => handleNavClick(item.name, item.href)}
                           role="menuitem"
                         >
@@ -214,31 +210,28 @@ export default function Header() {
                   )}
                 </div>
               </div>
-              
-              <div className="h-5 w-px bg-gray-200" />
-              
+              <div className="h-5 w-px bg-gray-200 mx-4" />
               {/* About and Contact - Less Prominent */}
               <div className="flex items-center gap-x-6">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-gray-500 hover:text-electric-blue transition-all duration-200 text-sm hover:scale-105 transform"
+                    className="text-gray-500 hover:text-electric-blue transition-all duration-200 text-sm font-medium hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onClick={() => handleNavClick(item.name, item.href)}
                   >
                     {item.name}
                   </Link>
                 ))}
               </div>
-              
-              <div className="h-5 w-px bg-gray-200" />
-              
+              <div className="h-5 w-px bg-gray-200 mx-4" />
               {/* CTA Button */}
-              <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+              <div className="flex items-center">
                 <Link
                   href="/life"
-                  className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+                  className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 ml-2"
                   onClick={() => handleNavClick('Get My Free Quote', '/life')}
+                  style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
                 >
                   Get My Free Quote
                 </Link>
