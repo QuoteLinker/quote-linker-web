@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Logo from './Logo';
 import { trackNavClick } from '@/utils/gtm';
 
 export default function Header() {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lifeDropdownOpen, setLifeDropdownOpen] = useState(false);
   const [healthDropdownOpen, setHealthDropdownOpen] = useState(false);
@@ -16,6 +17,13 @@ export default function Header() {
   // Add timeouts for dropdown menus
   const [lifeTimeout, setLifeTimeout] = useState<NodeJS.Timeout>();
   const [healthTimeout, setHealthTimeout] = useState<NodeJS.Timeout>();
+
+  // Close dropdowns when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setLifeDropdownOpen(false);
+    setHealthDropdownOpen(false);
+  }, [pathname]);
 
   useEffect(() => {
     return () => {
@@ -73,6 +81,8 @@ export default function Header() {
   const handleNavClick = (text: string, path: string) => {
     trackNavClick(text, path);
     setMobileMenuOpen(false);
+    // Use router.push for programmatic navigation if needed
+    router.push(path);
   };
 
   // Get the current insurance type from the pathname

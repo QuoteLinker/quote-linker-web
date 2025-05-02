@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { getArticles } from '@/utils/getArticles';
 import ArticleImage from '@/components/ArticleImage';
 
+export const dynamic = 'force-dynamic';
+
 const DEFAULT_COVER_IMAGE = '/images/education/default-article.jpg';
 
 export default async function EducationPage() {
