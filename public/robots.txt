@@ -1,9 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
+# QuoteLinker robots.txt
 User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://quotelinker.com/sitemap.xml
+Sitemap: https://www.quotelinker.com/sitemap.xml
 
 # Disallow admin and api routes
 Disallow: /api/

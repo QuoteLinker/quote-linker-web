@@ -169,6 +169,10 @@ export default function EducationPage() {
                       className="object-cover transition-transform duration-200 group-hover:scale-105"
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       priority={!article.coverImage}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = DEFAULT_COVER_IMAGE;
+                      }}
                     />
                   </div>
                   <div className="p-4 sm:p-5 flex flex-col flex-grow">

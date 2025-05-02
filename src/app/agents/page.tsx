@@ -73,28 +73,26 @@ export default function AgentsPage() {
         <div className="container max-w-screen-xl mx-auto px-4 py-24 sm:py-32">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-              Grow Your Insurance Business with Exclusive Leads
+              Become the Local Expert Powered by QuoteLinker
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              QuoteLinker connects high-intent consumers with top local agents using AI-powered funnels.
+              Get exclusive leads, real-time alerts, and powerful tools to grow your insurance business.
             </p>
             <div className="mt-10 flex items-center justify-center gap-6">
               <Link
-                href="/contact"
+                href="#schedule"
                 className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
-                onClick={() => trackCTAClick('Apply for Access - Agents Page')}
-              >
-                Apply for Access
-              </Link>
-              <a
-                href="https://calendly.com/quotelinker/demo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-200"
                 onClick={() => trackCTAClick('Schedule Demo - Agents Page')}
               >
                 Schedule a Demo
-              </a>
+              </Link>
+              <Link
+                href="#join-waitlist"
+                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-200"
+                onClick={() => trackCTAClick('Join Waitlist - Agents Page')}
+              >
+                Join Waitlist
+              </Link>
             </div>
           </div>
         </div>
@@ -104,10 +102,10 @@ export default function AgentsPage() {
       <div className="container max-w-screen-xl mx-auto px-4 py-24">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Built for Modern Insurance Agents
+            Your Growth Engine for the Modern Insurance Economy
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Our platform helps you focus on what matters most: building relationships and closing deals.
+            QuoteLinker combines AI-powered lead generation with powerful tools to help you scale your business.
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
@@ -179,6 +177,57 @@ export default function AgentsPage() {
             </div>
           </figcaption>
         </figure>
+      </div>
+
+      {/* Calendly Section */}
+      <div id="schedule" className="bg-white">
+        <div className="container max-w-screen-xl mx-auto px-4 py-24">
+          <div className="mx-auto max-w-2xl text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Schedule a Demo
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Learn how QuoteLinker can help grow your insurance business.
+            </p>
+          </div>
+          <div className="mx-auto max-w-3xl">
+            <div className="calendly-inline-widget" data-url="https://calendly.com/quotelinker/demo" style={{ minWidth: '320px', height: '700px' }}></div>
+            <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          </div>
+        </div>
+      </div>
+
+      {/* Waitlist Section */}
+      <div id="join-waitlist" className="bg-gray-50">
+        <div className="container max-w-screen-xl mx-auto px-4 py-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+              Join the Waitlist
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Be among the first agents to get access to QuoteLinker's exclusive leads and powerful tools.
+            </p>
+            <form className="mt-10 max-w-md mx-auto">
+              <div className="grid grid-cols-1 gap-4">
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Enter your email"
+                  className="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-electric-blue sm:text-sm"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="rounded-lg bg-electric-blue px-6 py-3 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+                  onClick={() => trackCTAClick('Submit Waitlist - Agents Page')}
+                >
+                  Join Waitlist
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
       {/* CTA Section */}
