@@ -250,6 +250,34 @@ const productMetadata: Record<InsuranceType, ProductMetadata> = {
       "dollar": "Affordable rates icon",
       "star": "Top-rated service icon"
     }
+  },
+  DISABILITY: {
+    title: 'Disability Insurance Quotes | QuoteLinker',
+    description: 'Get competitive disability insurance quotes to protect your income. Compare rates and coverage options from top-rated carriers.',
+    schema: {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: 'Disability Insurance',
+      description: 'Protect your income with comprehensive disability coverage from top-rated carriers.',
+      brand: {
+        '@type': 'Organization',
+        name: 'QuoteLinker'
+      },
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        offerCount: 'multiple'
+      },
+      areaServed: {
+        '@type': 'Country',
+        name: 'United States'
+      }
+    },
+    altText: {
+      logo: 'QuoteLinker disability insurance logo',
+      hero: 'Disability insurance protection illustration'
+    }
   }
 };
 

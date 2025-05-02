@@ -1,4 +1,13 @@
-export type InsuranceType = 'life' | 'disability' | 'home' | 'auto' | 'health' | 'supplemental';
+export type InsuranceType = 
+  | 'AUTO' 
+  | 'HOME' 
+  | 'LIFE' 
+  | 'HEALTH'
+  | 'LIFE_TERM'
+  | 'LIFE_PERMANENT'
+  | 'HEALTH_SHORT_TERM_DISABILITY'
+  | 'HEALTH_SUPPLEMENTAL'
+  | 'DISABILITY';
 
 export type FormField =
   | 'firstName'
@@ -48,9 +57,13 @@ export interface FormErrors {
 }
 
 export const FIELD_CONFIG: Record<InsuranceType, FormField[]> = {
-  life: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'tobaccoUse'],
-  disability: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'employmentStatus'],
-  home: ['firstName', 'lastName', 'email', 'phone', 'zip', 'streetAddress'],
-  auto: ['firstName', 'lastName', 'email', 'phone', 'zip', 'vehicleUse'],
-  health: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age'],
+  LIFE: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'tobaccoUse'],
+  DISABILITY: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'employmentStatus'],
+  HOME: ['firstName', 'lastName', 'email', 'phone', 'zip', 'streetAddress'],
+  AUTO: ['firstName', 'lastName', 'email', 'phone', 'zip', 'vehicleUse'],
+  HEALTH: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age'],
+  LIFE_TERM: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'tobaccoUse'],
+  LIFE_PERMANENT: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'tobaccoUse'],
+  HEALTH_SHORT_TERM_DISABILITY: ['firstName', 'lastName', 'email', 'phone', 'zip', 'age', 'employmentStatus'],
+  HEALTH_SUPPLEMENTAL: ['firstName', 'lastName', 'email', 'phone', 'zip', 'currentCoverage'],
 }; 

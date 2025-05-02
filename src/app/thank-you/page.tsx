@@ -1,11 +1,14 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { InlineWidget } from 'react-calendly';
 import { TrustIndicator } from '@/components/trust/TrustIndicator';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function ThankYouPage() {
+  const [isCalendlyLoading, setIsCalendlyLoading] = useState(true);
+
   useEffect(() => {
     // Track conversion in Google Ads
     if (window.gtag) {
@@ -16,10 +19,19 @@ export default function ThankYouPage() {
         'transaction_id': ''
       });
     }
+
+    // Set up Calendly loading detection
+    const handleCalendlyEvent = (e: any) => {
+      if (e.data.event && e.data.event.indexOf('calendly') === 0) {
+        setIsCalendlyLoading(false);
+      }
+    };
+    window.addEventListener('message', handleCalendlyEvent);
+    return () => window.removeEventListener('message', handleCalendlyEvent);
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
       {/* Google Ads Conversion Tracking */}
       <Script
         id="google-ads-conversion"
@@ -54,12 +66,28 @@ export default function ThankYouPage() {
             and help you find the perfect coverage.
           </p>
           
-          <div className="calendly-inline-widget min-h-[700px]">
+          <div className="calendly-inline-widget min-h-[700px] relative">
+            {isCalendlyLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                  <p className="text-gray-600">Loading calendar...</p>
+                </div>
+              </div>
+            )}
             <InlineWidget
               url={process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/quotelinker/consultation'}
               styles={{
                 height: '700px',
                 width: '100%',
+                minWidth: '320px',
+              }}
+              pageSettings={{
+                backgroundColor: 'ffffff',
+                hideEventTypeDetails: false,
+                hideLandingPageDetails: false,
+                primaryColor: '00EEFD',
+                textColor: '333333',
               }}
             />
           </div>
@@ -71,6 +99,6 @@ export default function ThankYouPage() {
           </p>
         </div>
       </div>
-    </>
+    </ErrorBoundary>
   );
 } 

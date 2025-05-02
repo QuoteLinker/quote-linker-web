@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent, useRef } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent, useRef, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,7 +34,7 @@ interface QuoteFormProps {
 
 const FORM_KEY = 'savedQuoteForm';
 
-export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
+function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -102,7 +102,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   }, [pathname, isProductSpecificPage]);
 
   // Default to the first main insurance type if none provided
-  const defaultType: InsuranceType = 'auto';
+  const defaultType: InsuranceType = 'AUTO';
   const initialType = insuranceType || defaultType;
 
   // Convert to main insurance type if it's a subtype
@@ -318,25 +318,25 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         zip: formData.zip,
         insuranceType: formData.insuranceType,
         // Add product-specific fields
-        ...(formData.insuranceType === 'life' && {
+        ...(formData.insuranceType === 'LIFE' && {
           age: formData.age,
           coverageAmount: formData.coverageAmount,
         }),
-        ...(formData.insuranceType === 'home' && {
+        ...(formData.insuranceType === 'HOME' && {
           propertyType: formData.propertyType,
           propertyValue: formData.propertyValue,
         }),
-        ...(formData.insuranceType === 'auto' && {
+        ...(formData.insuranceType === 'AUTO' && {
           vehicleUse: formData.vehicleUse,
         }),
-        ...(formData.insuranceType === 'health' && {
+        ...(formData.insuranceType === 'HEALTH' && {
           coverageType: formData.coverageType,
         }),
-        ...(formData.insuranceType === 'disability' && {
+        ...(formData.insuranceType === 'DISABILITY' && {
           monthlyIncome: formData.monthlyIncome,
           occupation: formData.occupation,
         }),
-        ...(formData.insuranceType === 'supplemental' && {
+        ...(formData.insuranceType === 'HEALTH_SUPPLEMENTAL' && {
           currentCoverage: formData.currentCoverage,
         }),
         // Add honeypot and metadata
@@ -888,5 +888,13 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         </div>
       </div>
     </div>
+  );
+}
+
+export default function QuoteForm(props: QuoteFormProps) {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <QuoteFormContent {...props} />
+    </Suspense>
   );
 }

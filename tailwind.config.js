@@ -37,6 +37,7 @@ module.exports = {
         'cool-gray': '#F5F7FA',
         'dark-gray': '#333333',
         'white': '#FFFFFF',
+        'electric-blue': '#00EEFD',
       },
       fontFamily: {
         sans: ['Inter var', 'sans-serif'],
@@ -84,6 +85,7 @@ module.exports = {
       },
       ringColor: {
         DEFAULT: '#00EEFD',
+        'electric-blue': '#00EEFD',
       },
       ringOffsetColor: {
         DEFAULT: '#FFFFFF',

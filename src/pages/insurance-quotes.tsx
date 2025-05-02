@@ -1,41 +1,21 @@
+'use client';
+
 import React, { useState } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
-import { 
-  LifeInsuranceForm, 
-  ShortTermDisabilityForm, 
-  SupplementalHealthForm, 
-  AutoInsuranceForm, 
-  HomeInsuranceForm 
-} from '../components/forms';
+import { QuoteForm } from '../components/forms';
+import { InsuranceType } from '@/types/insurance';
 
 const InsuranceQuotes: React.FC = () => {
-  const [selectedInsurance, setSelectedInsurance] = useState<string>('life');
+  const [selectedInsurance, setSelectedInsurance] = useState<InsuranceType>('LIFE');
 
   const insuranceTypes = [
-    { id: 'life', name: 'Life Insurance' },
-    { id: 'stdi', name: 'Short-Term Disability Insurance' },
-    { id: 'supplemental', name: 'Supplemental Health Insurance' },
-    { id: 'auto', name: 'Auto Insurance' },
-    { id: 'home', name: 'Home Insurance' },
+    { id: 'LIFE' as InsuranceType, name: 'Life Insurance' },
+    { id: 'HEALTH_SHORT_TERM_DISABILITY' as InsuranceType, name: 'Short-Term Disability Insurance' },
+    { id: 'HEALTH_SUPPLEMENTAL' as InsuranceType, name: 'Supplemental Health Insurance' },
+    { id: 'AUTO' as InsuranceType, name: 'Auto Insurance' },
+    { id: 'HOME' as InsuranceType, name: 'Home Insurance' },
   ];
-
-  const renderForm = () => {
-    switch (selectedInsurance) {
-      case 'life':
-        return <LifeInsuranceForm />;
-      case 'stdi':
-        return <ShortTermDisabilityForm />;
-      case 'supplemental':
-        return <SupplementalHealthForm />;
-      case 'auto':
-        return <AutoInsuranceForm />;
-      case 'home':
-        return <HomeInsuranceForm />;
-      default:
-        return <LifeInsuranceForm />;
-    }
-  };
 
   return (
     <Layout
@@ -77,7 +57,7 @@ const InsuranceQuotes: React.FC = () => {
               </div>
             </div>
             <div className="px-4 py-5 sm:p-6">
-              {renderForm()}
+              <QuoteForm insuranceType={selectedInsurance} />
             </div>
           </div>
         </div>

@@ -1,5 +1,7 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { TrustContext, TrustSignal, TrustScore, TrustConfig, TrustAction } from '@/types/trust';
+import type { TrustContext, TrustSignal, TrustScore, TrustConfig, TrustAction } from '@/types/trust';
 
 const defaultConfig: TrustConfig = {
   weights: {

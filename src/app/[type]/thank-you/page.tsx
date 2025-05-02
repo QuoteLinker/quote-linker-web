@@ -16,7 +16,8 @@ const insuranceTypeTitles: Record<InsuranceType, string> = {
   LIFE_PERMANENT: 'Whole Life Insurance',
   HEALTH: 'Health Insurance',
   HEALTH_SHORT_TERM_DISABILITY: 'Short-Term Disability Insurance',
-  HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance'
+  HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance',
+  DISABILITY: 'Disability Insurance'
 };
 
 export default function ThankYouPage({ params }: ThankYouPageProps) {

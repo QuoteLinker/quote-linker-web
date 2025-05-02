@@ -29,10 +29,6 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/products/permanent-life', request.url));
   }
   
-  if (pathname === '/disability') {
-    return NextResponse.redirect(new URL('/products/disability', request.url));
-  }
-  
   return NextResponse.next();
 }
 
@@ -44,6 +40,5 @@ export const config = {
     '/health',
     '/term',
     '/permanent-life',
-    '/disability',
   ],
 }; 

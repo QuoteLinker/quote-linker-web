@@ -189,6 +189,23 @@ const benefits: Record<InsuranceType, Benefit[]> = {
       description: 'Work with agents who understand healthcare coverage.',
     },
   ],
+  DISABILITY: [
+    {
+      icon: ShieldCheckIcon,
+      title: 'Income Protection',
+      description: 'Replace your income if you become disabled'
+    },
+    {
+      icon: ClockIcon,
+      title: 'Quick Benefits',
+      description: 'Get benefits when you need them most'
+    },
+    {
+      icon: UserGroupIcon,
+      title: 'Expert Support',
+      description: 'Guidance from licensed agents'
+    }
+  ],
 };
 
 export default function WhyChoose({ insuranceType }: WhyChooseProps) {
