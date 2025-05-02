@@ -10,7 +10,6 @@ import PageTransition from '@/components/PageTransition';
 import { TrustProvider } from '@/components/trust/TrustProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import QuoteForm from '@/components/QuoteForm';
 import { usePathname } from 'next/navigation';
 import { getIntent } from '@/utils/getIntent';
 
@@ -191,7 +190,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ErrorBoundary>
                 <Header />
               </ErrorBoundary>
-              <QuoteForm intent={intent} />
               <PageTransition>
                 <main className="min-h-screen bg-gray-50">
                   <ErrorBoundary>

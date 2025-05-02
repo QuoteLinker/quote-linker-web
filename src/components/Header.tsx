@@ -100,9 +100,9 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
-          <div className="relative flex flex-col items-center justify-center gap-y-2 gap-x-8">
-            {/* Logo */}
-            <div className="flex-shrink-0 flex items-center justify-center w-full mb-2">
+          <div className="relative flex items-center justify-between gap-x-8 w-full">
+            {/* Logo left */}
+            <div className="flex-shrink-0 flex items-center justify-start w-auto">
               <Link 
                 href="/" 
                 className="block transform transition-transform hover:scale-105 duration-200" 
@@ -113,9 +113,8 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* Desktop navigation */}
-            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-8 w-full">
-              {/* Insurance Types - More Prominent */}
+            {/* Centered nav */}
+            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-8 flex-1">
               <div className="flex items-center gap-x-8">
                 {insuranceTypes.map((item) => (
                   <Link
@@ -211,7 +210,6 @@ export default function Header() {
                 </div>
               </div>
               <div className="h-5 w-px bg-gray-200 mx-4" />
-              {/* About and Contact - Less Prominent */}
               <div className="flex items-center gap-x-6">
                 {navigation.map((item) => (
                   <Link
@@ -224,47 +222,47 @@ export default function Header() {
                   </Link>
                 ))}
               </div>
-              <div className="h-5 w-px bg-gray-200 mx-4" />
-              {/* CTA Button */}
-              <div className="flex items-center">
-                <Link
-                  href="/life"
-                  className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 ml-2"
-                  onClick={() => handleNavClick('Get My Free Quote', '/life')}
-                  style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
-                >
-                  Get My Free Quote
-                </Link>
-              </div>
             </div>
 
-            {/* Mobile menu button */}
-            <div className="flex items-center gap-x-4 lg:hidden">
+            {/* CTA right */}
+            <div className="flex items-center justify-end flex-shrink-0 w-auto min-w-[180px]">
               <Link
-                href={`/${currentInsuranceType}`}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
-                onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
+                href="/life"
+                className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 ml-2 whitespace-nowrap"
+                onClick={() => handleNavClick('Get My Free Quote', '/life')}
+                style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
               >
-                Get Quote
+                Get My Free Quote
               </Link>
-              <button
-                type="button"
-                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-electric-blue hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                aria-expanded={mobileMenuOpen}
-                aria-controls="mobile-menu"
-                aria-label="Toggle navigation menu"
-              >
-                <span className="sr-only">
-                  {mobileMenuOpen ? 'Close main menu' : 'Open main menu'}
-                </span>
-                {mobileMenuOpen ? (
-                  <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-                ) : (
-                  <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-                )}
-              </button>
             </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="flex items-center gap-x-4 lg:hidden">
+            <Link
+              href={`/${currentInsuranceType}`}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
+              onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
+            >
+              Get Quote
+            </Link>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-electric-blue hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label="Toggle navigation menu"
+            >
+              <span className="sr-only">
+                {mobileMenuOpen ? 'Close main menu' : 'Open main menu'}
+              </span>
+              {mobileMenuOpen ? (
+                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
           </div>
 
           {/* Mobile menu */}
