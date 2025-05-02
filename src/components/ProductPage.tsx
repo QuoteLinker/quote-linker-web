@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import type { InsuranceType } from '@/types/insurance';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';
 
 // Dynamic imports for client components
 const Hero = dynamic(() => import('@/components/Hero'), {
