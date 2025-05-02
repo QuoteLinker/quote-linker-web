@@ -1,5 +1,6 @@
 import { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 import './globals.css';
 import Script from 'next/script';
 import Header from '@/components/Header';
@@ -8,6 +9,7 @@ import BackToTop from '@/components/BackToTop';
 import PageTransition from '@/components/PageTransition';
 import { TrustProvider } from '@/components/trust/TrustProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -179,18 +181,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <GoogleTagManagerBody />
         <ErrorBoundary>
           <TrustProvider>
-            <ErrorBoundary>
-              <Header />
-            </ErrorBoundary>
-            <PageTransition>
+            <Suspense fallback={<LoadingSpinner />}>
               <ErrorBoundary>
-                <main className="min-h-screen">{children}</main>
+                <Header />
               </ErrorBoundary>
-            </PageTransition>
-            <BackToTop />
-            <ErrorBoundary>
-              <Footer />
-            </ErrorBoundary>
+              <PageTransition>
+                <ErrorBoundary>
+                  <main className="min-h-screen">{children}</main>
+                </ErrorBoundary>
+              </PageTransition>
+              <BackToTop />
+              <ErrorBoundary>
+                <Footer />
+              </ErrorBoundary>
+            </Suspense>
           </TrustProvider>
         </ErrorBoundary>
       </body>
