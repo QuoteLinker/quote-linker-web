@@ -33,10 +33,12 @@ export default function EducationLayout({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Category Menu */}
-      <div className="md:hidden sticky top-0 z-30 bg-white border-b border-gray-200">
+      <div className="md:hidden sticky top-0 z-30 bg-white shadow-sm">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="w-full px-4 py-3 flex items-center justify-between text-gray-700 hover:bg-gray-50"
+          className="w-full px-4 py-3 flex items-center justify-between text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-categories"
         >
           <span className="font-medium">Categories</span>
           <ChevronDownIcon
@@ -46,14 +48,14 @@ export default function EducationLayout({
           />
         </button>
         {isMobileMenuOpen && (
-          <nav className="border-t border-gray-100">
+          <nav id="mobile-categories" className="border-t border-gray-100">
             {categories.map((category) => (
               <Link
                 key={category.slug}
                 href={`/education/${category.slug}`}
-                className={`block px-4 py-3 text-sm ${
+                className={`block px-4 py-3 text-sm transition-colors ${
                   pathname === `/education/${category.slug}`
-                    ? 'bg-blue-50 text-blue-700'
+                    ? 'bg-blue-50 text-electric-blue font-medium'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -65,16 +67,17 @@ export default function EducationLayout({
         )}
       </div>
 
-      <div className="container mx-auto px-4 py-6 sm:py-8">
+      <div className="container max-w-screen-xl mx-auto px-4 py-6 sm:py-8">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Desktop Sidebar */}
           <aside className="hidden md:block w-64 flex-shrink-0">
             <nav
-              className={`${
-                isScrolled ? 'sticky top-4 transition-all duration-200' : ''
+              className={`transition-all duration-200 ${
+                isScrolled ? 'sticky top-4' : ''
               }`}
+              aria-label="Categories"
             >
-              <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+              <div className="bg-white rounded-lg shadow-card hover:shadow-card-hover border border-gray-100 overflow-hidden">
                 <h2 className="text-lg font-semibold p-4 border-b border-gray-100">
                   Categories
                 </h2>
@@ -85,7 +88,7 @@ export default function EducationLayout({
                         href={`/education/${category.slug}`}
                         className={`block px-4 py-2 rounded-md text-sm transition-colors ${
                           pathname === `/education/${category.slug}`
-                            ? 'bg-blue-50 text-blue-700 font-medium'
+                            ? 'bg-blue-50 text-electric-blue font-medium'
                             : 'text-gray-700 hover:bg-gray-50'
                         }`}
                       >

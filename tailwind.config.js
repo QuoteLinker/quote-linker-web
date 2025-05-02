@@ -38,6 +38,9 @@ module.exports = {
         'dark-gray': '#333333',
         'white': '#FFFFFF',
         'electric-blue': '#00EEFD',
+        'muted': {
+          foreground: '#64748b',
+        },
       },
       fontFamily: {
         sans: ['Inter var', 'sans-serif'],
@@ -67,6 +70,8 @@ module.exports = {
       boxShadow: {
         'inner-lg': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
         'brand': '0 4px 14px 0 rgba(0, 238, 253, 0.2)',
+        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
       },
       container: {
         center: true,
@@ -80,12 +85,11 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-fade': 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%)',
       },
       ringColor: {
         DEFAULT: '#00EEFD',
-        'electric-blue': '#00EEFD',
       },
       ringOffsetColor: {
         DEFAULT: '#FFFFFF',
@@ -93,6 +97,20 @@ module.exports = {
       ringOffsetWidth: {
         DEFAULT: '2px',
       },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            maxWidth: '65ch',
+            color: theme('colors.dark-gray'),
+            a: {
+              color: theme('colors.electric-blue'),
+              '&:hover': {
+                color: theme('colors.primary.600'),
+              },
+            },
+          },
+        },
+      }),
     },
   },
   plugins: [
