@@ -41,6 +41,16 @@ interface QuoteFormProps {
 const FORM_KEY = 'savedQuoteForm';
 
 function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
+  if (!insuranceType || !FIELD_CONFIG[insuranceType]) {
+    console.error('QuoteForm: Invalid or missing insuranceType:', insuranceType);
+    return (
+      <div className="p-8 text-center text-red-600">
+        <h2 className="text-xl font-bold mb-2">Form Error</h2>
+        <p>Sorry, we couldn't load the quote form for this insurance type.</p>
+      </div>
+    );
+  }
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

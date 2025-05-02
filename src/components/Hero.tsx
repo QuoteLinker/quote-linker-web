@@ -33,6 +33,15 @@ const productSubtitles: Record<InsuranceType, string> = {
 };
 
 export default function Hero({ insuranceType }: HeroProps) {
+  if (!insuranceType || !productTitles[insuranceType]) {
+    console.error('Hero: Invalid or missing insuranceType:', insuranceType);
+    return (
+      <div className="bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white py-12 text-center">
+        <h1 className="text-3xl font-bold mb-4">Insurance Product Not Found</h1>
+        <p className="text-lg">Sorry, we couldn't load the hero section for this insurance type.</p>
+      </div>
+    );
+  }
   const title = productTitles[insuranceType] || 'Insurance Coverage';
   const subtitle = productSubtitles[insuranceType] || 'Find the right coverage for your needs.';
 

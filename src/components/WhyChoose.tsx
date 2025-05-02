@@ -209,6 +209,15 @@ const benefits: Record<InsuranceType, Benefit[]> = {
 };
 
 export default function WhyChoose({ insuranceType }: WhyChooseProps) {
+  if (!insuranceType || !benefits[insuranceType]) {
+    console.error('WhyChoose: Invalid or missing insuranceType:', insuranceType);
+    return (
+      <section className="py-16 bg-white text-center text-red-600">
+        <h2 className="text-2xl font-bold mb-2">Benefits Error</h2>
+        <p>Sorry, we couldn't load benefits for this insurance type.</p>
+      </section>
+    );
+  }
   const productBenefits = benefits[insuranceType];
   const displayTitle = productBenefits ? insuranceType.split('_').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
