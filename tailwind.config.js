@@ -19,15 +19,52 @@ module.exports = {
           700: '#0369a1',
           800: '#075985',
           900: '#0c4a6e',
-          950: '#082f49',
         },
-        'electric-blue': '#00EEFD',
+        secondary: {
+          50: '#f8fafc',
+          100: '#f1f5f9',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
+          500: '#64748b',
+          600: '#475569',
+          700: '#334155',
+          800: '#1e293b',
+          900: '#0f172a',
+        },
+        accent: '#00EEFD',
         'deep-navy': '#0B0B45',
         'cool-gray': '#F5F7FA',
         'dark-gray': '#333333',
         'white': '#FFFFFF',
       },
+      fontFamily: {
+        sans: ['Inter var', 'sans-serif'],
+      },
+      screens: {
+        'xs': '375px', // iPhone 12 width
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '112': '28rem',
+        '128': '32rem',
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+      },
+      borderRadius: {
+        'xl': '1rem',
+        '2xl': '1.5rem',
+        '3xl': '2rem',
+      },
       boxShadow: {
+        'inner-lg': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
         'brand': '0 4px 14px 0 rgba(0, 238, 253, 0.2)',
       },
       container: {
@@ -39,9 +76,6 @@ module.exports = {
           xl: '5rem',
           '2xl': '6rem',
         },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

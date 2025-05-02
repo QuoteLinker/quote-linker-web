@@ -1,45 +1,48 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 export default function ThankYouPage() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
+  const insuranceType = searchParams.get('type') || 'insurance';
 
-  // Redirect to home page after 5 seconds
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push('/');
-    }, 5000);
+    // Load Calendly widget script
+    const script = document.createElement('script');
+    script.src = 'https://assets.calendly.com/assets/external/widget.js';
+    script.async = true;
+    document.body.appendChild(script);
 
-    return () => clearTimeout(timer);
-  }, [router]);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-        <div className="mb-6">
-          <svg className="h-16 w-16 text-green-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Thank You for Your Interest!
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            We've received your {insuranceType} quote request and will be in touch shortly.
+          </p>
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              Schedule a Free Consultation
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Want to discuss your insurance needs right away? Book a free consultation with one of our licensed agents.
+            </p>
+            <div 
+              className="calendly-inline-widget" 
+              data-url="https://calendly.com/your-calendly-link"
+              style={{ minWidth: '320px', height: '700px' }}
+            />
+          </div>
         </div>
-        
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Thank You!</h1>
-        <p className="text-gray-600 mb-6">
-          We'll reach out to you shortly with your personalized insurance quotes.
-        </p>
-        
-        <div className="text-sm text-gray-500 mb-6">
-          <p>You will be redirected to the home page in a few seconds.</p>
-        </div>
-        
-        <Link 
-          href="/" 
-          className="inline-block bg-[#00EEFD] text-[#0B0B45] font-medium py-2 px-6 rounded-md hover:bg-[#00D4E5] transition-colors duration-200"
-        >
-          Return to Home
-        </Link>
       </div>
     </div>
   );

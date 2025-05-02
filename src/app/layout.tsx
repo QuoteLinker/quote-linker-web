@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import PageTransition from '@/components/PageTransition';
+import { TrustProvider } from '@/components/trust/TrustProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -175,12 +176,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={inter.className}>
         <GoogleTagManagerBody />
-        <Header />
-        <PageTransition>
-          <main className="min-h-screen">{children}</main>
-        </PageTransition>
-        <BackToTop />
-        <Footer />
+        <TrustProvider>
+          <Header />
+          <PageTransition>
+            <main className="min-h-screen">{children}</main>
+          </PageTransition>
+          <BackToTop />
+          <Footer />
+        </TrustProvider>
       </body>
     </html>
   );

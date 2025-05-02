@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent, useRef } from 'react';
 import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -24,64 +24,28 @@ import { debounce } from 'lodash';
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-hot-toast';
 import InsuranceTip from './InsuranceTip';
-
-interface FormData {
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
-  phone: string | null;
-  zipCode: string | null;
-  insuranceType: MainInsuranceType;
-  age?: string | null;
-  coverageAmount?: string | null;
-  website?: string | null;
-  honeypot?: string | null;
-  propertyType?: string | null;
-  propertyValue?: string | null;
-  vehicleUse?: string | null;
-  coverageType?: string | null;
-  monthlyIncome?: string | null;
-  occupation?: string | null;
-  currentCoverage?: string | null;
-}
-
-interface FormErrors {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  zipCode?: string;
-  age?: string;
-  coverageAmount?: string;
-  insuranceType?: string;
-  propertyType?: string;
-  propertyValue?: string;
-  vehicleUse?: string;
-  coverageType?: string;
-  monthlyIncome?: string;
-  occupation?: string;
-  currentCoverage?: string;
-}
+import { TrustIndicator } from './trust/TrustIndicator';
+import { useQuoteTrust } from '@/lib/trust/useQuoteTrust';
+import { FormData, FormErrors, FIELD_CONFIG } from '@/types/insurance';
 
 interface QuoteFormProps {
-  insuranceType?: InsuranceType;
-  productType?: InsuranceType;
-  _subType?: string;
+  insuranceType: InsuranceType;
+  className?: string;
 }
-
-const INSURANCE_OPTIONS = [
-  { value: 'AUTO', label: 'Auto Insurance' },
-  { value: 'HOME', label: 'Home Insurance' },
-  { value: 'LIFE', label: 'Life Insurance' },
-  { value: 'HEALTH', label: 'Health Insurance' },
-];
 
 const FORM_KEY = 'savedQuoteForm';
 
-export default function QuoteForm({ insuranceType, productType, _subType }: QuoteFormProps) {
+export default function QuoteForm({ insuranceType, className = '' }: QuoteFormProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Initialize trust system
+  const { addFormInteractionSignal, addSocialProofSignal } = useQuoteTrust({
+    formId: 'quote-form',
+    productType: insuranceType as MainInsuranceType,
+  });
 
   // Track UTM parameters and referrer
   const [attributionData, setAttributionData] = useState({
@@ -140,7 +104,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
   // Default to the first main insurance type if none provided
   const defaultType: MainInsuranceType = 'AUTO';
-  const initialType = insuranceType || productType || defaultType;
+  const initialType = insuranceType as MainInsuranceType || defaultType;
 
   // Convert to main insurance type if it's a subtype
   const getMainType = (type: InsuranceType): MainInsuranceType => {
@@ -176,11 +140,11 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
       return saved;
     }
     return {
-      firstName: null,
-      lastName: null,
-      email: null,
-      phone: null,
-      zipCode: null,
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      zip: '',
       insuranceType: getMainType(initialType),
     };
   });
@@ -219,7 +183,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
   const validateField = (name: string, value: string | null | undefined): string | undefined => {
     if (value === null || value === undefined) {
-      if (['firstName', 'lastName', 'email', 'phone', 'zipCode', 'insuranceType'].includes(name)) {
+      if (['firstName', 'lastName', 'email', 'phone', 'zip', 'insuranceType'].includes(name)) {
         return 'This field is required';
       }
       return undefined;
@@ -239,7 +203,7 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         if (!value.match(/^\d{10}$/)) return 'Please enter a valid 10-digit phone number';
         return undefined;
       }
-      case 'zipCode': {
+      case 'zip': {
         if (!value.match(/^\d{5}$/)) return 'Please enter a valid 5-digit ZIP code';
         return undefined;
       }
@@ -275,31 +239,26 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     }
   };
 
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value, type } = e.target;
+  // Add trust signals for form interactions
+  const handleFieldInteraction = (fieldName: string, value: string | null) => {
+    addFormInteractionSignal(`field_${fieldName}`, value ? 0.1 : 0);
+  };
 
-      // Handle checkbox inputs
-      if (type === 'checkbox') {
-        const checkbox = e.target as HTMLInputElement;
-        setFormData(prev => ({ ...prev, [name]: checkbox.checked }));
-      } else {
-        setFormData(prev => ({ ...prev, [name]: value }));
-      }
+  const handleFieldValidation = (fieldName: string, isValid: boolean) => {
+    addFormInteractionSignal(`validation_${fieldName}`, isValid ? 0.2 : -0.1);
+  };
 
-      // Clear error when user starts typing
-      if (formErrors[name as keyof FormErrors]) {
-        setFormErrors(prev => ({ ...prev, [name]: undefined }));
-      }
-
-      // Validate on change
-      const error = validateField(name, value);
-      if (error) {
-        setFormErrors(prev => ({ ...prev, [name]: error }));
-      }
-    },
-    [formErrors]
-  );
+  // Update the handleChange function to include trust signals
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    handleFieldInteraction(name, value);
+    
+    // Validate the field and update trust
+    const error = validateField(name, value);
+    setFormErrors(prev => ({ ...prev, [name]: error }));
+    handleFieldValidation(name, !error);
+  };
 
   const handleBlur = useCallback(
     (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -342,9 +301,9 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Validate form before submission
+    
     if (!validateForm()) {
+      addFormInteractionSignal('form_validation_failed', -0.2);
       toast.error('Please check all required fields and try again');
       return;
     }
@@ -353,13 +312,16 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
     setSubmitStatus('idle');
 
     try {
+      // Add trust signal for form submission
+      addFormInteractionSignal('form_submission_started', 0.3);
+
       // Construct the payload with all required fields
       const payload = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         phone: formData.phone,
-        zipCode: formData.zipCode,
+        zip: formData.zip,
         insuranceType: formData.insuranceType,
         // Add product-specific fields
         ...(formData.insuranceType === 'LIFE' && {
@@ -409,437 +371,511 @@ export default function QuoteForm({ insuranceType, productType, _subType }: Quot
         throw new Error(errorData.message || 'Failed to submit form. Please try again.');
       }
 
-      // Show success toast
-      toast.success('Thanks! Your quote request was submitted successfully. We\'ll be in touch shortly.');
+      // Add success trust signals
+      addFormInteractionSignal('form_submission_success', 0.5);
+      addSocialProofSignal('form_completion', 0.4);
 
+      setSubmitStatus('success');
+      toast.success('Thanks! Your quote request was submitted successfully. We\'ll be in touch shortly.');
+      
       // Clear saved form data on successful submission
       if (typeof window !== 'undefined') {
         localStorage.removeItem(FORM_KEY);
       }
-
+      
       // Redirect to thank you page after a short delay
       setTimeout(() => {
         router.push('/thank-you');
       }, 1500);
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      addFormInteractionSignal('form_submission_error', -0.3);
       toast.error(error instanceof Error ? error.message : 'Something went wrong. Please try again or call us directly.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const fields = FIELD_CONFIG[insuranceType];
+
   return (
-    <div className="w-full">
-      <InsuranceTip productType={formData.insuranceType.toLowerCase()} />
+    <div className="max-w-4xl mx-auto p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          <TrustIndicator className="mb-6" showDetails={true} />
+          
+          <InsuranceTip productType={insuranceType.toLowerCase()} />
 
-      <div className="flex justify-center items-center py-4 sm:py-8">
-        <form
-          onSubmit={handleSubmit}
-          id="quote-form"
-          className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100 relative"
-          aria-label="Insurance Quote Request Form"
-        >
-          <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
-            Get Your Free Quote
-          </h2>
+          <div className="flex justify-center items-center py-4 sm:py-8">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              id="quote-form"
+              className={`w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100 relative ${className}`}
+              aria-label="Insurance Quote Request Form"
+            >
+              <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
+                Get Your Free Quote
+              </h2>
 
-          <div className="space-y-6">
-            {/* Required Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
-                  First Name <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  required
-                  placeholder="Enter your first name"
-                  value={formData.firstName || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
-                  aria-required="true"
-                  aria-invalid={!!formErrors.firstName}
-                  aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
-                />
-                {touchedFields.firstName && formErrors.firstName && (
-                  <p id="firstName-error" className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.firstName}
-                  </p>
-                )}
-              </div>
+              <div className="space-y-6">
+                {/* Required Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                      First Name <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      type="text"
+                      name="firstName"
+                      id="firstName"
+                      required
+                      placeholder="Enter your first name"
+                      value={formData.firstName || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
+                      aria-required="true"
+                      aria-invalid={!!formErrors.firstName}
+                      aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
+                    />
+                    {touchedFields.firstName && formErrors.firstName && (
+                      <p id="firstName-error" className="mt-1 text-sm text-red-600" role="alert">
+                        {formErrors.firstName}
+                      </p>
+                    )}
+                  </div>
 
-              <div className="space-y-2">
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
-                  Last Name <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  required
-                  placeholder="Enter your last name"
-                  value={formData.lastName || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
-                  aria-required="true"
-                  aria-invalid={!!formErrors.lastName}
-                  aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
-                />
-                {touchedFields.lastName && formErrors.lastName && (
-                  <p id="lastName-error" className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.lastName}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* Email and Phone/Zip section */}
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  required
-                  placeholder="Enter your email address"
-                  value={formData.email || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
-                  aria-required="true"
-                  aria-invalid={!!formErrors.email}
-                  aria-describedby={formErrors.email ? 'email-error' : undefined}
-                />
-                {touchedFields.email && formErrors.email && (
-                  <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
-                    {formErrors.email}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                    Phone Number <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    required
-                    placeholder="Enter your phone number"
-                    value={formData.phone || ''}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
-                    aria-required="true"
-                    aria-invalid={!!formErrors.phone}
-                    aria-describedby={formErrors.phone ? 'phone-error' : undefined}
-                  />
-                  {touchedFields.phone && formErrors.phone && (
-                    <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
-                      {formErrors.phone}
-                    </p>
-                  )}
+                  <div className="space-y-2">
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                      Last Name <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      type="text"
+                      name="lastName"
+                      id="lastName"
+                      required
+                      placeholder="Enter your last name"
+                      value={formData.lastName || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
+                      aria-required="true"
+                      aria-invalid={!!formErrors.lastName}
+                      aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
+                    />
+                    {touchedFields.lastName && formErrors.lastName && (
+                      <p id="lastName-error" className="mt-1 text-sm text-red-600" role="alert">
+                        {formErrors.lastName}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700">
-                    ZIP Code <span className="text-red-500">*</span>
-                  </label>
+                {/* Email and Phone/Zip section */}
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      type="email"
+                      name="email"
+                      id="email"
+                      required
+                      placeholder="Enter your email address"
+                      value={formData.email || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
+                      aria-required="true"
+                      aria-invalid={!!formErrors.email}
+                      aria-describedby={formErrors.email ? 'email-error' : undefined}
+                    />
+                    {touchedFields.email && formErrors.email && (
+                      <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                        {formErrors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        type="tel"
+                        name="phone"
+                        id="phone"
+                        required
+                        placeholder="Enter your phone number"
+                        value={formData.phone || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                        aria-required="true"
+                        aria-invalid={!!formErrors.phone}
+                        aria-describedby={formErrors.phone ? 'phone-error' : undefined}
+                      />
+                      {touchedFields.phone && formErrors.phone && (
+                        <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.phone}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="zip" className="block text-sm font-medium text-gray-700">
+                        ZIP Code <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        type="text"
+                        name="zip"
+                        id="zip"
+                        required
+                        placeholder="Enter your ZIP code"
+                        value={formData.zip || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`h-11 ${touchedFields.zip && formErrors.zip ? 'border-red-500' : ''}`}
+                        aria-required="true"
+                        aria-invalid={!!formErrors.zip}
+                        aria-describedby={formErrors.zip ? 'zip-error' : undefined}
+                      />
+                      {touchedFields.zip && formErrors.zip && (
+                        <p id="zip-error" className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.zip}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Product-specific fields */}
+                {fields.includes('age') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Age"
+                      name="age"
+                      tooltip="Your age helps us determine the most appropriate coverage options and rates for you."
+                      required
+                      type="number"
+                      min="18"
+                      max="120"
+                      placeholder="Enter your age"
+                      value={formData.age || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.age ? formErrors.age : undefined}
+                      aria-invalid={!!formErrors.age}
+                      aria-describedby={formErrors.age ? 'age-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('tobaccoUse') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Tobacco Use"
+                      name="tobaccoUse"
+                      tooltip="Tobacco use can affect your health insurance rates. Please be honest in your response."
+                      required
+                      type="text"
+                      placeholder="Enter your tobacco use"
+                      value={formData.tobaccoUse || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.tobaccoUse ? formErrors.tobaccoUse : undefined}
+                      aria-invalid={!!formErrors.tobaccoUse}
+                      aria-describedby={formErrors.tobaccoUse ? 'tobaccoUse-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('employmentStatus') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Employment Status"
+                      name="employmentStatus"
+                      tooltip="Your employment status can affect your insurance rates. Please be honest in your response."
+                      required
+                      type="text"
+                      placeholder="Enter your employment status"
+                      value={formData.employmentStatus || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.employmentStatus ? formErrors.employmentStatus : undefined}
+                      aria-invalid={!!formErrors.employmentStatus}
+                      aria-describedby={formErrors.employmentStatus ? 'employmentStatus-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('streetAddress') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Street Address"
+                      name="streetAddress"
+                      tooltip="Your street address can affect your insurance rates. Please be honest in your response."
+                      required
+                      type="text"
+                      placeholder="Enter your street address"
+                      value={formData.streetAddress || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.streetAddress ? formErrors.streetAddress : undefined}
+                      aria-invalid={!!formErrors.streetAddress}
+                      aria-describedby={formErrors.streetAddress ? 'streetAddress-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('vehicleUse') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Vehicle Use"
+                      name="vehicleUse"
+                      tooltip="Your vehicle use can affect your insurance rates. Please be honest in your response."
+                      required
+                      type="text"
+                      placeholder="Enter your vehicle use"
+                      value={formData.vehicleUse || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.vehicleUse ? formErrors.vehicleUse : undefined}
+                      aria-invalid={!!formErrors.vehicleUse}
+                      aria-describedby={formErrors.vehicleUse ? 'vehicleUse-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('coverageAmount') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Coverage Amount"
+                      name="coverageAmount"
+                      tooltip="The amount of coverage you need. This helps us calculate your premium and ensure adequate protection."
+                      required
+                      type="number"
+                      min="0"
+                      step="1000"
+                      placeholder="Enter coverage amount"
+                      value={formData.coverageAmount || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
+                      aria-invalid={!!formErrors.coverageAmount}
+                      aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('propertyType') && (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700">
+                        Property Type <span className="text-red-500">*</span>
+                      </label>
+                      <Select
+                        value={formData.propertyType || ''}
+                        onValueChange={value =>
+                          handleChange({
+                            target: { name: 'propertyType', value },
+                          } as ChangeEvent<HTMLInputElement>)
+                        }
+                        onOpenChange={() => handleSelectBlur('propertyType')}
+                      >
+                        <SelectTrigger className="w-full h-11" aria-label="Select property type">
+                          <SelectValue placeholder="Select property type" />
+                        </SelectTrigger>
+                        <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
+                          <SelectItem value="single_family">Single Family Home</SelectItem>
+                          <SelectItem value="condo">Condo/Townhouse</SelectItem>
+                          <SelectItem value="multi_family">Multi-Family Home</SelectItem>
+                          <SelectItem value="mobile_home">Mobile Home</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {touchedFields.propertyType && formErrors.propertyType && (
+                        <p className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.propertyType}
+                        </p>
+                      )}
+                    </div>
+
+                    <FieldWithTooltip
+                      label="Property Value"
+                      name="propertyValue"
+                      tooltip="Estimated value of your property."
+                      required
+                      type="number"
+                      min={0}
+                      step={1000}
+                      placeholder="Enter property value"
+                      value={formData.propertyValue || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('coverageType') && (
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <label htmlFor="coverageType" className="block text-sm font-medium text-gray-700">
+                        Coverage Type <span className="text-red-500">*</span>
+                      </label>
+                      <Select
+                        value={formData.coverageType || ''}
+                        onValueChange={value =>
+                          handleChange({
+                            target: { name: 'coverageType', value },
+                          } as ChangeEvent<HTMLInputElement>)
+                        }
+                        onOpenChange={() => handleSelectBlur('coverageType')}
+                      >
+                        <SelectTrigger className="w-full h-11" aria-label="Select coverage type">
+                          <SelectValue placeholder="Select coverage type" />
+                        </SelectTrigger>
+                        <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
+                          <SelectItem value="individual">Individual Coverage</SelectItem>
+                          <SelectItem value="family">Family Coverage</SelectItem>
+                          <SelectItem value="medicare_supplement">Medicare Supplement</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {touchedFields.coverageType && formErrors.coverageType && (
+                        <p className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.coverageType}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {fields.includes('monthlyIncome') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Monthly Income"
+                      name="monthlyIncome"
+                      tooltip="Your current monthly income helps us determine appropriate coverage amounts."
+                      required
+                      type="number"
+                      min="0"
+                      step="100"
+                      placeholder="Enter your monthly income"
+                      value={formData.monthlyIncome || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.monthlyIncome ? formErrors.monthlyIncome : undefined}
+                      aria-invalid={!!formErrors.monthlyIncome}
+                      aria-describedby={formErrors.monthlyIncome ? 'monthlyIncome-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('occupation') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Occupation"
+                      name="occupation"
+                      tooltip="Your occupation helps us assess risk factors and determine appropriate coverage."
+                      required
+                      type="text"
+                      placeholder="Enter your occupation"
+                      value={formData.occupation || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.occupation ? formErrors.occupation : undefined}
+                      aria-invalid={!!formErrors.occupation}
+                      aria-describedby={formErrors.occupation ? 'occupation-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {fields.includes('currentCoverage') && (
+                  <div className="space-y-6">
+                    <FieldWithTooltip
+                      label="Current Coverage"
+                      name="currentCoverage"
+                      tooltip="Tell us about your current insurance coverage to help us recommend appropriate supplemental options."
+                      required
+                      type="text"
+                      placeholder="Describe your current coverage"
+                      value={formData.currentCoverage || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touchedFields.currentCoverage ? formErrors.currentCoverage : undefined}
+                      aria-invalid={!!formErrors.currentCoverage}
+                      aria-describedby={formErrors.currentCoverage ? 'currentCoverage-error' : undefined}
+                      className="h-11"
+                    />
+                  </div>
+                )}
+
+                {/* Hidden attribution fields */}
+                <div className="hidden">
+                  <input type="hidden" name="utmSource" value={attributionData.utmSource} />
+                  <input type="hidden" name="utmMedium" value={attributionData.utmMedium} />
+                  <input type="hidden" name="utmCampaign" value={attributionData.utmCampaign} />
+                  <input type="hidden" name="utmTerm" value={attributionData.utmTerm} />
+                  <input type="hidden" name="referrer" value={attributionData.referrer} />
+                </div>
+
+                {/* Honeypot field */}
+                <div className="hidden">
+                  <label htmlFor="website">Website</label>
                   <Input
                     type="text"
-                    name="zipCode"
-                    id="zipCode"
-                    required
-                    placeholder="Enter your ZIP code"
-                    value={formData.zipCode || ''}
+                    name="website"
+                    id="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website || ''}
                     onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`h-11 ${touchedFields.zipCode && formErrors.zipCode ? 'border-red-500' : ''}`}
-                    aria-required="true"
-                    aria-invalid={!!formErrors.zipCode}
-                    aria-describedby={formErrors.zipCode ? 'zipCode-error' : undefined}
                   />
-                  {touchedFields.zipCode && formErrors.zipCode && (
-                    <p id="zipCode-error" className="mt-1 text-sm text-red-600" role="alert">
-                      {formErrors.zipCode}
-                    </p>
-                  )}
                 </div>
-              </div>
-            </div>
 
-            {/* Product-specific fields */}
-            {formData.insuranceType === 'LIFE' && (
-              <div className="space-y-6">
-                <FieldWithTooltip
-                  label="Age"
-                  name="age"
-                  tooltip="Your age helps us determine the most appropriate coverage options and rates for you."
-                  required
-                  type="number"
-                  min="18"
-                  max="120"
-                  placeholder="Enter your age"
-                  value={formData.age || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touchedFields.age ? formErrors.age : undefined}
-                  aria-invalid={!!formErrors.age}
-                  aria-describedby={formErrors.age ? 'age-error' : undefined}
-                  className="h-11"
-                />
-
-                <FieldWithTooltip
-                  label="Coverage Amount"
-                  name="coverageAmount"
-                  tooltip="The amount of coverage you need. This helps us calculate your premium and ensure adequate protection."
-                  required
-                  type="number"
-                  min="0"
-                  step="1000"
-                  placeholder="Enter coverage amount"
-                  value={formData.coverageAmount || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touchedFields.coverageAmount ? formErrors.coverageAmount : undefined}
-                  aria-invalid={!!formErrors.coverageAmount}
-                  aria-describedby={formErrors.coverageAmount ? 'coverageAmount-error' : undefined}
-                  className="h-11"
-                />
-              </div>
-            )}
-
-            {formData.insuranceType === 'HOME' && (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="propertyType" className="block text-sm font-medium text-gray-700">
-                    Property Type <span className="text-red-500">*</span>
-                  </label>
-                  <Select
-                    value={formData.propertyType || ''}
-                    onValueChange={value =>
-                      handleChange({
-                        target: { name: 'propertyType', value },
-                      } as ChangeEvent<HTMLInputElement>)
-                    }
-                    onOpenChange={() => handleSelectBlur('propertyType')}
+                {/* Submit Button */}
+                <div className="mt-8">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`w-full h-12 text-base font-medium text-white bg-[#007BFF] hover:bg-[#0056b3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                    aria-label="Submit quote request"
                   >
-                    <SelectTrigger className="w-full h-11" aria-label="Select property type">
-                      <SelectValue placeholder="Select property type" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
-                      <SelectItem value="single_family">Single Family Home</SelectItem>
-                      <SelectItem value="condo">Condo/Townhouse</SelectItem>
-                      <SelectItem value="multi_family">Multi-Family Home</SelectItem>
-                      <SelectItem value="mobile_home">Mobile Home</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {touchedFields.propertyType && formErrors.propertyType && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">
-                      {formErrors.propertyType}
-                    </p>
-                  )}
-                </div>
-
-                <FieldWithTooltip
-                  label="Property Value"
-                  name="propertyValue"
-                  tooltip="Estimated value of your property."
-                  required
-                  type="number"
-                  min={0}
-                  step={1000}
-                  placeholder="Enter property value"
-                  value={formData.propertyValue || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="h-11"
-                />
-              </div>
-            )}
-
-            {formData.insuranceType === 'AUTO' && (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="vehicleUse" className="block text-sm font-medium text-gray-700">
-                    Vehicle Use <span className="text-red-500">*</span>
-                  </label>
-                  <Select
-                    value={formData.vehicleUse || ''}
-                    onValueChange={value =>
-                      handleChange({
-                        target: { name: 'vehicleUse', value },
-                      } as ChangeEvent<HTMLInputElement>)
-                    }
-                    onOpenChange={() => handleSelectBlur('vehicleUse')}
-                  >
-                    <SelectTrigger className="w-full h-11" aria-label="Select vehicle use">
-                      <SelectValue placeholder="Select vehicle use" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
-                      <SelectItem value="personal">Personal Use</SelectItem>
-                      <SelectItem value="commute">Commuting</SelectItem>
-                      <SelectItem value="business">Business Use</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {touchedFields.vehicleUse && formErrors.vehicleUse && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">
-                      {formErrors.vehicleUse}
-                    </p>
-                  )}
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </div>
+                    ) : (
+                      'Get My Free Quote'
+                    )}
+                  </Button>
                 </div>
               </div>
-            )}
-
-            {formData.insuranceType === 'HEALTH' && (
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label htmlFor="coverageType" className="block text-sm font-medium text-gray-700">
-                    Coverage Type <span className="text-red-500">*</span>
-                  </label>
-                  <Select
-                    value={formData.coverageType || ''}
-                    onValueChange={value =>
-                      handleChange({
-                        target: { name: 'coverageType', value },
-                      } as ChangeEvent<HTMLInputElement>)
-                    }
-                    onOpenChange={() => handleSelectBlur('coverageType')}
-                  >
-                    <SelectTrigger className="w-full h-11" aria-label="Select coverage type">
-                      <SelectValue placeholder="Select coverage type" />
-                    </SelectTrigger>
-                    <SelectContent className="z-[100] max-h-[200px] overflow-y-auto">
-                      <SelectItem value="individual">Individual Coverage</SelectItem>
-                      <SelectItem value="family">Family Coverage</SelectItem>
-                      <SelectItem value="medicare_supplement">Medicare Supplement</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {touchedFields.coverageType && formErrors.coverageType && (
-                    <p className="mt-1 text-sm text-red-600" role="alert">
-                      {formErrors.coverageType}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {formData.insuranceType === 'DISABILITY' && (
-              <div className="space-y-6">
-                <FieldWithTooltip
-                  label="Monthly Income"
-                  name="monthlyIncome"
-                  tooltip="Your current monthly income helps us determine appropriate coverage amounts."
-                  required
-                  type="number"
-                  min="0"
-                  step="100"
-                  placeholder="Enter your monthly income"
-                  value={formData.monthlyIncome || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touchedFields.monthlyIncome ? formErrors.monthlyIncome : undefined}
-                  aria-invalid={!!formErrors.monthlyIncome}
-                  aria-describedby={formErrors.monthlyIncome ? 'monthlyIncome-error' : undefined}
-                  className="h-11"
-                />
-
-                <FieldWithTooltip
-                  label="Occupation"
-                  name="occupation"
-                  tooltip="Your occupation helps us assess risk factors and determine appropriate coverage."
-                  required
-                  type="text"
-                  placeholder="Enter your occupation"
-                  value={formData.occupation || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touchedFields.occupation ? formErrors.occupation : undefined}
-                  aria-invalid={!!formErrors.occupation}
-                  aria-describedby={formErrors.occupation ? 'occupation-error' : undefined}
-                  className="h-11"
-                />
-              </div>
-            )}
-
-            {formData.insuranceType === 'SUPPLEMENTAL' && (
-              <div className="space-y-6">
-                <FieldWithTooltip
-                  label="Current Coverage"
-                  name="currentCoverage"
-                  tooltip="Tell us about your current insurance coverage to help us recommend appropriate supplemental options."
-                  required
-                  type="text"
-                  placeholder="Describe your current coverage"
-                  value={formData.currentCoverage || ''}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touchedFields.currentCoverage ? formErrors.currentCoverage : undefined}
-                  aria-invalid={!!formErrors.currentCoverage}
-                  aria-describedby={formErrors.currentCoverage ? 'currentCoverage-error' : undefined}
-                  className="h-11"
-                />
-              </div>
-            )}
-
-            {/* Hidden attribution fields */}
-            <div className="hidden">
-              <input type="hidden" name="utmSource" value={attributionData.utmSource} />
-              <input type="hidden" name="utmMedium" value={attributionData.utmMedium} />
-              <input type="hidden" name="utmCampaign" value={attributionData.utmCampaign} />
-              <input type="hidden" name="utmTerm" value={attributionData.utmTerm} />
-              <input type="hidden" name="referrer" value={attributionData.referrer} />
-            </div>
-
-            {/* Honeypot field */}
-            <div className="hidden">
-              <label htmlFor="website">Website</label>
-              <Input
-                type="text"
-                name="website"
-                id="website"
-                tabIndex={-1}
-                autoComplete="off"
-                value={formData.website || ''}
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="mt-8">
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className={`w-full h-12 text-base font-medium text-white bg-[#007BFF] hover:bg-[#0056b3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                aria-label="Submit quote request"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Submitting...
-                  </div>
-                ) : (
-                  'Get My Free Quote'
-                )}
-              </Button>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
+        
+        <div className="space-y-6">
+          {/* Additional trust-building content can go here */}
+        </div>
       </div>
     </div>
   );
