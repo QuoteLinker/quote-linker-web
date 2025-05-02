@@ -23,6 +23,11 @@ export const GTMEvents = {
   CONTACT_SUBMISSION: 'contact_submission',
   FORM_ERROR: 'form_error',
   NAV_CLICK: 'nav_click',
+  FORM_START: 'form_start',
+  FORM_FIELD_INTERACTION: 'form_field_interaction',
+  FORM_VALIDATION: 'form_validation',
+  CALENDLY_INTERACTION: 'calendly_interaction',
+  TRUST_SIGNAL: 'trust_signal',
 } as const;
 
 export function trackQuoteSubmission(insuranceType: string, zip: string) {
@@ -56,6 +61,55 @@ export function trackNavClick(linkText: string, path: string) {
     event: GTMEvents.NAV_CLICK,
     linkText,
     path,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export function trackFormFieldInteraction(formId: string, fieldName: string, action: 'focus' | 'blur' | 'change') {
+  pushGTMEvent({
+    event: GTMEvents.FORM_FIELD_INTERACTION,
+    formId,
+    fieldName,
+    action,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export function trackFormStart(formId: string, insuranceType: string) {
+  pushGTMEvent({
+    event: GTMEvents.FORM_START,
+    formId,
+    insuranceType,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export function trackFormValidation(formId: string, fieldName: string, isValid: boolean, errorMessage?: string) {
+  pushGTMEvent({
+    event: GTMEvents.FORM_VALIDATION,
+    formId,
+    fieldName,
+    isValid,
+    errorMessage,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export function trackCalendlyInteraction(action: 'open' | 'close' | 'scheduled', details?: Record<string, any>) {
+  pushGTMEvent({
+    event: GTMEvents.CALENDLY_INTERACTION,
+    action,
+    ...details,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export function trackTrustSignal(signalType: string, weight: number, metadata?: Record<string, any>) {
+  pushGTMEvent({
+    event: GTMEvents.TRUST_SIGNAL,
+    signalType,
+    weight,
+    ...metadata,
     timestamp: new Date().toISOString(),
   });
 } 

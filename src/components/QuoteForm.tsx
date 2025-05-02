@@ -26,6 +26,12 @@ import InsuranceTip from './InsuranceTip';
 import { TrustIndicator } from './trust/TrustIndicator';
 import { useQuoteTrust } from '@/lib/trust/useQuoteTrust';
 import { FormData, FormErrors, FIELD_CONFIG, InsuranceType } from '@/types/insurance';
+import { 
+  trackFormFieldInteraction, 
+  trackFormStart, 
+  trackFormValidation,
+  trackTrustSignal
+} from '@/utils/gtm';
 
 interface QuoteFormProps {
   insuranceType: InsuranceType;
@@ -175,6 +181,11 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     }
   }, []); // Only run once on mount
 
+  // Track form start when component mounts
+  useEffect(() => {
+    trackFormStart('quote-form', insuranceType);
+  }, [insuranceType]);
+
   const validateField = (name: string, value: string | null | undefined): string | undefined => {
     if (value === null || value === undefined) {
       if (['firstName', 'lastName', 'email', 'phone', 'zip', 'insuranceType'].includes(name)) {
@@ -242,26 +253,42 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     addFormInteractionSignal(`validation_${fieldName}`, isValid ? 0.2 : -0.1);
   };
 
-  // Update the handleChange function to include trust signals
+  // Update the handleChange function to include trust signals and field interaction tracking
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     handleFieldInteraction(name, value);
     
+    // Track field interaction
+    trackFormFieldInteraction('quote-form', name, 'change');
+    
     // Validate the field and update trust
     const error = validateField(name, value);
     setFormErrors(prev => ({ ...prev, [name]: error }));
     handleFieldValidation(name, !error);
+    
+    // Track validation result
+    trackFormValidation('quote-form', name, !error, error);
   };
 
+  // Update handleBlur to include field interaction tracking
   const handleBlur = useCallback(
     (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
       const { name } = e.target;
       setTouchedFields(prev => ({ ...prev, [name]: true }));
+      
+      // Track field interaction
+      trackFormFieldInteraction('quote-form', name, 'blur');
+      
       const value = formData[name as keyof FormData] as string | null | undefined;
       const error = validateField(name, value);
       if (error) {
         setFormErrors(prev => ({ ...prev, [name]: error }));
+        // Track validation error
+        trackFormValidation('quote-form', name, false, error);
+      } else {
+        // Track validation success
+        trackFormValidation('quote-form', name, true);
       }
     },
     [formData]
@@ -293,11 +320,14 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     return Object.keys(errors).length === 0;
   };
 
+  // Update handleSubmit to include trust signal tracking
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!validateForm()) {
       addFormInteractionSignal('form_validation_failed', -0.2);
+      // Track trust signal for validation failure
+      trackTrustSignal('form_validation', -0.2, { formId: 'quote-form', status: 'failed' });
       toast.error('Please check all required fields and try again');
       return;
     }
@@ -308,6 +338,7 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     try {
       // Add trust signal for form submission
       addFormInteractionSignal('form_submission_started', 0.3);
+      trackTrustSignal('form_submission', 0.3, { formId: 'quote-form', status: 'started' });
 
       // Construct the payload with all required fields
       const payload = {
@@ -367,6 +398,7 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
 
       // Add success trust signal
       addFormInteractionSignal('form_submission_success', 0.5);
+      trackTrustSignal('form_submission', 0.5, { formId: 'quote-form', status: 'success' });
 
       // Clear form
       setFormData({
@@ -387,6 +419,7 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     } catch (error) {
       console.error('Form submission error:', error);
       addFormInteractionSignal('form_submission_error', -0.3);
+      trackTrustSignal('form_submission', -0.3, { formId: 'quote-form', status: 'error' });
       
       // Show detailed error message
       toast.error(
