@@ -57,7 +57,7 @@ const InsuranceQuotes: React.FC = () => {
               </div>
             </div>
             <div className="px-4 py-5 sm:p-6">
-              <QuoteForm insuranceType={selectedInsurance} />
+              <QuoteForm intent={selectedInsurance} />
             </div>
           </div>
         </div>

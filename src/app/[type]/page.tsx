@@ -36,7 +36,7 @@ export default function InsurancePage({ params }: InsurancePageProps) {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white shadow-xl rounded-lg overflow-hidden">
             <div className="p-6 sm:p-8">
-              <QuoteForm insuranceType={insuranceType as any} />
+              <QuoteForm intent={insuranceType} />
             </div>
           </div>
 

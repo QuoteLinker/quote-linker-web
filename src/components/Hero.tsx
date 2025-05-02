@@ -53,25 +53,27 @@ export default function Hero({ insuranceType }: HeroProps) {
   };
 
   return (
-    <div className="relative bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white pt-16 md:pt-24 pb-16">
+    <div className="relative bg-gradient-to-b from-[#0B0B45] to-[#1A1A6C] text-white pt-32 md:pt-44 pb-16">
       <div className="absolute inset-0 bg-[url('/images/pattern.svg')] opacity-10"></div>
       <div className="container mx-auto px-4 relative">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto flex flex-col items-center justify-center text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {title}
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-200">
             {subtitle}
           </p>
-          <button
-            onClick={scrollToForm}
-            className="inline-flex items-center justify-center px-8 py-4 bg-[#00EEFD] text-white rounded-lg font-extrabold text-lg md:text-xl shadow-lg hover:bg-[#00D4E5] focus:outline-none focus:ring-4 focus:ring-[#00EEFD]/50 transition-colors duration-200 w-full max-w-xs mx-auto mb-4 md:mb-0"
-            style={{ boxShadow: '0 4px 24px 0 rgba(0,238,253,0.15)' }}
-            aria-label="Get My Free Quote"
-          >
-            Get My Free Quote
-            <ArrowDownIcon className="ml-2 h-5 w-5" />
-          </button>
+          <div className="flex justify-center w-full">
+            <button
+              onClick={scrollToForm}
+              className="inline-flex items-center justify-center px-8 py-4 bg-[#00EEFD] text-white rounded-lg font-extrabold text-lg md:text-xl shadow-lg hover:bg-[#00D4E5] focus:outline-none focus:ring-4 focus:ring-[#00EEFD]/50 transition-colors duration-200 w-full max-w-xs mx-auto mb-4 md:mb-0"
+              style={{ boxShadow: '0 4px 24px 0 rgba(0,238,253,0.15)' }}
+              aria-label="Get My Free Quote"
+            >
+              Get My Free Quote
+              <ArrowDownIcon className="ml-2 h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

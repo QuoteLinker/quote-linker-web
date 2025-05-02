@@ -34,13 +34,15 @@ import {
 } from '@/utils/gtm';
 
 interface QuoteFormProps {
-  insuranceType: InsuranceType;
+  intent?: string;
   className?: string;
 }
 
 const FORM_KEY = 'savedQuoteForm';
 
-function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
+function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps) {
+  // Map intent to insuranceType
+  const insuranceType = (intent || 'general').toUpperCase() as InsuranceType;
   if (!insuranceType || !FIELD_CONFIG[insuranceType]) {
     console.error('QuoteForm: Invalid or missing insuranceType:', insuranceType);
     return (
@@ -104,22 +106,9 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  // Update insurance type based on route when component mounts
-  useEffect(() => {
-    if (isProductSpecificPage) {
-      const routeType = pathname?.substring(1).toUpperCase() as InsuranceType;
-      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
-        setFormData(prev => ({
-          ...prev,
-          insuranceType: routeType
-        }));
-      }
-    }
-  }, [pathname, isProductSpecificPage]);
-
   // Default to the first main insurance type if none provided
   const defaultType: InsuranceType = 'AUTO';
-  const initialType = insuranceType ? insuranceType.toUpperCase() as InsuranceType : defaultType;
+  const initialType = insuranceType ? insuranceType : defaultType;
 
   // Convert to main insurance type if it's a subtype
   const getMainType = (type: InsuranceType): InsuranceType => {
@@ -155,9 +144,25 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
       email: '',
       phone: '',
       zip: '',
-      insuranceType: insuranceType.toUpperCase() as InsuranceType,
+      insuranceType: insuranceType,
     };
   });
+
+  // Reset form state on intent/insuranceType change
+  useEffect(() => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      zip: '',
+      insuranceType: insuranceType,
+    });
+    setFormErrors({});
+    setTouchedFields({});
+    setIsSubmitting(false);
+    setSubmitStatus('idle');
+  }, [insuranceType]);
 
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
@@ -934,10 +939,10 @@ function QuoteFormContent({ insuranceType, className = '' }: QuoteFormProps) {
   );
 }
 
-export default function QuoteForm(props: QuoteFormProps) {
+export default function QuoteForm({ intent = 'general', className, }: QuoteFormProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <QuoteFormContent {...props} />
+      <QuoteFormContent intent={intent} className={className} />
     </Suspense>
   );
 }

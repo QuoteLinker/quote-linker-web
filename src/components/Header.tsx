@@ -100,9 +100,9 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
-          <div className="relative flex items-center justify-between gap-x-8">
+          <div className="relative flex flex-col items-center justify-center gap-y-2 gap-x-8">
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center justify-center w-full mb-2">
               <Link 
                 href="/" 
                 className="block transform transition-transform hover:scale-105 duration-200" 
@@ -114,7 +114,7 @@ export default function Header() {
             </div>
 
             {/* Desktop navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-x-8 w-full">
+            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-8 w-full">
               {/* Insurance Types - More Prominent */}
               <div className="flex items-center gap-x-8">
                 {insuranceTypes.map((item) => (

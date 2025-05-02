@@ -72,7 +72,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           <div className="bg-white shadow-xl rounded-lg overflow-hidden" id="quote-form">
             <div className="p-6 sm:p-8">
               <Suspense fallback={<LoadingSpinner />}>
-                <QuoteForm insuranceType={type} />
+                <QuoteForm intent={type} />
               </Suspense>
             </div>
           </div>
