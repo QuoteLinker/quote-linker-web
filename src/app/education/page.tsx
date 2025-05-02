@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Image from 'next/image';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Insurance Education Hub | Learn About Coverage | QuoteLinker',
@@ -53,89 +54,165 @@ function getArticles(): Article[] {
   return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
+function EducationPageSchema({ articles }: { articles: Article[] }) {
+  return (
+    <Script
+      id="education-page-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          '@id': 'https://www.quotelinker.com/education#webpage',
+          name: 'Insurance Education Hub',
+          description: 'Learn everything you need to know about insurance coverage. Compare products, understand policy types, and make informed decisions.',
+          isPartOf: {
+            '@type': 'WebSite',
+            '@id': 'https://www.quotelinker.com/#website',
+            name: 'QuoteLinker',
+            url: 'https://www.quotelinker.com'
+          },
+          breadcrumb: {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                item: {
+                  '@id': 'https://www.quotelinker.com',
+                  name: 'Home'
+                }
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                item: {
+                  '@id': 'https://www.quotelinker.com/education',
+                  name: 'Education'
+                }
+              }
+            ]
+          },
+          mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: articles.map((article, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              item: {
+                '@type': 'EducationalArticle',
+                '@id': `https://www.quotelinker.com/education/${article.slug}`,
+                headline: article.title,
+                description: article.description,
+                author: {
+                  '@type': 'Organization',
+                  name: 'QuoteLinker Team'
+                },
+                publisher: {
+                  '@type': 'Organization',
+                  name: 'QuoteLinker',
+                  logo: {
+                    '@type': 'ImageObject',
+                    url: 'https://www.quotelinker.com/logo.png'
+                  }
+                },
+                datePublished: article.date,
+                image: article.coverImage ? `https://www.quotelinker.com${article.coverImage}` : undefined,
+                articleSection: article.category
+              }
+            }))
+          }
+        })
+      }}
+    />
+  );
+}
+
 export default function EducationPage() {
   const articles = getArticles();
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#00EEFD] to-[#00D4E5] py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
-              Insurance Education Hub
-            </h1>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto mb-4">
-              Learn everything you need to know about insurance to make informed decisions for you
-              and your family.
+    <>
+      <EducationPageSchema articles={articles} />
+      <div className="min-h-screen bg-white">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-r from-[#00EEFD] to-[#00D4E5] py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+                Insurance Education Hub
+              </h1>
+              <p className="text-xl text-white/90 max-w-3xl mx-auto mb-4">
+                Learn everything you need to know about insurance to make informed decisions for you
+                and your family.
+              </p>
+              <p className="text-lg text-white/80 max-w-3xl mx-auto">
+                Learn the basics of coverage, compare product types, and make smarter decisions — all in one place.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Articles Grid */}
+        <div className="py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.map(article => (
+                <Link
+                  key={article.slug}
+                  href={`/education/${article.slug}`}
+                  className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+                >
+                  {article.coverImage && (
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={article.coverImage}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <span className="inline-block px-3 py-1 text-sm font-semibold text-[#00EEFD] bg-[#00EEFD]/10 rounded-full mb-4">
+                      {article.category}
+                    </span>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#00EEFD] transition-colors duration-200">
+                      {article.title}
+                    </h2>
+                    <p className="text-gray-600 mb-4">{article.description}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <time dateTime={article.date}>
+                        {new Date(article.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </time>
+                      {article.readingTime && <span>{article.readingTime}</span>}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="bg-gray-50 py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold mb-6">Need Help Choosing Insurance?</h2>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Our team of experts is here to help you find the right coverage for your needs.
             </p>
-            <p className="text-lg text-white/80 max-w-3xl mx-auto">
-              Learn the basics of coverage, compare product types, and make smarter decisions — all in one place.
-            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-colors duration-200"
+            >
+              Get a Free Quote
+            </Link>
           </div>
         </div>
       </div>
-
-      {/* Articles Grid */}
-      <div className="py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.map(article => (
-              <Link
-                key={article.slug}
-                href={`/education/${article.slug}`}
-                className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
-              >
-                {article.coverImage && (
-                  <div className="relative h-48 w-full">
-                    <Image
-                      src={article.coverImage}
-                      alt={article.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="p-6">
-                  <span className="inline-block px-3 py-1 text-sm font-semibold text-[#00EEFD] bg-[#00EEFD]/10 rounded-full mb-4">
-                    {article.category}
-                  </span>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#00EEFD] transition-colors duration-200">
-                    {article.title}
-                  </h2>
-                  <p className="text-gray-600 mb-4">{article.description}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <time dateTime={article.date}>
-                      {new Date(article.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                    </time>
-                    {article.readingTime && <span>{article.readingTime}</span>}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Section */}
-      <div className="bg-gray-50 py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-6">Need Help Choosing Insurance?</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Our team of experts is here to help you find the right coverage for your needs.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-colors duration-200"
-          >
-            Get a Free Quote
-          </Link>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
