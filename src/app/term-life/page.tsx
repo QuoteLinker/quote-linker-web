@@ -1,8 +1,7 @@
 import ProductPage from '@/components/ProductPage';
-import type { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function TermLifePage() {
-  return <ProductPage params={{ type: 'LIFE_TERM' as InsuranceType }} />;
+  return <ProductPage params={{ type: 'term-life' }} />;
 }
 
 export const metadata = {
