@@ -44,3 +44,12 @@ Phase 2 (Coming Soon):
 - Agent portal (login, lead tracking, Stripe billing)
 - Fully AI-integrated follow-up and campaign workflows
 All AI-generated improvements must follow these principles and support QuoteLinker’s position as the next QuoteWizard, built for the modern insurance economy.
+
+All changes must reinforce the QuoteLinker AI Engineering Mindset:
+
+- Simplify codebase continuously
+- Refactor for clarity and trust
+- Validate end-to-end user flow on all device types
+- Push with purpose: build a category-defining insurance funnel
+
+Every commit must serve a real person taking action on insurance.

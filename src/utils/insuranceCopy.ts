@@ -9,7 +9,8 @@ export type InsuranceType =
   | 'LIFE_TERM'
   | 'LIFE_PERMANENT'
   | 'HEALTH_SHORT_TERM_DISABILITY'
-  | 'HEALTH_SUPPLEMENTAL';
+  | 'HEALTH_SUPPLEMENTAL'
+  | 'DISABILITY';
 
 interface Benefit {
   title: string;
@@ -378,6 +379,50 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
       {
         question: 'Can I have multiple supplemental plans?',
         answer: 'Yes, you can combine different types of supplemental coverage to create a comprehensive protection plan. We\'ll help you design a package that meets your specific needs and budget.'
+      }
+    ]
+  },
+  DISABILITY: {
+    title: 'Disability Insurance',
+    subtitle: 'Protect your income with comprehensive disability coverage',
+    benefits: [
+      {
+        title: 'Income Protection',
+        description: 'Replace your income if you become disabled'
+      },
+      {
+        title: 'Flexible Coverage',
+        description: 'Choose the coverage that fits your needs'
+      },
+      {
+        title: 'Quick Benefits',
+        description: 'Get benefits when you need them most'
+      },
+      {
+        title: 'Easy Application',
+        description: 'Simple application process'
+      },
+      {
+        title: 'Expert Support',
+        description: 'Guidance from licensed agents'
+      }
+    ],
+    faqs: [
+      {
+        question: 'What does disability insurance cover?',
+        answer: 'Disability insurance provides income replacement if you become unable to work due to illness or injury. It helps protect your financial stability during recovery.'
+      },
+      {
+        question: 'How much disability coverage do I need?',
+        answer: 'Generally, you should aim to cover 60-70% of your gross monthly income. We\'ll help you calculate the right amount based on your situation.'
+      },
+      {
+        question: 'How long do benefits last?',
+        answer: 'Benefit periods can range from a few months to several years, or even until retirement age, depending on the policy you choose.'
+      },
+      {
+        question: 'Is disability insurance worth it?',
+        answer: 'If you rely on your income to support yourself or your family, disability insurance is crucial protection against unexpected illness or injury.'
       }
     ]
   }

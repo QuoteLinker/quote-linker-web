@@ -15,6 +15,7 @@ const productTitles: Record<InsuranceType, string> = {
   HEALTH_SUPPLEMENTAL: 'Supplemental Health Insurance',
   LIFE: 'Life Insurance',
   HEALTH: 'Health Insurance',
+  DISABILITY: 'Protect Your Paycheck with Disability Insurance',
 };
 
 const productSubtitles: Record<InsuranceType, string> = {
@@ -26,6 +27,7 @@ const productSubtitles: Record<InsuranceType, string> = {
   HEALTH_SUPPLEMENTAL: 'Get additional health coverage for extra peace of mind.',
   LIFE: 'Protect your loved ones with the right life insurance coverage.',
   HEALTH: 'Find comprehensive health insurance that fits your needs and budget.',
+  DISABILITY: 'Short-term disability coverage for life\'s what-ifs',
 };
 
 export default function Hero({ insuranceType }: HeroProps) {
