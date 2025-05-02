@@ -7,9 +7,14 @@ import matter from 'gray-matter';
 import Image from 'next/image';
 
 export const metadata: Metadata = {
-  title: 'Insurance Education Hub | QuoteLinker - Learn About Insurance',
+  title: 'Insurance Education Hub | Learn About Coverage | QuoteLinker',
   description:
-    'Comprehensive insurance education resources. Learn about term life insurance, auto & home bundles, disability insurance, and more.',
+    'Learn everything you need to know about insurance coverage. Compare products, understand policy types, and make informed decisions for your family.',
+  openGraph: {
+    title: 'Insurance Education Hub | QuoteLinker',
+    description: 'Learn about insurance coverage, compare products, and make informed decisions.',
+    images: [{ url: '/images/education-hub-og.png', width: 1200, height: 630 }],
+  },
 };
 
 interface Article {
@@ -60,9 +65,12 @@ export default function EducationPage() {
             <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6">
               Insurance Education Hub
             </h1>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+            <p className="text-xl text-white/90 max-w-3xl mx-auto mb-4">
               Learn everything you need to know about insurance to make informed decisions for you
               and your family.
+            </p>
+            <p className="text-lg text-white/80 max-w-3xl mx-auto">
+              Learn the basics of coverage, compare product types, and make smarter decisions — all in one place.
             </p>
           </div>
         </div>

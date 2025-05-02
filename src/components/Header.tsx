@@ -49,6 +49,8 @@ export default function Header() {
   };
 
   const navigation = [
+    { name: 'Education', href: '/education' },
+    { name: 'For Agents', href: '/agents' },
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];

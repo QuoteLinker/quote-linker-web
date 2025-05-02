@@ -3,6 +3,29 @@
 import React, { SVGProps } from 'react';
 import Link from 'next/link';
 
+const navigation = {
+  products: [
+    { name: 'Auto Insurance', href: '/auto' },
+    { name: 'Home Insurance', href: '/home' },
+    { name: 'Life Insurance', href: '/life' },
+    { name: 'Disability Insurance', href: '/disability' },
+  ],
+  company: [
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
+    { name: 'For Agents', href: '/agents' },
+  ],
+  resources: [
+    { name: 'Education Hub', href: '/education' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'FAQs', href: '/faqs' },
+  ],
+  legal: [
+    { name: 'Privacy', href: '/privacy' },
+    { name: 'Terms', href: '/terms' },
+  ],
+};
+
 const socialLinks = [
   {
     name: 'YouTube',
@@ -27,43 +50,84 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200">
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex flex-col items-center justify-between md:flex-row">
-          <div className="flex flex-col items-center space-y-2 md:items-center md:flex-1">
-            <p className="text-sm text-gray-500 text-center">
-              © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
-            </p>
-            <p className="text-sm text-gray-500 text-center">
-              400 S 4th St Ste 410 PMB 629080, Minneapolis, MN 55415
-            </p>
-            <p className="text-sm text-gray-500 text-center">
-              <a href="mailto:support@quotelinker.com" className="hover:text-[#00EEFD]">
+      <div className="mx-auto max-w-7xl px-6 py-12 lg:py-16">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Products</h3>
+            <ul className="mt-4 space-y-3">
+              {navigation.products.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Company</h3>
+            <ul className="mt-4 space-y-3">
+              {navigation.company.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
+            <ul className="mt-4 space-y-3">
+              {navigation.resources.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900">Legal</h3>
+            <ul className="mt-4 space-y-3">
+              {navigation.legal.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="text-sm text-gray-600 hover:text-[#00EEFD]">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <div className="mt-12 border-t border-gray-200 pt-8">
+          <div className="flex flex-col items-center justify-between md:flex-row">
+            <div className="flex flex-col items-center space-y-2 md:items-start">
+              <p className="text-sm text-gray-500">
+                © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
+              </p>
+              <p className="text-sm text-gray-500">
+                400 S 4th St Ste 410 PMB 629080, Minneapolis, MN 55415
+              </p>
+              <a href="mailto:support@quotelinker.com" className="text-sm text-gray-500 hover:text-[#00EEFD]">
                 support@quotelinker.com
               </a>
-            </p>
-            <div className="flex space-x-4">
-              <Link href="/terms" className="text-sm text-gray-500 hover:text-[#00EEFD]">
-                Terms
-              </Link>
-              <span className="text-gray-500">|</span>
-              <Link href="/privacy" className="text-sm text-gray-500 hover:text-[#00EEFD]">
-                Privacy
-              </Link>
             </div>
-          </div>
-          <div className="mt-4 flex space-x-6 md:mt-0 md:justify-end">
-            {socialLinks.map(item => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-gray-400 hover:text-[#00EEFD] transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="sr-only">{item.name}</span>
-                <item.icon className="h-6 w-6" aria-hidden="true" />
-              </a>
-            ))}
+            <div className="mt-4 flex space-x-6 md:mt-0">
+              {socialLinks.map(item => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-400 hover:text-[#00EEFD] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="sr-only">{item.name}</span>
+                  <item.icon className="h-6 w-6" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
