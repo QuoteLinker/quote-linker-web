@@ -32,8 +32,25 @@ interface ProductPageProps {
   };
 }
 
+const typeMapping: Record<string, InsuranceType> = {
+  'auto': 'AUTO',
+  'home': 'HOME',
+  'life': 'LIFE',
+  'health': 'HEALTH',
+  'disability': 'DISABILITY',
+  'term-life': 'LIFE_TERM',
+  'permanent-life': 'LIFE_PERMANENT',
+  'short-term-disability': 'HEALTH_SHORT_TERM_DISABILITY',
+  'supplemental-health': 'HEALTH_SUPPLEMENTAL'
+};
+
 export default function ProductPage({ params }: ProductPageProps) {
-  const type = params.type.toUpperCase() as InsuranceType;
+  const inputType = params.type.toLowerCase();
+  const type = typeMapping[inputType];
+  
+  if (!type) {
+    throw new Error(`Invalid insurance type: ${params.type}`);
+  }
   
   return (
     <div className="min-h-screen bg-gray-50">
