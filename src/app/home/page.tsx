@@ -1,5 +1,5 @@
-import ProductPage from '@/components/ProductPage';
+import { redirect } from 'next/navigation';
 
 export default function HomeInsurancePage() {
-  return <ProductPage params={{ type: 'HOME' }} />;
+  redirect('/home');
 }

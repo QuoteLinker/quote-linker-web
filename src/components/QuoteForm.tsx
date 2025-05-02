@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent, useRef } from 'react';
-import { InsuranceType, MainInsuranceType } from '@/utils/insuranceCopy';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,7 +25,7 @@ import { toast } from 'react-hot-toast';
 import InsuranceTip from './InsuranceTip';
 import { TrustIndicator } from './trust/TrustIndicator';
 import { useQuoteTrust } from '@/lib/trust/useQuoteTrust';
-import { FormData, FormErrors, FIELD_CONFIG } from '@/types/insurance';
+import { FormData, FormErrors, FIELD_CONFIG, InsuranceType } from '@/types/insurance';
 
 interface QuoteFormProps {
   insuranceType: InsuranceType;
@@ -44,7 +43,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   // Initialize trust system
   const { addFormInteractionSignal, addSocialProofSignal } = useQuoteTrust({
     formId: 'quote-form',
-    productType: insuranceType as MainInsuranceType,
+    productType: insuranceType as InsuranceType,
   });
 
   // Track UTM parameters and referrer
@@ -92,8 +91,8 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   // Update insurance type based on route when component mounts
   useEffect(() => {
     if (isProductSpecificPage) {
-      const routeType = pathname?.substring(1).toUpperCase() as MainInsuranceType;
-      if (routeType && ['AUTO', 'HOME', 'LIFE', 'HEALTH'].includes(routeType)) {
+      const routeType = pathname?.substring(1).toLowerCase() as InsuranceType;
+      if (routeType && ['auto', 'home', 'life', 'health'].includes(routeType)) {
         setFormData(prev => ({
           ...prev,
           insuranceType: routeType
@@ -103,17 +102,12 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
   }, [pathname, isProductSpecificPage]);
 
   // Default to the first main insurance type if none provided
-  const defaultType: MainInsuranceType = 'AUTO';
-  const initialType = insuranceType as MainInsuranceType || defaultType;
+  const defaultType: InsuranceType = 'auto';
+  const initialType = insuranceType || defaultType;
 
   // Convert to main insurance type if it's a subtype
-  const getMainType = (type: InsuranceType): MainInsuranceType => {
-    if (type === 'AUTO' || type === 'HOME' || type === 'LIFE' || type === 'HEALTH') {
-      return type;
-    }
-    if (type.startsWith('LIFE_')) return 'LIFE';
-    if (type.startsWith('HEALTH_')) return 'HEALTH';
-    return defaultType;
+  const getMainType = (type: InsuranceType): InsuranceType => {
+    return type;
   };
 
   // Load saved form data from localStorage
@@ -145,7 +139,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
       email: '',
       phone: '',
       zip: '',
-      insuranceType: getMainType(initialType),
+      insuranceType: insuranceType,
     };
   });
 
@@ -324,25 +318,25 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         zip: formData.zip,
         insuranceType: formData.insuranceType,
         // Add product-specific fields
-        ...(formData.insuranceType === 'LIFE' && {
+        ...(formData.insuranceType === 'life' && {
           age: formData.age,
           coverageAmount: formData.coverageAmount,
         }),
-        ...(formData.insuranceType === 'HOME' && {
+        ...(formData.insuranceType === 'home' && {
           propertyType: formData.propertyType,
           propertyValue: formData.propertyValue,
         }),
-        ...(formData.insuranceType === 'AUTO' && {
+        ...(formData.insuranceType === 'auto' && {
           vehicleUse: formData.vehicleUse,
         }),
-        ...(formData.insuranceType === 'HEALTH' && {
+        ...(formData.insuranceType === 'health' && {
           coverageType: formData.coverageType,
         }),
-        ...(formData.insuranceType === 'DISABILITY' && {
+        ...(formData.insuranceType === 'disability' && {
           monthlyIncome: formData.monthlyIncome,
           occupation: formData.occupation,
         }),
-        ...(formData.insuranceType === 'SUPPLEMENTAL' && {
+        ...(formData.insuranceType === 'supplemental' && {
           currentCoverage: formData.currentCoverage,
         }),
         // Add honeypot and metadata
@@ -358,40 +352,39 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
         referrer: attributionData.referrer,
       };
 
+      // Submit to Zapier webhook
       const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || '/api/submit-quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to submit form. Please try again.');
+        throw new Error('Failed to submit quote request');
       }
 
-      // Add success trust signals
+      // Add success trust signal
       addFormInteractionSignal('form_submission_success', 0.5);
-      addSocialProofSignal('form_completion', 0.4);
 
-      setSubmitStatus('success');
-      toast.success('Thanks! Your quote request was submitted successfully. We\'ll be in touch shortly.');
-      
-      // Clear saved form data on successful submission
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem(FORM_KEY);
-      }
-      
-      // Redirect to thank you page after a short delay
-      setTimeout(() => {
-        router.push('/thank-you');
-      }, 1500);
+      // Clear form and redirect to thank you page
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        zip: '',
+        insuranceType: insuranceType,
+      });
+
+      // Redirect to thank you page with Calendly
+      router.push('/thank-you');
+
     } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitStatus('error');
+      console.error('Form submission error:', error);
       addFormInteractionSignal('form_submission_error', -0.3);
-      toast.error(error instanceof Error ? error.message : 'Something went wrong. Please try again or call us directly.');
+      toast.error('Failed to submit form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -416,7 +409,7 @@ export default function QuoteForm({ insuranceType, className = '' }: QuoteFormPr
               aria-label="Insurance Quote Request Form"
             >
               <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
-                Get Your Free Quote
+                Get Your Free {insuranceType.charAt(0).toUpperCase() + insuranceType.slice(1)} Insurance Quote
               </h2>
 
               <div className="space-y-6">

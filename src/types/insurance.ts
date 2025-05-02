@@ -1,4 +1,4 @@
-export type InsuranceType = 'life' | 'disability' | 'home' | 'auto' | 'health';
+export type InsuranceType = 'life' | 'disability' | 'home' | 'auto' | 'health' | 'supplemental';
 
 export type FormField =
   | 'firstName'
@@ -40,6 +40,7 @@ export interface FormData {
   monthlyIncome?: string;
   occupation?: string;
   currentCoverage?: string;
+  website?: string;
 }
 
 export interface FormErrors {
