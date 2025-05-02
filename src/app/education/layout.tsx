@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { Metadata } from 'next';
 import Script from 'next/script';
 
 const categories = [
@@ -12,17 +11,6 @@ const categories = [
   { name: 'Health Insurance', slug: 'health-insurance' },
   { name: 'Auto & Home', slug: 'auto-home' },
 ];
-
-export const metadata: Metadata = {
-  title: 'Insurance Education Hub | Learn About Coverage | QuoteLinker',
-  description:
-    'Learn everything you need to know about insurance coverage. Compare products, understand policy types, and make informed decisions for your family.',
-  openGraph: {
-    title: 'Insurance Education Hub | QuoteLinker',
-    description: 'Learn about insurance coverage, compare products, and make informed decisions.',
-    images: [{ url: '/images/education-hub-og.png', width: 1200, height: 630 }],
-  },
-};
 
 export default function EducationLayout({
   children,
