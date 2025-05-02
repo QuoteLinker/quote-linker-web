@@ -2,23 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Image from 'next/image';
 import Script from 'next/script';
-
-export const metadata: Metadata = {
-  title: 'Insurance Education Hub | Learn About Coverage | QuoteLinker',
-  description:
-    'Learn everything you need to know about insurance coverage. Compare products, understand policy types, and make informed decisions for your family.',
-  openGraph: {
-    title: 'Insurance Education Hub | QuoteLinker',
-    description: 'Learn about insurance coverage, compare products, and make informed decisions.',
-    images: [{ url: '/images/education-hub-og.png', width: 1200, height: 630 }],
-  },
-};
 
 interface Article {
   slug: string;
@@ -29,6 +17,8 @@ interface Article {
   readingTime?: string;
   category: string;
 }
+
+const DEFAULT_COVER_IMAGE = '/images/education/default-article.jpg';
 
 // Pre-fetch articles at build time
 const articles = getArticles();
@@ -136,8 +126,6 @@ function EducationPageSchema({ articles }: { articles: Article[] }) {
     />
   );
 }
-
-const DEFAULT_COVER_IMAGE = '/images/education/default-article.jpg';
 
 export default function EducationPage() {
   return (
