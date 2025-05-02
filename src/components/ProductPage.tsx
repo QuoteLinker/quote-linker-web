@@ -49,12 +49,13 @@ export default function ProductPage({ params }: ProductPageProps) {
   const type = typeMapping[inputType];
   
   if (!type) {
-    console.error(`Invalid insurance type: ${params.type}`);
+    console.error(`Invalid insurance type: ${params.type}. Input type:`, inputType, 'Type mapping:', typeMapping);
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Invalid Insurance Type</h1>
-          <p className="text-gray-600">Please select a valid insurance type.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
+          <p className="text-gray-600 mb-4">We couldn't find the right insurance type for this page. Please check the URL or return to the home page.</p>
+          <a href="/" className="inline-block px-6 py-3 bg-[#00EEFD] text-white rounded-lg font-bold text-lg shadow hover:bg-[#00D4E5] transition-colors duration-200">Return Home</a>
         </div>
       </div>
     );

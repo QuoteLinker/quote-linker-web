@@ -56,7 +56,9 @@ export default function Hero({ insuranceType }: HeroProps) {
           </p>
           <button
             onClick={scrollToForm}
-            className="inline-flex items-center px-8 py-4 bg-[#00EEFD] text-white rounded-lg font-bold text-lg hover:bg-[#00D4E5] transition-colors duration-200"
+            className="inline-flex items-center justify-center px-8 py-4 bg-[#00EEFD] text-white rounded-lg font-extrabold text-lg md:text-xl shadow-lg hover:bg-[#00D4E5] focus:outline-none focus:ring-4 focus:ring-[#00EEFD]/50 transition-colors duration-200 w-full max-w-xs mx-auto mb-4 md:mb-0"
+            style={{ boxShadow: '0 4px 24px 0 rgba(0,238,253,0.15)' }}
+            aria-label="Get My Free Quote"
           >
             Get My Free Quote
             <ArrowDownIcon className="ml-2 h-5 w-5" />
