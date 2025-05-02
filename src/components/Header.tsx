@@ -90,7 +90,7 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
-          <div className="relative flex items-center justify-between">
+          <div className="relative flex items-center justify-between gap-x-6">
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link 
@@ -104,7 +104,7 @@ export default function Header() {
             </div>
 
             {/* Desktop navigation */}
-            <div className="hidden lg:flex lg:items-center lg:gap-x-8">
+            <div className="hidden lg:flex lg:items-center lg:gap-x-6">
               {/* Insurance Types - More Prominent */}
               <div className="flex items-center gap-x-6">
                 {insuranceTypes.map((item) => (
@@ -223,10 +223,11 @@ export default function Header() {
               
               <div className="h-5 w-px bg-gray-200" />
               
+              {/* CTA Button */}
               <Link
-                href={`/${currentInsuranceType}`}
-                className="inline-flex items-center px-6 py-2.5 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
-                onClick={() => handleNavClick('Get a Quote', `/${currentInsuranceType}`)}
+                href={`/quote?type=${currentInsuranceType}`}
+                className="hidden lg:inline-flex items-center justify-center rounded-lg bg-electric-blue px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2"
+                onClick={() => handleNavClick('Get My Free Quote', `/quote?type=${currentInsuranceType}`)}
               >
                 Get My Free Quote
               </Link>
@@ -332,5 +333,4 @@ export default function Header() {
       <div className="h-14" />
     </>
   );
-} 
 } 

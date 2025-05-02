@@ -12,6 +12,17 @@ export const metadata: Metadata = {
     description: 'Access exclusive insurance leads and scalable funnel automation.',
     images: [{ url: '/images/agents-og.png', width: 1200, height: 630 }],
   },
+  keywords: [
+    'insurance leads',
+    'lead generation',
+    'insurance agents',
+    'exclusive leads',
+    'AI matching',
+    'territory protection',
+    'insurance sales',
+    'agent portal',
+    'CRM integration',
+  ],
 };
 
 const features = [
@@ -81,7 +92,16 @@ export default function AgentsPage() {
             <div className="mt-10 flex items-center justify-center gap-6">
               <Link
                 href="/contact"
-                className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2"
+                className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+                onClick={() => {
+                  // Track CTA click
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'click', {
+                      event_category: 'CTA',
+                      event_label: 'Apply for Access - Agents Page',
+                    });
+                  }
+                }}
               >
                 Apply for Access
               </Link>
@@ -89,7 +109,16 @@ export default function AgentsPage() {
                 href="https://calendly.com/quotelinker/demo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-200"
+                onClick={() => {
+                  // Track CTA click
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'click', {
+                      event_category: 'CTA',
+                      event_label: 'Schedule Demo - Agents Page',
+                    });
+                  }
+                }}
               >
                 Schedule a Demo
               </a>
@@ -192,7 +221,16 @@ export default function AgentsPage() {
             <div className="mt-10 flex items-center justify-center gap-6">
               <Link
                 href="/contact"
-                className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2"
+                className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+                onClick={() => {
+                  // Track CTA click
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'click', {
+                      event_category: 'CTA',
+                      event_label: 'Apply for Access - Agents Page',
+                    });
+                  }
+                }}
               >
                 Apply for Access
               </Link>
@@ -200,7 +238,16 @@ export default function AgentsPage() {
                 href="https://calendly.com/quotelinker/demo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-200"
+                onClick={() => {
+                  // Track CTA click
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'click', {
+                      event_category: 'CTA',
+                      event_label: 'Schedule Demo - Agents Page',
+                    });
+                  }
+                }}
               >
                 Schedule a Demo
               </a>

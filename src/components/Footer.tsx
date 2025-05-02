@@ -49,10 +49,10 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50" aria-labelledby="footer-heading">
+    <footer className="bg-gray-50 border-t border-muted" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">Footer</h2>
-      <div className="container max-w-screen-xl mx-auto px-4 py-12 sm:py-16">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+      <div className="container max-w-screen-xl mx-auto px-4 py-10 md:py-16">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           <div>
             <h3 className="text-sm font-semibold text-gray-900">Products</h3>
             <ul role="list" className="mt-4 space-y-3">
@@ -99,7 +99,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Legal</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Support</h3>
             <ul role="list" className="mt-4 space-y-3">
               {navigation.legal.map((item) => (
                 <li key={item.name}>
@@ -111,6 +111,14 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a 
+                  href="mailto:support@quotelinker.com" 
+                  className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
+                >
+                  support@quotelinker.com
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -129,27 +137,19 @@ export default function Footer() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-4 md:flex-row md:items-center md:gap-6">
-              <a 
-                href="mailto:support@quotelinker.com" 
-                className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
-              >
-                support@quotelinker.com
-              </a>
-              <div className="flex space-x-6">
-                {socialLinks.map(item => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-muted-foreground hover:text-electric-blue transition-colors"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={item.name}
-                  >
-                    <item.icon className="h-6 w-6" aria-hidden="true" />
-                  </a>
-                ))}
-              </div>
+            <div className="flex space-x-6">
+              {socialLinks.map(item => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-muted-foreground hover:text-electric-blue transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.name}
+                >
+                  <item.icon className="h-6 w-6 hover:opacity-80" aria-hidden="true" />
+                </a>
+              ))}
             </div>
           </div>
         </div>

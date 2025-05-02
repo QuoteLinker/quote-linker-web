@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ArrowDownIcon } from '@heroicons/react/24/outline';
 import { InsuranceType } from '@/utils/insuranceCopy';
