@@ -186,9 +186,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Header />
               </ErrorBoundary>
               <PageTransition>
-                <ErrorBoundary>
-                  <main className="min-h-screen">{children}</main>
-                </ErrorBoundary>
+                <main className="min-h-screen bg-gray-50">
+                  <ErrorBoundary>
+                    {children}
+                  </ErrorBoundary>
+                </main>
               </PageTransition>
               <BackToTop />
               <ErrorBoundary>
