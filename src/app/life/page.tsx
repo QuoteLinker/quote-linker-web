@@ -1,5 +1,5 @@
 import ProductPage from '@/components/ProductPage';
-import type { InsuranceType } from '@/types/insurance';
+import type { InsuranceType } from '@/utils/insuranceCopy';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
@@ -46,10 +46,5 @@ function InsuranceProductSchema() {
 }
 
 export default function LifeInsurancePage() {
-  return (
-    <>
-      <InsuranceProductSchema />
-      <ProductPage params={{ type: 'LIFE' as InsuranceType }} />
-    </>
-  );
+  return <ProductPage params={{ type: 'life' }} />;
 } 

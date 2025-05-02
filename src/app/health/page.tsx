@@ -2,7 +2,7 @@ import ProductPage from '@/components/ProductPage';
 import type { InsuranceType } from '@/utils/insuranceCopy';
 
 export default function HealthInsurancePage() {
-  return <ProductPage params={{ type: 'HEALTH' as InsuranceType }} />;
+  return <ProductPage params={{ type: 'health' }} />;
 }
 
 export const metadata = {
