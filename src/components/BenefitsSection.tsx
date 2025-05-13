@@ -38,16 +38,16 @@ export default function BenefitsSection() {
             trusted local agents.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Responsive grid for benefits */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="bg-[#F8F9FA] rounded-xl p-6 hover:shadow-lg transition-shadow"
+              className="bg-cool-gray rounded-2xl p-8 flex flex-col items-center hover:shadow-card-hover shadow-card transition-shadow min-h-[220px]"
             >
-              <div className="text-[#28A745] mb-4">{benefit.icon}</div>
-              <h3 className="text-xl font-semibold text-[#212529] mb-2">{benefit.title}</h3>
-              <p className="text-[#212529]">{benefit.description}</p>
+              <div className="text-electric-blue mb-4">{benefit.icon}</div>
+              <h3 className="text-lg md:text-xl font-semibold text-dark-gray mb-2 text-center">{benefit.title}</h3>
+              <p className="text-dark-gray text-center text-base md:text-lg">{benefit.description}</p>
             </div>
           ))}
         </div>

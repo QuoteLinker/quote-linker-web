@@ -3,13 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --foreground-rgb: 33, 37, 41;
+  --background-rgb: 245, 247, 250;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+  font-family: 'Inter', 'Inter var', system-ui, Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Inter var', system-ui, Arial, sans-serif;
+  font-weight: 700;
+  color: rgb(var(--foreground-rgb));
+  margin-bottom: 0.5em;
 }
 
 /* Global focus styles for interactive elements */

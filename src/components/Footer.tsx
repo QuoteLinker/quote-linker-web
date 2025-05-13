@@ -49,12 +49,12 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-muted" aria-labelledby="footer-heading">
+    <footer className="bg-cool-gray border-t border-gray-200" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">Footer</h2>
       <div className="container max-w-screen-xl mx-auto px-4 py-10 md:py-16">
         <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Products</h3>
+            <h3 className="text-sm font-semibold text-dark-gray">Products</h3>
             <ul role="list" className="mt-4 space-y-3">
               {navigation.products.map((item) => (
                 <li key={item.name}>
@@ -69,7 +69,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Company</h3>
+            <h3 className="text-sm font-semibold text-dark-gray">Company</h3>
             <ul role="list" className="mt-4 space-y-3">
               {navigation.company.map((item) => (
                 <li key={item.name}>
@@ -84,7 +84,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Resources</h3>
+            <h3 className="text-sm font-semibold text-dark-gray">Resources</h3>
             <ul role="list" className="mt-4 space-y-3">
               {navigation.resources.map((item) => (
                 <li key={item.name}>
@@ -99,7 +99,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">Support</h3>
+            <h3 className="text-sm font-semibold text-dark-gray">Support</h3>
             <ul role="list" className="mt-4 space-y-3">
               {navigation.legal.map((item) => (
                 <li key={item.name}>

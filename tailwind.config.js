@@ -32,18 +32,18 @@ module.exports = {
           800: '#1e293b',
           900: '#0f172a',
         },
-        accent: '#00EEFD',
-        'deep-navy': '#0B0B45',
-        'cool-gray': '#F5F7FA',
-        'dark-gray': '#333333',
+        accent: '#00EEFD', // Use for highlights and CTAs
+        'electric-blue': '#00EEFD', // Main CTA color
+        'deep-navy': '#0B0B45', // For hero backgrounds
+        'cool-gray': '#F5F7FA', // For section backgrounds
+        'dark-gray': '#212529', // For main text
         'white': '#FFFFFF',
-        'electric-blue': '#00EEFD',
-        'muted': {
-          foreground: '#64748b',
+        muted: {
+          foreground: '#64748b', // For muted text
         },
       },
       fontFamily: {
-        sans: ['Inter var', 'sans-serif'],
+        sans: ['Inter', 'Inter var', 'sans-serif'],
       },
       screens: {
         'xs': '375px', // iPhone 12 width

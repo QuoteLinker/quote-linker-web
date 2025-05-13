@@ -99,20 +99,19 @@ export default function Header() {
   return (
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <nav className="container max-w-screen-xl mx-auto px-4 py-3" aria-label="Main navigation">
+        <nav className="container max-w-screen-xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-center lg:items-stretch gap-y-2" aria-label="Main navigation">
           <div className="relative flex items-center justify-between gap-x-8 w-full">
             {/* Logo left */}
             <div className="flex-shrink-0 flex items-center justify-start w-auto">
               <Link 
                 href="/" 
-                className="block transform transition-transform hover:scale-105 duration-200" 
+                className="block transform transition-transform hover:scale-105 duration-200 focus:outline-none focus:ring-2 focus:ring-electric-blue rounded"
                 onClick={() => handleNavClick('Logo', '/')}
                 aria-label="QuoteLinker Home"
               >
                 <Logo showText={true} className="h-8 w-auto" />
               </Link>
             </div>
-
             {/* Centered nav */}
             <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-8 flex-1">
               <div className="flex items-center gap-x-8">
@@ -132,11 +131,7 @@ export default function Header() {
                     className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onMouseEnter={handleLifeMouseEnter}
                     onMouseLeave={handleLifeMouseLeave}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setLifeDropdownOpen(!lifeDropdownOpen);
-                      }
-                    }}
+                    onTouchStart={() => setLifeDropdownOpen(!lifeDropdownOpen)}
                     aria-expanded={lifeDropdownOpen}
                     aria-haspopup="true"
                     tabIndex={0}
@@ -173,11 +168,7 @@ export default function Header() {
                     className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
                     onMouseEnter={handleHealthMouseEnter}
                     onMouseLeave={handleHealthMouseLeave}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        setHealthDropdownOpen(!healthDropdownOpen);
-                      }
-                    }}
+                    onTouchStart={() => setHealthDropdownOpen(!healthDropdownOpen)}
                     aria-expanded={healthDropdownOpen}
                     aria-haspopup="true"
                     tabIndex={0}
@@ -223,7 +214,6 @@ export default function Header() {
                 ))}
               </div>
             </div>
-
             {/* CTA right */}
             <div className="flex items-center justify-end flex-shrink-0 w-auto min-w-[180px]">
               <Link
@@ -236,9 +226,8 @@ export default function Header() {
               </Link>
             </div>
           </div>
-
           {/* Mobile menu button */}
-          <div className="flex items-center gap-x-4 lg:hidden">
+          <div className="flex items-center gap-x-4 lg:hidden mt-2">
             <Link
               href={`/${currentInsuranceType}`}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
@@ -264,11 +253,10 @@ export default function Header() {
               )}
             </button>
           </div>
-
           {/* Mobile menu */}
           {mobileMenuOpen && (
             <div 
-              className="lg:hidden"
+              className="lg:hidden mt-2 rounded-xl shadow-card bg-white border border-gray-100"
               id="mobile-menu"
               role="navigation"
               aria-label="Mobile navigation"
@@ -284,7 +272,6 @@ export default function Header() {
                     {item.name}
                   </Link>
                 ))}
-                
                 {/* Life Insurance Section */}
                 <div className="px-3 py-2">
                   <div className="font-medium text-gray-900 mb-2">Life Insurance</div>
@@ -299,7 +286,6 @@ export default function Header() {
                     </Link>
                   ))}
                 </div>
-                
                 {/* Health Insurance Section */}
                 <div className="px-3 py-2">
                   <div className="font-medium text-gray-900 mb-2">Health Insurance</div>
@@ -314,9 +300,7 @@ export default function Header() {
                     </Link>
                   ))}
                 </div>
-                
                 <div className="border-t border-gray-200 my-2" />
-                
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
@@ -333,7 +317,7 @@ export default function Header() {
         </nav>
       </header>
       {/* Spacer to prevent content from being hidden under fixed header */}
-      <div className="h-14" />
+      <div className="h-16 lg:h-14" />
     </>
   );
 } 
