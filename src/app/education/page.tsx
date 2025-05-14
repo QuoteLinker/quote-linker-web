@@ -1,14 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { BookOpenIcon, ShieldCheckIcon, UserGroupIcon, AcademicCapIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { getArticles } from '@/utils/getArticles';
-import { ClockIcon } from '@heroicons/react/24/outline';
 
 // Enable static generation
 export const dynamic = 'force-static';
 export const revalidate = 3600; // Revalidate every hour
 
-const DEFAULT_COVER_IMAGE = '/images/education/default-article.jpg';
+function getCategoryIcon(category: string) {
+  if (category.toLowerCase().includes('life')) return <BookOpenIcon className="h-10 w-10 text-electric-blue mx-auto" aria-hidden="true" />;
+  if (category.toLowerCase().includes('property') || category.toLowerCase().includes('auto') || category.toLowerCase().includes('home')) return <ShieldCheckIcon className="h-10 w-10 text-electric-blue mx-auto" aria-hidden="true" />;
+  if (category.toLowerCase().includes('health')) return <UserGroupIcon className="h-10 w-10 text-electric-blue mx-auto" aria-hidden="true" />;
+  return <AcademicCapIcon className="h-10 w-10 text-electric-blue mx-auto" aria-hidden="true" />;
+}
 
 export default async function EducationPage() {
   const articles = await getArticles();
@@ -40,15 +44,8 @@ export default async function EducationPage() {
                 href={`/education/${article.slug}`}
                 className="group bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-200 overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-1"
               >
-                <div className="relative h-48 w-full bg-gradient-to-r from-[#00EEFD]/10 to-[#00D4E5]/10">
-                  <Image
-                    src={article.coverImage || DEFAULT_COVER_IMAGE}
-                    alt={article.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover"
-                    priority={false}
-                  />
+                <div className="relative h-48 w-full flex items-center justify-center bg-gradient-to-r from-[#00EEFD]/10 to-[#00D4E5]/10">
+                  {getCategoryIcon(article.category)}
                 </div>
                 <div className="p-4 sm:p-5 flex flex-col flex-grow">
                   <div className="mb-auto">
