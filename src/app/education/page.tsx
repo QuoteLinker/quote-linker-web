@@ -1,9 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { getArticles } from '@/utils/getArticles';
-import ArticleImage from '@/components/ArticleImage';
+import { ClockIcon } from '@heroicons/react/24/outline';
 
-export const dynamic = 'force-dynamic';
+// Enable static generation
+export const dynamic = 'force-static';
+export const revalidate = 3600; // Revalidate every hour
 
 const DEFAULT_COVER_IMAGE = '/images/education/default-article.jpg';
 
@@ -38,10 +41,13 @@ export default async function EducationPage() {
                 className="group bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-200 overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-1"
               >
                 <div className="relative h-48 w-full bg-gradient-to-r from-[#00EEFD]/10 to-[#00D4E5]/10">
-                  <ArticleImage
+                  <Image
                     src={article.coverImage || DEFAULT_COVER_IMAGE}
                     alt={article.title}
-                    fallbackSrc={DEFAULT_COVER_IMAGE}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover"
+                    priority={false}
                   />
                 </div>
                 <div className="p-4 sm:p-5 flex flex-col flex-grow">
@@ -66,19 +72,7 @@ export default async function EducationPage() {
                     </time>
                     {article.readingTime && (
                       <span className="flex items-center">
-                        <svg
-                          className="w-4 h-4 mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
+                        <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                         {article.readingTime}
                       </span>
                     )}

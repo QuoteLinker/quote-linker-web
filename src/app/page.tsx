@@ -5,23 +5,23 @@ import { Metadata } from 'next';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: 'Fast Insurance Quotes | QuoteLinker for Auto, Home, Life, and Disability',
+  title: 'QuoteLinker - Turn Old Leads Into New Premium',
   description:
-    'QuoteLinker uses AI to help you get personalized insurance quotes fast and easy. Auto, Home, Life, and Disability quotes powered by AI. Trusted by families and individuals.',
+    'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
   keywords: [
-    'insurance quotes',
-    'auto insurance',
-    'home insurance',
-    'life insurance',
-    'health insurance',
-    'disability insurance',
-    'Minnesota insurance',
-    'licensed insurance agent',
+    'insurance leads',
+    'lead generation',
+    'insurance agents',
+    'lead management',
+    'insurance sales',
+    'lead conversion',
+    'insurance marketing',
+    'lead nurturing',
   ],
   openGraph: {
-    title: 'Fast Insurance Quotes | QuoteLinker for Auto, Home, Life, and Disability',
+    title: 'QuoteLinker - Turn Old Leads Into New Premium',
     description:
-      'QuoteLinker uses AI to help you get personalized insurance quotes fast and easy. Auto, Home, Life, and Disability quotes powered by AI. Trusted by families and individuals.',
+      'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
     type: 'website',
     url: 'https://quotelinker.com',
   },
@@ -35,7 +35,7 @@ export default function Home() {
           '@context': 'https://schema.org',
           '@type': 'InsuranceLeadGenerator',
           name: 'QuoteLinker',
-          description: 'Connect with licensed insurance agents and get personalized quotes.',
+          description: 'Connect with qualified insurance leads and grow your business with our AI-powered platform.',
           url: 'https://quotelinker.com',
           areaServed: {
             '@type': 'State',
@@ -46,36 +46,27 @@ export default function Home() {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'InsuranceLeadGenerator',
-                name: 'Auto Insurance',
-                description: 'Comprehensive auto insurance coverage options',
-                url: '/products/auto',
+                name: 'Lead Generation',
+                description: 'AI-powered lead generation and management',
+                url: '/agent',
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'InsuranceLeadGenerator',
-                name: 'Home Insurance',
-                description: 'Comprehensive home insurance coverage options',
-                url: '/products/home',
+                name: 'Lead Management',
+                description: 'Smart lead tracking and conversion tools',
+                url: '/agent/dashboard',
               },
             },
             {
               '@type': 'Offer',
               itemOffered: {
                 '@type': 'InsuranceLeadGenerator',
-                name: 'Life Insurance',
-                description: 'Comprehensive life insurance coverage options',
-                url: '/term-life',
-              },
-            },
-            {
-              '@type': 'Offer',
-              itemOffered: {
-                '@type': 'InsuranceLeadGenerator',
-                name: 'Health Insurance',
-                description: 'Comprehensive health insurance coverage options',
-                url: '/products/health',
+                name: 'Analytics',
+                description: 'Performance tracking and ROI optimization',
+                url: '/agent/analytics',
               },
             },
           ],
@@ -83,13 +74,11 @@ export default function Home() {
       </Script>
 
       <HeroSection
-        title="QuoteLinker"
-        subtitle="Your Personal Connection to Trusted Insurance Agents"
-        ctaText="Get My Free Quote"
-        ctaLink="/term-life"
+        title="Turn Old Leads Into New Premium"
+        subtitle="Connect with qualified insurance leads and grow your business with our AI-powered platform."
+        ctaText="Get Started"
+        ctaLink="/agent/signup"
       />
-
-      <QuoteForm intent="AUTO" />
 
       <BenefitsSection />
     </main>

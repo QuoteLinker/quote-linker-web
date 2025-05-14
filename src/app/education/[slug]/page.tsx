@@ -7,6 +7,7 @@ import matter from 'gray-matter';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 interface Article {
   slug: string;
@@ -66,6 +67,22 @@ export async function generateMetadata({
   };
 }
 
+// Enable static generation
+export const dynamic = 'force-static';
+export const revalidate = 3600; // Revalidate every hour
+
+// Generate static params for all articles
+export async function generateStaticParams() {
+  const articlesDirectory = path.join(process.cwd(), 'src/content/education');
+  const files = fs.readdirSync(articlesDirectory);
+  
+  return files
+    .filter(file => file.endsWith('.mdx'))
+    .map(file => ({
+      slug: file.replace(/\.mdx$/, ''),
+    }));
+}
+
 export default async function ArticlePage({ params }: { params: { slug: string } }) {
   const article = await getArticle(params.slug);
 
@@ -74,9 +91,9 @@ export default async function ArticlePage({ params }: { params: { slug: string }
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <article className="min-h-screen bg-white">
       {/* Article Header */}
-      <div className="bg-gradient-to-r from-[#00EEFD] to-[#00D4E5] py-16 sm:py-24">
+      <header className="bg-gradient-to-r from-[#00EEFD] to-[#00D4E5] py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block px-3 py-1 text-sm font-semibold text-[#00EEFD] bg-white/20 rounded-full mb-4">
@@ -95,7 +112,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Article Content */}
       <div className="py-16 sm:py-24">
@@ -108,6 +125,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
                 width={1200}
                 height={630}
                 className="rounded-lg shadow-lg"
+                priority
               />
             </div>
           )}
@@ -117,32 +135,26 @@ export default async function ArticlePage({ params }: { params: { slug: string }
           </div>
 
           {/* Article Footer */}
-          <div className="mt-16 pt-8 border-t border-gray-200">
+          <footer className="mt-16 pt-8 border-t border-gray-200">
             <div className="flex justify-between items-center">
               <Link
                 href="/education"
                 className="inline-flex items-center text-[#00EEFD] hover:text-[#00D4E5]"
+                aria-label="Back to Education Hub"
               >
-                <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
+                <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
                 Back to Education Hub
               </Link>
               <Link
-                href="/education"
+                href="/quote"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-lg text-white bg-[#00EEFD] hover:bg-[#00D4E5] transition-colors duration-200"
               >
                 Get a Quote
               </Link>
             </div>
-          </div>
+          </footer>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

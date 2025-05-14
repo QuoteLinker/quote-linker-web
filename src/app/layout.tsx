@@ -19,10 +19,23 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'QuoteLinker - Insurance Quotes Made Easy',
+  title: {
+    default: 'QuoteLinker - Turn Old Leads Into New Premium',
+    template: '%s | QuoteLinker',
+  },
   description:
-    'Connect with licensed insurance agents and get personalized quotes for auto, home, life, and health insurance.',
+    'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
   metadataBase: new URL('https://www.quotelinker.com'),
+  keywords: [
+    'insurance leads',
+    'lead generation',
+    'insurance agents',
+    'lead management',
+    'insurance sales',
+    'lead conversion',
+    'insurance marketing',
+    'lead nurturing',
+  ],
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -35,8 +48,8 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: 'QuoteLinker — Fast, Free Insurance Quotes',
-    description: 'Get instant quotes for Auto, Home, Life & Health insurance.',
+    title: 'QuoteLinker - Turn Old Leads Into New Premium',
+    description: 'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
     url: 'https://www.quotelinker.com',
     siteName: 'QuoteLinker',
     images: [
@@ -44,7 +57,7 @@ export const metadata: Metadata = {
         url: '/icons/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'QuoteLinker Logo',
+        alt: 'QuoteLinker - Insurance Lead Generation Platform',
       },
     ],
     locale: 'en_US',
@@ -52,16 +65,27 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'QuoteLinker — Fast, Free Insurance Quotes',
-    description: 'Get instant quotes for Auto, Home, Life & Health insurance.',
+    title: 'QuoteLinker - Turn Old Leads Into New Premium',
+    description: 'Connect with qualified insurance leads and grow your business with our AI-powered platform.',
     images: ['/icons/og-image.png'],
+    creator: '@quotelinker',
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
+  alternates: {
+    canonical: 'https://www.quotelinker.com',
   },
 };
 
@@ -165,10 +189,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="theme-color" content="#00EEFD" />
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="QuoteLinker — Fast, Free Insurance Quotes" />
+        <meta property="og:title" content="QuoteLinker - Turn Old Leads Into New Premium" />
         <meta
           property="og:description"
-          content="Get instant quotes for Auto, Home, Life & Health insurance."
+          content="Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide."
         />
         <meta property="og:image" content="https://www.quotelinker.com/icons/og-image.png" />
         <meta property="og:url" content="https://www.quotelinker.com" />

@@ -1,117 +1,97 @@
-'use client';
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { CheckCircle, Clock, Phone, Mail } from 'lucide-react';
 
-import Script from 'next/script';
-import { useEffect, useState } from 'react';
-import { InlineWidget } from 'react-calendly';
-import { TrustIndicator } from '@/components/trust/TrustIndicator';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { trackCalendlyInteraction } from '@/utils/gtm';
+export const metadata: Metadata = {
+  title: 'Thank You - QuoteLinker',
+  description: 'Thank you for your interest in our insurance services. We\'ll be in touch shortly.',
+};
 
 export default function ThankYouPage() {
-  const [isCalendlyLoading, setIsCalendlyLoading] = useState(true);
-
-  useEffect(() => {
-    // Track conversion in Google Ads
-    if (window.gtag) {
-      window.gtag('event', 'conversion', {
-        'send_to': process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID,
-        'value': 1.0,
-        'currency': 'USD',
-        'transaction_id': `QUOTE_${Date.now()}`
-      });
-    }
-
-    // Set up Calendly loading and event tracking
-    const handleCalendlyEvent = (e: any) => {
-      if (e.data.event && e.data.event.indexOf('calendly') === 0) {
-        setIsCalendlyLoading(false);
-        
-        // Track Calendly interactions
-        if (e.data.event === 'calendly:event_scheduled') {
-          trackCalendlyInteraction('scheduled', {
-            eventType: e.data.payload.event_type.name,
-            eventDate: e.data.payload.event.start_time
-          });
-        } else if (e.data.event === 'calendly:profile_page_viewed') {
-          trackCalendlyInteraction('open');
-        } else if (e.data.event === 'calendly:profile_page_closed') {
-          trackCalendlyInteraction('close');
-        }
-      }
-    };
-    
-    window.addEventListener('message', handleCalendlyEvent);
-    return () => window.removeEventListener('message', handleCalendlyEvent);
-  }, []);
-
   return (
-    <ErrorBoundary>
-      {/* Google Ads Conversion Tracking */}
-      <Script
-        id="google-ads-conversion"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSION_ID}');
-          `
-        }}
-      />
-
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Thank You for Your Quote Request!
+    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center">
+          <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+            <CheckCircle className="h-6 w-6 text-green-600" />
+          </div>
+          <h1 className="mt-4 text-3xl font-bold text-gray-900">
+            Thank You for Your Interest
           </h1>
-          <p className="text-lg text-gray-600 mb-8">
-            A licensed insurance agent will review your information and contact you shortly.
+          <p className="mt-2 text-lg text-gray-600">
+            We've received your information and will be in touch shortly to discuss your insurance needs.
           </p>
-          <TrustIndicator className="mb-8" showDetails={true} />
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Schedule a Consultation
+        <div className="mt-12 bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            What Happens Next
           </h2>
-          <p className="text-gray-600 mb-6">
-            Want to discuss your insurance needs right away? Schedule a free consultation with one of our licensed agents.
-          </p>
-          
-          <div className="calendly-inline-widget min-h-[700px] relative">
-            {isCalendlyLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
-                  <p className="text-gray-600">Loading calendar...</p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-start">
+              <Clock className="h-6 w-6 text-blue-600 mt-1" />
+              <div className="ml-4">
+                <h3 className="text-lg font-medium text-gray-900">Quick Response</h3>
+                <p className="text-gray-600">
+                  Our licensed insurance experts will review your information and contact you within 24 hours.
+                </p>
               </div>
-            )}
-            <InlineWidget
-              url={process.env.NEXT_PUBLIC_CALENDLY_URL || 'https://calendly.com/quotelinker/consultation'}
-              styles={{
-                height: '700px',
-                width: '100%',
-                minWidth: '320px',
-              }}
-              pageSettings={{
-                backgroundColor: 'ffffff',
-                hideEventTypeDetails: false,
-                hideLandingPageDetails: false,
-                primaryColor: '00EEFD',
-                textColor: '333333',
-              }}
-            />
+            </div>
+            <div className="flex items-start">
+              <Phone className="h-6 w-6 text-blue-600 mt-1" />
+              <div className="ml-4">
+                <h3 className="text-lg font-medium text-gray-900">Personalized Consultation</h3>
+                <p className="text-gray-600">
+                  We'll schedule a call to discuss your specific needs and provide tailored insurance solutions.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Mail className="h-6 w-6 text-blue-600 mt-1" />
+              <div className="ml-4">
+                <h3 className="text-lg font-medium text-gray-900">Email Confirmation</h3>
+                <p className="text-gray-600">
+                  You'll receive an email confirmation with your quote request details and next steps.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="text-center text-sm text-gray-500">
-          <p>
-            Your privacy is important to us. We never share your information without your consent.
-          </p>
+        <div className="mt-8 bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Why Choose QuoteLinker
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">24/7</div>
+              <p className="text-gray-600">Support Available</p>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">100%</div>
+              <p className="text-gray-600">Licensed Agents</p>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">15+</div>
+              <p className="text-gray-600">Years Experience</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <Link href="/contact">
+            <Button variant="outline" className="mr-4">
+              Contact Us
+            </Button>
+          </Link>
+          <Link href="/">
+            <Button>
+              Return Home
+            </Button>
+          </Link>
         </div>
       </div>
-    </ErrorBoundary>
+    </main>
   );
 } 

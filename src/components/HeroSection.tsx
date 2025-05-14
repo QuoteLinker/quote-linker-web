@@ -1,7 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { FaShieldAlt, FaUserTie, FaCar, FaHome, FaHeartbeat } from 'react-icons/fa';
+import { 
+  ShieldCheckIcon,
+  UserGroupIcon,
+  ChartBarIcon,
+  ArrowRightIcon,
+} from '@heroicons/react/24/outline';
 
 interface HeroSectionProps {
   title: string;
@@ -16,42 +21,62 @@ export default function HeroSection({
   subtitle,
   ctaText,
   ctaLink,
-  bgColor = 'bg-[#00EEFD]',
+  bgColor = 'bg-gradient-to-br from-electric-blue to-primary-600',
 }: HeroSectionProps) {
   return (
-    <section className={`${bgColor} py-16 md:py-24`}>
-      <div className="container mx-auto px-4 flex flex-col items-center text-center gap-8">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 drop-shadow-lg">
-          Insurance Quotes You Can Trust
-        </h1>
-        <p className="text-xl md:text-2xl text-white mb-8 max-w-2xl mx-auto">
-          Get matched with real, licensed agents—no robocalls, no spam. Powered by AI, built for trust.
-        </p>
-        <div className="flex flex-wrap justify-center gap-6 mb-8">
-          <div className="flex flex-col items-center">
-            <FaCar className="w-10 h-10 text-white bg-[#007BFF] rounded-full p-2 mb-2 shadow-md" />
-            <span className="text-white text-sm font-medium">Auto</span>
+    <section className={`${bgColor} py-16 md:py-24 overflow-hidden`}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Left Column: Text Content */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
+              Turn Old Leads Into New Premium
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto lg:mx-0">
+              Connect with qualified insurance leads and grow your business with our AI-powered platform.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Link
+                href={ctaLink}
+                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-lg font-bold text-electric-blue shadow-brand hover:bg-white/90 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-electric-blue"
+                aria-label={ctaText}
+              >
+                {ctaText}
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
+              </Link>
+              <Link
+                href="/agent"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white/20 bg-transparent px-8 py-3 text-lg font-semibold text-white hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-electric-blue"
+              >
+                For Agents
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-col items-center">
-            <FaHome className="w-10 h-10 text-white bg-[#28A745] rounded-full p-2 mb-2 shadow-md" />
-            <span className="text-white text-sm font-medium">Home</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <FaShieldAlt className="w-10 h-10 text-white bg-[#FFC107] rounded-full p-2 mb-2 shadow-md" />
-            <span className="text-white text-sm font-medium">Life</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <FaHeartbeat className="w-10 h-10 text-white bg-[#E83E8C] rounded-full p-2 mb-2 shadow-md" />
-            <span className="text-white text-sm font-medium">Disability</span>
+
+          {/* Right Column: Feature Icons */}
+          <div className="grid grid-cols-2 gap-6 lg:gap-8">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+              <ShieldCheckIcon className="h-12 w-12 mb-4" />
+              <h3 className="text-xl font-bold mb-2">Trusted Platform</h3>
+              <p className="text-white/80">Verified agents and secure lead management</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+              <UserGroupIcon className="h-12 w-12 mb-4" />
+              <h3 className="text-xl font-bold mb-2">Qualified Leads</h3>
+              <p className="text-white/80">Pre-screened prospects ready to convert</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+              <ChartBarIcon className="h-12 w-12 mb-4" />
+              <h3 className="text-xl font-bold mb-2">Growth Analytics</h3>
+              <p className="text-white/80">Track performance and optimize ROI</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white">
+              <ShieldCheckIcon className="h-12 w-12 mb-4" />
+              <h3 className="text-xl font-bold mb-2">AI-Powered</h3>
+              <p className="text-white/80">Smart matching and automated workflows</p>
+            </div>
           </div>
         </div>
-        <Link
-          href={ctaLink}
-          className="inline-block bg-[#007BFF] text-white px-10 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-[#0056b3] transition-all focus:ring-4 focus:ring-white focus:ring-offset-2"
-          aria-label={ctaText}
-        >
-          {ctaText}
-        </Link>
       </div>
     </section>
   );

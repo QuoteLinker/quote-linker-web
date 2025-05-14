@@ -207,15 +207,19 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
     switch (name) {
       case 'firstName':
       case 'lastName': {
-        if (value.length < 2) return 'Must be at least 2 characters';
+        if (value.length < 2) return 'Please enter a valid name (minimum 2 characters)';
+        if (value.length > 50) return 'Name is too long (maximum 50 characters)';
+        if (!/^[a-zA-Z\s-']+$/.test(value)) return 'Please enter a valid name (letters, spaces, hyphens, and apostrophes only)';
         return undefined;
       }
       case 'email': {
-        if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Please enter a valid email';
+        if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Please enter a valid email address';
+        if (value.length > 100) return 'Email address is too long';
         return undefined;
       }
       case 'phone': {
-        if (!value.match(/^\d{10}$/)) return 'Please enter a valid 10-digit phone number';
+        const cleaned = value.replace(/\D/g, '');
+        if (cleaned.length !== 10) return 'Please enter a valid 10-digit phone number';
         return undefined;
       }
       case 'zip': {
@@ -224,33 +228,60 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
       }
       case 'age': {
         const numValue = Number(value);
-        if (isNaN(numValue) || numValue < 18 || numValue > 120) {
-          return 'Please enter a valid age between 18 and 120';
-        }
+        if (isNaN(numValue)) return 'Please enter a valid age';
+        if (numValue < 18) return 'You must be at least 18 years old';
+        if (numValue > 120) return 'Please enter a valid age';
         return undefined;
       }
       case 'coverageAmount': {
-        const numValue = Number(value);
-        if (isNaN(numValue) || numValue < 0) {
-          return 'Please enter a valid coverage amount';
-        }
+        const numValue = Number(value.replace(/[^0-9]/g, ''));
+        if (isNaN(numValue)) return 'Please enter a valid coverage amount';
+        if (numValue < 10000) return 'Coverage amount must be at least $10,000';
+        if (numValue > 10000000) return 'Coverage amount cannot exceed $10,000,000';
         return undefined;
       }
       case 'propertyValue': {
-        const numValue = Number(value);
-        if (isNaN(numValue) || numValue < 0) {
-          return 'Property value must be non-negative';
-        }
+        const numValue = Number(value.replace(/[^0-9]/g, ''));
+        if (isNaN(numValue)) return 'Please enter a valid property value';
+        if (numValue < 10000) return 'Property value must be at least $10,000';
+        if (numValue > 10000000) return 'Property value cannot exceed $10,000,000';
         return undefined;
       }
       case 'insuranceType': {
-        if (!value) {
-          return 'Please select an insurance type';
-        }
+        if (!value) return 'Please select an insurance type';
         return undefined;
       }
       default:
         return undefined;
+    }
+  };
+
+  // Add real-time validation feedback
+  const handleFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    setFormErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+    
+    setTouchedFields(prev => ({
+      ...prev,
+      [name]: true
+    }));
+    
+    // Track field interaction
+    trackFormFieldInteraction(name, value, 'change');
+    
+    // Add trust signal for valid input
+    if (!error) {
+      addFormInteractionSignal('valid_input', 1);
     }
   };
 
@@ -334,121 +365,93 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    if (!validateForm()) {
-      addFormInteractionSignal('form_validation_failed', -0.2);
-      // Track trust signal for validation failure
-      trackTrustSignal('form_validation', -0.2, { formId: 'quote-form', status: 'failed' });
-      toast.error('Please check all required fields and try again');
+    // Validate all fields
+    const isValid = validateForm();
+    if (!isValid) {
+      // Mark all fields as touched to show errors
+      const allFields = Object.keys(formData);
+      const touchedFields = allFields.reduce((acc, field) => ({
+        ...acc,
+        [field]: true
+      }), {});
+      setTouchedFields(touchedFields);
+      
+      // Scroll to first error
+      const firstError = document.querySelector('.error-message');
+      if (firstError) {
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      
       return;
     }
-
+    
     setIsSubmitting(true);
     setSubmitStatus('idle');
-
+    
     try {
       // Add trust signal for form submission
-      addFormInteractionSignal('form_submission_started', 0.3);
-      trackTrustSignal('form_submission', 0.3, { formId: 'quote-form', status: 'started' });
-
-      // Construct the payload with all required fields
-      const payload = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        zip: formData.zip,
-        insuranceType: formData.insuranceType,
-        // Add product-specific fields
-        ...(formData.insuranceType === 'LIFE' && {
-          age: formData.age,
-          coverageAmount: formData.coverageAmount,
-        }),
-        ...(formData.insuranceType === 'HOME' && {
-          propertyType: formData.propertyType,
-          propertyValue: formData.propertyValue,
-        }),
-        ...(formData.insuranceType === 'AUTO' && {
-          vehicleUse: formData.vehicleUse,
-        }),
-        ...(formData.insuranceType === 'HEALTH' && {
-          coverageType: formData.coverageType,
-        }),
-        ...(formData.insuranceType === 'DISABILITY' && {
-          monthlyIncome: formData.monthlyIncome,
-          occupation: formData.occupation,
-        }),
-        ...(formData.insuranceType === 'HEALTH_SUPPLEMENTAL' && {
-          currentCoverage: formData.currentCoverage,
-        }),
-        // Add honeypot and metadata
-        website: formData.website || '',
-        submittedAt: new Date().toISOString(),
-        source: 'web_form',
-        page: pathname,
-        // Add attribution data
-        utmSource: attributionData.utmSource,
-        utmMedium: attributionData.utmMedium,
-        utmCampaign: attributionData.utmCampaign,
-        utmTerm: attributionData.utmTerm,
-        referrer: attributionData.referrer,
+      addFormInteractionSignal('form_submit', 1);
+      
+      // Prepare submission data
+      const submissionData = {
+        ...formData,
+        ...attributionData,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`,
+        referrer: document.referrer,
       };
-
-      // Submit to Zapier webhook
-      const response = await fetch(process.env.NEXT_PUBLIC_ZAPIER_WEBHOOK_URL || '/api/submit-quote', {
+      
+      // Submit form data
+      const response = await fetch('/api/submit-quote', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(submissionData),
       });
-
+      
       if (!response.ok) {
-        throw new Error(`Failed to submit quote request: ${response.statusText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      // Add success trust signal
-      addFormInteractionSignal('form_submission_success', 0.5);
-      trackTrustSignal('form_submission', 0.5, { formId: 'quote-form', status: 'success' });
-
-      // Clear form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        zip: '',
-        insuranceType: insuranceType,
-      });
-
-      // Show success toast
-      toast.success('Quote request submitted successfully!');
-
-      // Redirect to thank you page with Calendly
-      router.push('/thank-you');
-
+      
+      const data = await response.json();
+      
+      // Track successful submission
+      trackFormValidation('quote-form', 'submission', true);
+      
+      // Clear form data from localStorage
+      localStorage.removeItem(FORM_KEY);
+      
+      // Show success message
+      toast.success('Thank you! We\'ll be in touch shortly.');
+      
+      // Redirect to thank you page
+      router.push(`/thank-you?type=${insuranceType.toLowerCase()}`);
+      
+      setSubmitStatus('success');
     } catch (error) {
       console.error('Form submission error:', error);
-      addFormInteractionSignal('form_submission_error', -0.3);
-      trackTrustSignal('form_submission', -0.3, { formId: 'quote-form', status: 'error' });
       
-      // Show detailed error message
-      toast.error(
-        error instanceof Error 
-          ? error.message 
-          : 'Failed to submit form. Please try again or contact support.'
-      );
+      // Track failed submission
+      trackFormValidation('quote-form', 'submission', false, 'Submission failed');
       
-      // Track error in analytics
-      if (window.gtag) {
-        window.gtag('event', 'form_error', {
-          event_category: 'form_submission',
-          event_label: error instanceof Error ? error.message : 'Unknown error',
-        });
-      }
+      // Show error message
+      toast.error('Sorry, something went wrong. Please try again or contact support.');
+      
+      setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  // Add loading state component
+  const LoadingSpinner = () => (
+    <div className="flex items-center justify-center">
+      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+      <span className="ml-2">Processing...</span>
+    </div>
+  );
 
   const fields = FIELD_CONFIG[insuranceType];
 
@@ -471,6 +474,50 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
               <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
                 Get Your Free {insuranceType.charAt(0).toUpperCase() + insuranceType.slice(1)} Insurance Quote
               </h2>
+
+              {/* Trust Indicators */}
+              <div className="bg-gray-50 p-4 rounded-lg mb-6">
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-shrink-0">
+                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">Secure & Private</h3>
+                    <p className="text-sm text-gray-500">Your information is encrypted and never shared with third parties</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0">
+                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">Quick Process</h3>
+                    <p className="text-sm text-gray-500">Get matched with licensed agents in your area in minutes</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form Progress */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-700">Form Progress</span>
+                  <span className="text-sm text-gray-500">
+                    {Object.keys(touchedFields).length} of {Object.keys(formData).length} fields completed
+                  </span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${(Object.keys(touchedFields).length / Object.keys(formData).length) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
 
               <div className="space-y-6">
                 {/* Required Fields */}
@@ -898,6 +945,24 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                   />
                 </div>
 
+                {/* Social Proof */}
+                <div className="mt-6 bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center justify-center space-x-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">4.8/5</div>
+                      <div className="text-sm text-gray-500">Customer Rating</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">10k+</div>
+                      <div className="text-sm text-gray-500">Quotes Generated</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-primary">98%</div>
+                      <div className="text-sm text-gray-500">Satisfaction Rate</div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Submit Button */}
                 <div className="mt-8">
                   <Button
@@ -909,13 +974,7 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                     aria-label={isSubmitting ? 'Submitting quote request...' : 'Submit quote request'}
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>Submitting...</span>
-                      </div>
+                      <LoadingSpinner />
                     ) : (
                       'Get My Free Quote'
                     )}
