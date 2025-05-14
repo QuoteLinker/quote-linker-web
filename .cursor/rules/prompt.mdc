@@ -1,5 +1,0 @@
----
-description: Project: QuoteLinker Web Application Objective: Develop a responsive, user-friendly interface for the QuoteLinker platform using Next.js and Tailwind CSS. Tasks: - Implement a dashboard for insurance agents to manage leads. - Integrate real-time auction features for lead distribution. - Ensure seamless CRM integration for lead tracking. - Optimize the application for performance and accessibility.
-globs: 
-alwaysApply: false
----
