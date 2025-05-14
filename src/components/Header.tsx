@@ -100,8 +100,8 @@ export default function Header() {
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
         <nav className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-3 w-full">
-          {/* Logo left */}
-          <div className="flex items-center flex-shrink-0">
+          {/* Left: Logo */}
+          <div className="flex items-center flex-shrink-0 w-1/3 justify-start">
             <Link 
               href="/" 
               className="flex items-center gap-2 transform transition-transform hover:scale-105 duration-200 focus:outline-none focus:ring-2 focus:ring-electric-blue rounded"
@@ -111,8 +111,8 @@ export default function Header() {
               <Logo showText={true} className="h-8 w-auto" />
             </Link>
           </div>
-          {/* Centered nav */}
-          <div className="hidden lg:flex flex-1 items-center justify-center gap-x-8">
+          {/* Center: Nav links */}
+          <div className="hidden lg:flex flex-1 items-center justify-center gap-x-8 w-1/3">
             <div className="flex items-center gap-x-8">
               {insuranceTypes.map((item) => (
                 <Link
@@ -213,8 +213,8 @@ export default function Header() {
               ))}
             </div>
           </div>
-          {/* CTA right */}
-          <div className="flex items-center flex-shrink-0 ml-4">
+          {/* Right: CTA */}
+          <div className="flex items-center flex-shrink-0 w-1/3 justify-end">
             <Link
               href="/life"
               className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 whitespace-nowrap"
