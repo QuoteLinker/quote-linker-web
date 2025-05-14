@@ -12,7 +12,7 @@ export default function Header() {
   const pathname = usePathname();
 
   const navigation = [
-    { name: 'Agent', href: '/agent' },
+    { name: 'Agent', href: '/agents' },
     { name: 'Education', href: '/education' },
   ];
 

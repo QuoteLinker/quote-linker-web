@@ -11,7 +11,7 @@ import {
 const navigation = {
   quickLinks: [
     { name: 'Home', href: '/' },
-    { name: 'Agent', href: '/agent' },
+    { name: 'Agent', href: '/agents' },
     { name: 'Education', href: '/education' },
   ],
   legal: [

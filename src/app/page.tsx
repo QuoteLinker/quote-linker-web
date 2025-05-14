@@ -48,7 +48,7 @@ export default function Home() {
                 '@type': 'InsuranceLeadGenerator',
                 name: 'Lead Generation',
                 description: 'AI-powered lead generation and management',
-                url: '/agent',
+                url: '/agents',
               },
             },
             {
@@ -57,7 +57,7 @@ export default function Home() {
                 '@type': 'InsuranceLeadGenerator',
                 name: 'Lead Management',
                 description: 'Smart lead tracking and conversion tools',
-                url: '/agent/dashboard',
+                url: '/agents/dashboard',
               },
             },
             {
@@ -66,7 +66,7 @@ export default function Home() {
                 '@type': 'InsuranceLeadGenerator',
                 name: 'Analytics',
                 description: 'Performance tracking and ROI optimization',
-                url: '/agent/analytics',
+                url: '/agents/analytics',
               },
             },
           ],
@@ -77,7 +77,7 @@ export default function Home() {
         title="Turn Old Leads Into New Premium"
         subtitle="Connect with qualified insurance leads and grow your business with our AI-powered platform."
         ctaText="Get Started"
-        ctaLink="/agent/signup"
+        ctaLink="/agents/signup"
       />
 
       <BenefitsSection />
