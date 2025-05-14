@@ -89,7 +89,7 @@ export default function Home() {
         ctaLink="/term-life"
       />
 
-      <QuoteForm intent="auto" />
+      <QuoteForm intent="AUTO" />
 
       <BenefitsSection />
     </main>
