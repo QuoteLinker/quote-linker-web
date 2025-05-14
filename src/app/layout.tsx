@@ -10,8 +10,6 @@ import PageTransition from '@/components/PageTransition';
 import { TrustProvider } from '@/components/trust/TrustProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { usePathname } from 'next/navigation';
-import { getIntent } from '@/utils/getIntent';
 import QuoteForm from '@/components/QuoteForm';
 
 const inter = Inter({
@@ -158,9 +156,6 @@ function BreadcrumbSchema() {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const intent = getIntent(pathname);
-
   return (
     <html lang="en">
       <head>
@@ -191,7 +186,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ErrorBoundary>
                 <Header />
               </ErrorBoundary>
-              <QuoteForm intent={intent} />
+              <QuoteForm />
               <PageTransition>
                 <main className="min-h-screen bg-gray-50">
                   <ErrorBoundary>
