@@ -99,135 +99,133 @@ export default function Header() {
   return (
     <>
       <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <nav className="container max-w-screen-xl mx-auto px-4 py-3 flex flex-col lg:flex-row items-center lg:items-stretch gap-y-2" aria-label="Main navigation">
-          <div className="relative flex items-center justify-between gap-x-8 w-full">
-            {/* Logo left */}
-            <div className="flex-shrink-0 flex items-center justify-start w-auto">
-              <Link 
-                href="/" 
-                className="block transform transition-transform hover:scale-105 duration-200 focus:outline-none focus:ring-2 focus:ring-electric-blue rounded"
-                onClick={() => handleNavClick('Logo', '/')}
-                aria-label="QuoteLinker Home"
-              >
-                <Logo showText={true} className="h-8 w-auto" />
-              </Link>
-            </div>
-            {/* Centered nav */}
-            <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-x-8 flex-1">
-              <div className="flex items-center gap-x-8">
-                {insuranceTypes.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
-                    onClick={() => handleNavClick(item.name, item.href)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-                {/* Life Insurance Dropdown */}
-                <div className="relative">
-                  <button
-                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+        <nav className="max-w-screen-xl mx-auto flex items-center justify-between px-6 py-3 w-full">
+          {/* Logo left */}
+          <div className="flex items-center flex-shrink-0">
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 transform transition-transform hover:scale-105 duration-200 focus:outline-none focus:ring-2 focus:ring-electric-blue rounded"
+              onClick={() => handleNavClick('Logo', '/')}
+              aria-label="QuoteLinker Home"
+            >
+              <Logo showText={true} className="h-8 w-auto" />
+            </Link>
+          </div>
+          {/* Centered nav */}
+          <div className="hidden lg:flex flex-1 items-center justify-center gap-x-8">
+            <div className="flex items-center gap-x-8">
+              {insuranceTypes.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                  onClick={() => handleNavClick(item.name, item.href)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {/* Life Insurance Dropdown */}
+              <div className="relative">
+                <button
+                  className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                  onMouseEnter={handleLifeMouseEnter}
+                  onMouseLeave={handleLifeMouseLeave}
+                  onTouchStart={() => setLifeDropdownOpen(!lifeDropdownOpen)}
+                  aria-expanded={lifeDropdownOpen}
+                  aria-haspopup="true"
+                  tabIndex={0}
+                >
+                  Life Insurance
+                  <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
+                </button>
+                {lifeDropdownOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
                     onMouseEnter={handleLifeMouseEnter}
                     onMouseLeave={handleLifeMouseLeave}
-                    onTouchStart={() => setLifeDropdownOpen(!lifeDropdownOpen)}
-                    aria-expanded={lifeDropdownOpen}
-                    aria-haspopup="true"
-                    tabIndex={0}
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="life-insurance-menu"
                   >
-                    Life Insurance
-                    <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
-                  </button>
-                  {lifeDropdownOpen && (
-                    <div 
-                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
-                      onMouseEnter={handleLifeMouseEnter}
-                      onMouseLeave={handleLifeMouseLeave}
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="life-insurance-menu"
-                    >
-                      {lifeInsuranceTypes.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
-                          onClick={() => handleNavClick(item.name, item.href)}
-                          role="menuitem"
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {/* Health Insurance Dropdown */}
-                <div className="relative">
-                  <button
-                    className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                    {lifeInsuranceTypes.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
+                        onClick={() => handleNavClick(item.name, item.href)}
+                        role="menuitem"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* Health Insurance Dropdown */}
+              <div className="relative">
+                <button
+                  className="flex items-center text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                  onMouseEnter={handleHealthMouseEnter}
+                  onMouseLeave={handleHealthMouseLeave}
+                  onTouchStart={() => setHealthDropdownOpen(!healthDropdownOpen)}
+                  aria-expanded={healthDropdownOpen}
+                  aria-haspopup="true"
+                  tabIndex={0}
+                >
+                  Health Insurance
+                  <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
+                </button>
+                {healthDropdownOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
                     onMouseEnter={handleHealthMouseEnter}
                     onMouseLeave={handleHealthMouseLeave}
-                    onTouchStart={() => setHealthDropdownOpen(!healthDropdownOpen)}
-                    aria-expanded={healthDropdownOpen}
-                    aria-haspopup="true"
-                    tabIndex={0}
+                    role="menu"
+                    aria-orientation="vertical"
+                    aria-labelledby="health-insurance-menu"
                   >
-                    Health Insurance
-                    <ChevronDownIcon className="h-4 w-4 ml-1" aria-hidden="true" />
-                  </button>
-                  {healthDropdownOpen && (
-                    <div 
-                      className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-card py-1 z-10"
-                      onMouseEnter={handleHealthMouseEnter}
-                      onMouseLeave={handleHealthMouseLeave}
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="health-insurance-menu"
-                    >
-                      {healthInsuranceTypes.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
-                          onClick={() => handleNavClick(item.name, item.href)}
-                          role="menuitem"
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="h-5 w-px bg-gray-200 mx-4" />
-              <div className="flex items-center gap-x-6">
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="text-gray-500 hover:text-electric-blue transition-all duration-200 text-sm font-medium hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
-                    onClick={() => handleNavClick(item.name, item.href)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                    {healthInsuranceTypes.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded"
+                        onClick={() => handleNavClick(item.name, item.href)}
+                        role="menuitem"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            {/* CTA right */}
-            <div className="flex items-center justify-end flex-shrink-0 w-auto min-w-[180px]">
-              <Link
-                href="/life"
-                className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 ml-2 whitespace-nowrap"
-                onClick={() => handleNavClick('Get My Free Quote', '/life')}
-                style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
-              >
-                Get My Free Quote
-              </Link>
+            <div className="h-5 w-px bg-gray-200 mx-4" />
+            <div className="flex items-center gap-x-6">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-500 hover:text-electric-blue transition-all duration-200 text-sm font-medium hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
+                  onClick={() => handleNavClick(item.name, item.href)}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
           </div>
+          {/* CTA right */}
+          <div className="flex items-center flex-shrink-0 ml-4">
+            <Link
+              href="/life"
+              className="rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 whitespace-nowrap"
+              onClick={() => handleNavClick('Get My Free Quote', '/life')}
+              style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+            >
+              Get My Free Quote
+            </Link>
+          </div>
           {/* Mobile menu button */}
-          <div className="flex items-center gap-x-4 lg:hidden mt-2">
+          <div className="flex items-center gap-x-4 lg:hidden ml-2">
             <Link
               href={`/${currentInsuranceType}`}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-electric-blue hover:bg-electric-blue/90 transition-all duration-200 transform shadow-brand hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
@@ -253,68 +251,68 @@ export default function Header() {
               )}
             </button>
           </div>
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div 
-              className="lg:hidden mt-2 rounded-xl shadow-card bg-white border border-gray-100"
-              id="mobile-menu"
-              role="navigation"
-              aria-label="Mobile navigation"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {insuranceTypes.map((item) => (
+        </nav>
+        {/* Mobile menu */}
+        {mobileMenuOpen && (
+          <div 
+            className="lg:hidden mt-2 rounded-xl shadow-card bg-white border border-gray-100"
+            id="mobile-menu"
+            role="navigation"
+            aria-label="Mobile navigation"
+          >
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {insuranceTypes.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50 hover:text-electric-blue"
+                  onClick={() => handleNavClick(item.name, item.href)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              {/* Life Insurance Section */}
+              <div className="px-3 py-2">
+                <div className="font-medium text-gray-900 mb-2">Life Insurance</div>
+                {lifeInsuranceTypes.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50 hover:text-electric-blue"
-                    onClick={() => handleNavClick(item.name, item.href)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-                {/* Life Insurance Section */}
-                <div className="px-3 py-2">
-                  <div className="font-medium text-gray-900 mb-2">Life Insurance</div>
-                  {lifeInsuranceTypes.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
-                      onClick={() => handleNavClick(item.name, item.href)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                {/* Health Insurance Section */}
-                <div className="px-3 py-2">
-                  <div className="font-medium text-gray-900 mb-2">Health Insurance</div>
-                  {healthInsuranceTypes.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
-                      onClick={() => handleNavClick(item.name, item.href)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                <div className="border-t border-gray-200 my-2" />
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="block px-3 py-2 rounded-md text-base text-gray-500 hover:bg-gray-50 hover:text-electric-blue"
+                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
                     onClick={() => handleNavClick(item.name, item.href)}
                   >
                     {item.name}
                   </Link>
                 ))}
               </div>
+              {/* Health Insurance Section */}
+              <div className="px-3 py-2">
+                <div className="font-medium text-gray-900 mb-2">Health Insurance</div>
+                {healthInsuranceTypes.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-electric-blue rounded-md"
+                    onClick={() => handleNavClick(item.name, item.href)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              <div className="border-t border-gray-200 my-2" />
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 rounded-md text-base text-gray-500 hover:bg-gray-50 hover:text-electric-blue"
+                  onClick={() => handleNavClick(item.name, item.href)}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
-          )}
-        </nav>
+          </div>
+        )}
       </header>
       {/* Spacer to prevent content from being hidden under fixed header */}
       <div className="h-16 lg:h-14" />

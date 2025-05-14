@@ -1,5 +1,6 @@
 import HeroSection from '@/components/HeroSection';
 import BenefitsSection from '@/components/BenefitsSection';
+import QuoteForm from '@/components/QuoteForm';
 import { Metadata } from 'next';
 import Script from 'next/script';
 
@@ -87,6 +88,8 @@ export default function Home() {
         ctaText="Get My Free Quote"
         ctaLink="/term-life"
       />
+
+      <QuoteForm intent="auto" />
 
       <BenefitsSection />
     </main>
