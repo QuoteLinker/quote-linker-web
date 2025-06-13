@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // --- ADD THIS LINE FOR GOOGLE CLOUD RUN ---
+  output: 'standalone',
+  // -----------------------------------------
+
   reactStrictMode: true,
   swcMinify: true,
   images: {
@@ -56,4 +60,4 @@ const nextConfig = {
   // Add any other Next.js config options here
 };
 
-module.exports = nextConfig; 
+module.exports = nextConfig;
