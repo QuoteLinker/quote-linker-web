@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, ChangeEvent, FocusEvent, useRef, Suspense } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -11,14 +11,6 @@ import {
   SelectItem,
 } from '@/components/ui/select';
 import FieldWithTooltip from '@/components/FieldWithTooltip';
-import {
-  validateEmail,
-  validateName,
-  validatePhone,
-  validateZip,
-  validateAge,
-  validateCoverageAmount,
-} from '@/utils/validation';
 import { debounce } from 'lodash';
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-hot-toast';
@@ -30,7 +22,6 @@ import {
   trackFormFieldInteraction, 
   trackFormStart, 
   trackFormValidation,
-  trackTrustSignal
 } from '@/utils/gtm';
 // Import icons for insurance types
 import {
@@ -87,11 +78,12 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
 
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // Using searchParams if needed in the future
+  // const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
 
   // Initialize trust system
-  const { addFormInteractionSignal, addSocialProofSignal } = useQuoteTrust({
+  const { addFormInteractionSignal } = useQuoteTrust({
     formId: 'quote-form',
     productType: insuranceType as InsuranceType,
   });
@@ -117,11 +109,7 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
     });
   }, []);
 
-  // Determine if we're on a product-specific page
-  const isProductSpecificPage = pathname?.startsWith('/') && 
-    ['/home', '/life', '/health', '/auto'].includes(pathname);
-
-  // Auto-scroll to form on product-specific pages
+  // Auto-scroll to form on product-specific pages (checking if we're on a product page)
   useEffect(() => {
     // Small delay to ensure DOM is ready and any animations have completed
     const timer = setTimeout(() => {
@@ -199,7 +187,6 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Debounced save function
   const debouncedSave = useCallback((data: FormData) => {
@@ -293,20 +280,22 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
     }
   };
 
-  // Add real-time validation feedback
-  const handleFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    const error = validateField(name, value);
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    setFormErrors(prev => ({
-      ...prev,
-      [name]: error
-    }));
+  // Add real-time validation feedback - this function is not currently used
+  // Keeping for future reference if needed
+  // const handleFieldChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  //   const { name, value } = e.target;
+  //   const error = validateField(name, value);
+  //   
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  //   
+  //   setFormErrors(prev => ({
+  //     ...prev,
+  //     [name]: error
+  //   }));
+  // };
     
     setTouchedFields(prev => ({
       ...prev,
@@ -423,7 +412,6 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
     }
     
     setIsSubmitting(true);
-    setSubmitStatus('idle');
     
     try {
       // Add trust signal for form submission
@@ -466,7 +454,6 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
       // Redirect to thank you page
       router.push(`/thank-you?type=${insuranceType.toLowerCase()}`);
       
-      setSubmitStatus('success');
     } catch (error) {
       console.error('Form submission error:', error);
       
@@ -475,8 +462,6 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
       
       // Show error message
       toast.error('Sorry, something went wrong. Please try again or contact support.');
-      
-      setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
     }
