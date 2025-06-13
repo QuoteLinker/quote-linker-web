@@ -5,7 +5,7 @@ import { Metadata } from 'next';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: 'QuoteLinker - Turn Old Leads Into New Premium',
+  title: 'QuoteLinker - AI-Driven Insurance Lead Marketplace',
   description:
     'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
   keywords: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     'lead nurturing',
   ],
   openGraph: {
-    title: 'QuoteLinker - Turn Old Leads Into New Premium',
+    title: 'QuoteLinker - AI-Driven Insurance Lead Marketplace',
     description:
       'Connect with qualified insurance leads and grow your business with our AI-powered platform. Trusted by agents nationwide.',
     type: 'website',
@@ -74,7 +74,7 @@ export default function Home() {
       </Script>
 
       <HeroSection
-        title="Turn Old Leads Into New Premium"
+        title="QuoteLinker - AI-Driven Insurance Lead Marketplace"
         subtitle="Connect with qualified insurance leads and grow your business with our AI-powered platform."
         ctaText="Get Started"
         ctaLink="/agents/signup"
