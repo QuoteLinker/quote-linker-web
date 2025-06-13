@@ -32,11 +32,48 @@ import {
   trackFormValidation,
   trackTrustSignal
 } from '@/utils/gtm';
+// Import icons for insurance types
+import {
+  FaCar,
+  FaHome,
+  FaHeartbeat,
+  FaUserShield,
+  FaBriefcaseMedical,
+  FaUmbrella,
+  FaCalendarAlt,
+  FaMoneyBill,
+} from 'react-icons/fa';
 
 interface QuoteFormProps {
   intent?: string;
   className?: string;
 }
+
+// Insurance type icons mapping
+const InsuranceIcons: Record<InsuranceType, React.ReactNode> = {
+  'AUTO': <FaCar className="text-primary h-6 w-6" />,
+  'HOME': <FaHome className="text-primary h-6 w-6" />,
+  'LIFE': <FaHeartbeat className="text-primary h-6 w-6" />,
+  'HEALTH': <FaBriefcaseMedical className="text-primary h-6 w-6" />,
+  'LIFE_TERM': <FaCalendarAlt className="text-primary h-6 w-6" />,
+  'LIFE_PERMANENT': <FaUserShield className="text-primary h-6 w-6" />,
+  'HEALTH_SHORT_TERM_DISABILITY': <FaUmbrella className="text-primary h-6 w-6" />,
+  'HEALTH_SUPPLEMENTAL': <FaHeartbeat className="text-primary h-6 w-6" />,
+  'DISABILITY': <FaMoneyBill className="text-primary h-6 w-6" />,
+};
+
+// Insurance type friendly names
+const InsuranceTypeNames: Record<InsuranceType, string> = {
+  'AUTO': 'Auto Insurance',
+  'HOME': 'Home Insurance',
+  'LIFE': 'Life Insurance',
+  'HEALTH': 'Health Insurance',
+  'LIFE_TERM': 'Term Life Insurance',
+  'LIFE_PERMANENT': 'Permanent Life Insurance',
+  'HEALTH_SHORT_TERM_DISABILITY': 'Short Term Disability',
+  'HEALTH_SUPPLEMENTAL': 'Supplemental Health',
+  'DISABILITY': 'Disability Insurance',
+};
 
 const FORM_KEY = 'savedQuoteForm';
 
@@ -403,7 +440,7 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
       };
       
       // Submit form data
-      const response = await fetch('/api/submit-quote', {
+      const response = await fetch('/api/submit-lead', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -456,48 +493,59 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
   const fields = FIELD_CONFIG[insuranceType];
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
+    <div className="max-w-5xl mx-auto p-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-5 space-y-6">
           <TrustIndicator className="mb-6" showDetails={true} />
           
           <InsuranceTip productType={insuranceType.toLowerCase()} />
-
-          <div className="flex justify-center items-center py-4 sm:py-8">
+        </div>
+        
+        <div className="lg:col-span-7">
+          <div className="flex justify-center items-center">
             <form
               ref={formRef}
               onSubmit={handleSubmit}
               id="quote-form"
-              className={`w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-lg border border-gray-100 relative ${className}`}
+              className={`w-full bg-white p-5 sm:p-8 rounded-xl shadow-md border border-gray-100 relative ${className}`}
               aria-label="Insurance Quote Request Form"
             >
-              <h2 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
-                Get Your Free {insuranceType.charAt(0).toUpperCase() + insuranceType.slice(1)} Insurance Quote
-              </h2>
+              <div className="flex items-center justify-center mb-6">
+                <div className="mr-3">
+                  {InsuranceIcons[formData.insuranceType as InsuranceType]}
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-center text-gray-800">
+                  Get Your {InsuranceTypeNames[formData.insuranceType as InsuranceType]} Quote
+                </h2>
+              </div>
 
               {/* Trust Indicators */}
-              <div className="bg-gray-50 p-4 rounded-lg mb-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center bg-blue-50 rounded-lg px-3 py-2">
+                  <div className="flex-shrink-0 text-blue-500 mr-2">
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900">Secure & Private</h3>
-                    <p className="text-sm text-gray-500">Your information is encrypted and never shared with third parties</p>
-                  </div>
+                  <div className="text-sm text-blue-800 font-medium">Secure & Private</div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <div className="flex-shrink-0">
-                    <svg className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                
+                <div className="flex items-center bg-blue-50 rounded-lg px-3 py-2">
+                  <div className="flex-shrink-0 text-blue-500 mr-2">
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900">Quick Process</h3>
-                    <p className="text-sm text-gray-500">Get matched with licensed agents in your area in minutes</p>
+                  <div className="text-sm text-blue-800 font-medium">Fast Quotes</div>
+                </div>
+                
+                <div className="flex items-center bg-blue-50 rounded-lg px-3 py-2">
+                  <div className="flex-shrink-0 text-blue-500 mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                    </svg>
                   </div>
+                  <div className="text-sm text-blue-800 font-medium">Free Service</div>
                 </div>
               </div>
 
@@ -519,6 +567,48 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                 </div>
               </div>
 
+              {/* Insurance Type Selector */}
+              <div className="space-y-4 mb-6">
+                <label htmlFor="insuranceType" className="block text-sm font-medium text-gray-700">
+                  Insurance Type <span className="text-red-500">*</span>
+                </label>
+                
+                {/* Modern Insurance Type Icons */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {Object.entries({
+                    'AUTO': { icon: <FaCar className="h-5 w-5" />, name: 'Auto' },
+                    'HOME': { icon: <FaHome className="h-5 w-5" />, name: 'Home' },
+                    'LIFE': { icon: <FaHeartbeat className="h-5 w-5" />, name: 'Life' },
+                    'HEALTH': { icon: <FaBriefcaseMedical className="h-5 w-5" />, name: 'Health' }
+                  }).map(([type, { icon, name }]) => (
+                    <button
+                      key={type}
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          insuranceType: type as InsuranceType
+                        });
+                        addFormInteractionSignal('select_insurance_type', 1);
+                      }}
+                      className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${
+                        formData.insuranceType === type 
+                          ? 'bg-blue-50 border-blue-500 shadow-sm' 
+                          : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                      }`}
+                      aria-pressed={formData.insuranceType === type}
+                    >
+                      <div className={`p-2 rounded-full mb-2 ${formData.insuranceType === type ? 'text-blue-600' : 'text-gray-500'}`}>
+                        {icon}
+                      </div>
+                      <span className={`text-sm font-medium ${formData.insuranceType === type ? 'text-blue-700' : 'text-gray-700'}`}>
+                        {name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div className="space-y-6">
                 {/* Required Fields */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -526,50 +616,72 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                       First Name <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      type="text"
-                      name="firstName"
-                      id="firstName"
-                      required
-                      placeholder="Enter your first name"
-                      value={formData.firstName || ''}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={`h-11 ${touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}`}
-                      aria-required="true"
-                      aria-invalid={!!formErrors.firstName}
-                      aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
-                    />
-                    {touchedFields.firstName && formErrors.firstName && (
-                      <p id="firstName-error" className="mt-1 text-sm text-red-600" role="alert">
-                        {formErrors.firstName}
-                      </p>
-                    )}
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        name="firstName"
+                        id="firstName"
+                        required
+                        placeholder="Enter your first name"
+                        value={formData.firstName || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`h-11 pl-3 pr-8 rounded-md shadow-sm border ${
+                          touchedFields.firstName && formErrors.firstName 
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
+                        aria-required="true"
+                        aria-invalid={!!formErrors.firstName}
+                        aria-describedby={formErrors.firstName ? 'firstName-error' : undefined}
+                      />
+                      {touchedFields.firstName && !formErrors.firstName && (
+                        <svg className="h-5 w-5 text-green-500 absolute right-2 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                      {touchedFields.firstName && formErrors.firstName && (
+                        <p id="firstName-error" className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.firstName}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="space-y-2">
                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                       Last Name <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      type="text"
-                      name="lastName"
-                      id="lastName"
-                      required
-                      placeholder="Enter your last name"
-                      value={formData.lastName || ''}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={`h-11 ${touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}`}
-                      aria-required="true"
-                      aria-invalid={!!formErrors.lastName}
-                      aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
-                    />
-                    {touchedFields.lastName && formErrors.lastName && (
-                      <p id="lastName-error" className="mt-1 text-sm text-red-600" role="alert">
-                        {formErrors.lastName}
-                      </p>
-                    )}
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        name="lastName"
+                        id="lastName"
+                        required
+                        placeholder="Enter your last name"
+                        value={formData.lastName || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`h-11 pl-3 pr-8 rounded-md shadow-sm border ${
+                          touchedFields.lastName && formErrors.lastName 
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
+                        aria-required="true"
+                        aria-invalid={!!formErrors.lastName}
+                        aria-describedby={formErrors.lastName ? 'lastName-error' : undefined}
+                      />
+                      {touchedFields.lastName && !formErrors.lastName && (
+                        <svg className="h-5 w-5 text-green-500 absolute right-2 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                      {touchedFields.lastName && formErrors.lastName && (
+                        <p id="lastName-error" className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.lastName}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -579,32 +691,43 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                       Email Address <span className="text-red-500">*</span>
                     </label>
-                    <Input
-                      type="email"
-                      name="email"
-                      id="email"
-                      required
-                      placeholder="Enter your email address"
-                      value={formData.email || ''}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className={`h-11 ${touchedFields.email && formErrors.email ? 'border-red-500' : ''}`}
-                      aria-required="true"
-                      aria-invalid={!!formErrors.email}
-                      aria-describedby={formErrors.email ? 'email-error' : undefined}
-                    />
-                    {touchedFields.email && formErrors.email && (
-                      <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
-                        {formErrors.email}
-                      </p>
-                    )}
+                    <div className="relative">
+                      <Input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        placeholder="Enter your email address"
+                        value={formData.email || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`h-11 pl-3 pr-8 rounded-md shadow-sm border ${
+                          touchedFields.email && formErrors.email 
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
+                        aria-required="true"
+                        aria-invalid={!!formErrors.email}
+                        aria-describedby={formErrors.email ? 'email-error' : undefined}
+                      />
+                      {touchedFields.email && !formErrors.email && (
+                        <svg className="h-5 w-5 text-green-500 absolute right-2 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                      {touchedFields.email && formErrors.email && (
+                        <p id="email-error" className="mt-1 text-sm text-red-600" role="alert">
+                          {formErrors.email}
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
                         Phone Number <span className="text-red-500">*</span>
-                      </label>
+                      </label>                    <div className="relative">
                       <Input
                         type="tel"
                         name="phone"
@@ -614,22 +737,32 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                         value={formData.phone || ''}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={`h-11 ${touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}`}
+                        className={`h-11 pl-3 pr-8 rounded-md shadow-sm border ${
+                          touchedFields.phone && formErrors.phone 
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
                         aria-required="true"
                         aria-invalid={!!formErrors.phone}
                         aria-describedby={formErrors.phone ? 'phone-error' : undefined}
                       />
+                      {touchedFields.phone && !formErrors.phone && (
+                        <svg className="h-5 w-5 text-green-500 absolute right-2 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
                       {touchedFields.phone && formErrors.phone && (
                         <p id="phone-error" className="mt-1 text-sm text-red-600" role="alert">
                           {formErrors.phone}
                         </p>
                       )}
                     </div>
+                    </div>
 
                     <div className="space-y-2">
                       <label htmlFor="zip" className="block text-sm font-medium text-gray-700">
                         ZIP Code <span className="text-red-500">*</span>
-                      </label>
+                      </label>                    <div className="relative">
                       <Input
                         type="text"
                         name="zip"
@@ -639,16 +772,26 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                         value={formData.zip || ''}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className={`h-11 ${touchedFields.zip && formErrors.zip ? 'border-red-500' : ''}`}
+                        className={`h-11 pl-3 pr-8 rounded-md shadow-sm border ${
+                          touchedFields.zip && formErrors.zip 
+                            ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
+                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                        }`}
                         aria-required="true"
                         aria-invalid={!!formErrors.zip}
                         aria-describedby={formErrors.zip ? 'zip-error' : undefined}
                       />
+                      {touchedFields.zip && !formErrors.zip && (
+                        <svg className="h-5 w-5 text-green-500 absolute right-2 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
                       {touchedFields.zip && formErrors.zip && (
                         <p id="zip-error" className="mt-1 text-sm text-red-600" role="alert">
                           {formErrors.zip}
                         </p>
                       )}
+                    </div>
                     </div>
                   </div>
                 </div>
@@ -968,7 +1111,7 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full h-12 text-base font-medium text-white bg-[#007BFF] hover:bg-[#0056b3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
+                    className={`w-full h-14 text-base font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${
                       isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                     aria-label={isSubmitting ? 'Submitting quote request...' : 'Submit quote request'}
@@ -976,9 +1119,15 @@ function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps
                     {isSubmitting ? (
                       <LoadingSpinner />
                     ) : (
-                      'Get My Free Quote'
+                      <>
+                        Get My Free {InsuranceTypeNames[formData.insuranceType as InsuranceType].split(" ")[0]} Quote
+                        <svg className="ml-2 h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                      </>
                     )}
                   </Button>
+                  <p className="text-xs text-center text-gray-500 mt-2">No obligation • 100% free • Takes only 2 minutes</p>
                 </div>
               </div>
             </form>
