@@ -12,10 +12,10 @@
 
 ## 🎯 The Problem
 
-Insurance agents face two major challenges:
+Insurance agents and licensed insurance producers face two major challenges in acquiring new business in the digital era:
 
-1. **Overpriced Leads**: Paying $50-100 per lead that may not convert
-2. **Low Intent**: Receiving leads from users who aren't serious about buying insurance
+1. **Overpriced Leads**: Paying $50-100 per lead that is unlikely to convert
+2. **Low Intent**: Receiving leads from users who aren't serious about buying insurance which lowers closing KPIs
 
 Consumers struggle with:
 
@@ -52,12 +52,13 @@ QuoteLinker is a modern platform that connects consumers with local, licensed in
 2. **Agent Journey**:
    - Receive qualified leads in your area
    - Access detailed lead information
-   - Provide personalized quotes
+   - Self-service dashboard
    - Track performance and ROI
+
 
 ## 🛠️ Technical Overview
 
-QuoteLinker leverages cutting-edge technology to deliver a seamless experience:
+QuoteLinker leverages technology to deliver a seamless experience:
 
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript for type safety
@@ -102,7 +103,7 @@ npm run dev
 
 - [ ] Enhanced lead scoring system
 - [ ] Real-time agent-consumer communication
-- [ ] Mobile app for agents
+- [ ] Mobile app for agents and consumers
 - [ ] Automated quote comparison
 - [ ] Integration with major carriers
 
@@ -120,7 +121,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 This software is proprietary and confidential. Unauthorized copying, transferring, or reproduction of the contents of this software, via any medium, is strictly prohibited.
 
-Copyright © 2024 QuoteLinker. All rights reserved.
+Copyright © 2025 QuoteLinker. All rights reserved.
 
 ## 🌐 Links
 
