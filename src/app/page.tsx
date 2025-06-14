@@ -1,12 +1,7 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { Metadata } from 'next';
-import { ShieldCheck, Car, Home, HeartHandshake } from 'lucide-react';
-
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import HeroSection from '@/components/HeroSection';
-import BenefitsSection from '@/components/BenefitsSection';
+import { ShieldCheck, Car, Home as HomeIcon, HeartHandshake } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'QuoteLinker - The Smart Way to Find Insurance',
@@ -58,36 +53,24 @@ export default function Home() {
         })}
       </Script>
 
-      <Header />
-
       <main className="flex-grow">
-        <HeroSection
-          title="Your Link to Smarter Insurance."
-          subtitle="Get free, no-obligation quotes from experienced local agents in minutes. We make shopping for insurance easy."
-          ctaText="Get a Free Quote"
-          ctaLink="/get-quote"
-        />
-
-        <section className="py-20 md:py-24">
-            <div className="container mx-auto px-6">
-                <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">Compare All Your Insurance Needs</h2>
-                <p className="text-center text-gray-600 text-lg max-w-2xl mx-auto mb-12">
-                  Select a the coverage you need below to get started and see how much you could save.
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <InsuranceCard icon={<Car size={32} className="text-cyan-600" />} title="Auto Insurance" href="/get-quote/auto" />
-                    <InsuranceCard icon={<Home size={32} className="text-cyan-600" />} title="Home Insurance" href="/get-quote/home" />
-                    <InsuranceCard icon={<HeartHandshake size={32} className="text-cyan-600" />} title="Life Insurance" href="/get-quote/life" />
-                    <InsuranceCard icon={<ShieldCheck size={32} className="text-cyan-600" />} title="Health Insurance" href="/get-quote/health" />
-                </div>
-            </div>
-        </section>
-        
-        <BenefitsSection />
-
+        <div className="pt-24"> {/* Add padding on top to account for fixed header */}
+          <section className="py-20 md:py-24">
+              <div className="container mx-auto px-6">
+                  <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-4">Compare All Your Insurance Needs</h2>
+                  <p className="text-center text-gray-600 text-lg max-w-2xl mx-auto mb-12">
+                    Select the coverage you need below to get started and see how much you could save.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                      <InsuranceCard icon={<Car size={32} className="text-cyan-600" />} title="Auto Insurance" href="/get-quote/auto" />
+                      <InsuranceCard icon={<HomeIcon size={32} className="text-cyan-600" />} title="Home Insurance" href="/get-quote/home" />
+                      <InsuranceCard icon={<HeartHandshake size={32} className="text-cyan-600" />} title="Life Insurance" href="/get-quote/life" />
+                      <InsuranceCard icon={<ShieldCheck size={32} className="text-cyan-600" />} title="Health Insurance" href="/get-quote/health" />
+                  </div>
+              </div>
+          </section>
+        </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

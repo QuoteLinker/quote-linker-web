@@ -35,7 +35,7 @@ export default function ThankYouPage({ params }: ThankYouPageProps) {
               Thank You for Your Interest!
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              We've received your information and will be in touch shortly with your personalized {title} quotes.
+              We have received your information and will be in touch shortly with your personalized {title} quotes.
             </p>
             
             <div className="mt-8 space-y-4">
@@ -44,7 +44,7 @@ export default function ThankYouPage({ params }: ThankYouPageProps) {
                   <ClockIcon className="h-5 w-5 text-gray-400" />
                 </div>
                 <p className="ml-3 text-sm text-gray-600">
-                  A licensed Minnesota agent will contact you within 15 minutes during business hours.
+                  A licensed agent will contact you shortly.
                 </p>
               </div>
               
@@ -53,7 +53,7 @@ export default function ThankYouPage({ params }: ThankYouPageProps) {
                   <UserGroupIcon className="h-5 w-5 text-gray-400" />
                 </div>
                 <p className="ml-3 text-sm text-gray-600">
-                  You'll receive quotes from multiple top-rated carriers in Minnesota.
+                  You will receive quotes from top carriers.
                 </p>
               </div>
             </div>
