@@ -55,10 +55,10 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/get-quote" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Get a Quote</span></Link></li>
-              <li><Link href="/insurance-quotes/auto" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Auto Insurance</span></Link></li>
-              <li><Link href="/insurance-quotes/home" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Home Insurance</span></Link></li>
-              <li><Link href="/insurance-quotes/life" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Life Insurance</span></Link></li>
-              <li><Link href="/insurance-quotes/health" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Health Insurance</span></Link></li>
+              <li><Link href="/get-quote?type=auto" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Auto Insurance</span></Link></li>
+              <li><Link href="/get-quote?type=home" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Home Insurance</span></Link></li>
+              <li><Link href="/get-quote?type=life" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Life Insurance</span></Link></li>
+              <li><Link href="/get-quote?type=health" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Health Insurance</span></Link></li>
               <li><Link href="/resources" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Resources</span></Link></li>
             </ul>
           </div>
@@ -95,10 +95,10 @@ const Footer = () => {
               </li>
             </ul>
             <div className="flex space-x-4 mt-6">
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
+              <a href="https://www.youtube.com/@QuoteLinker" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
                 <Youtube size={28} /> {/* Increased size and added padding for better visibility */}
               </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
+              <a href="https://www.linkedin.com/company/quotelinker" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
                 <Linkedin size={28} /> {/* Increased size and added padding for better visibility */}
               </a>
             </div>
