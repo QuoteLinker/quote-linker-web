@@ -1,113 +1,157 @@
 'use client';
 
-import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Popover, Transition } from '@headlessui/react';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { Fragment, useState } from 'react';
 import Logo from './Logo';
-import { trackNavClick } from '@/utils/gtm';
 
-export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
+const insuranceProducts = [
+	{ name: 'Auto Insurance', href: '/get-quote?type=auto', description: 'Get a quote for your car' },
+	{ name: 'Home Insurance', href: '/get-quote?type=home', description: 'Protect your home and belongings' },
+	{ name: 'Life Insurance', href: '/get-quote?type=life', description: 'Secure your family\'s future' },
+	{ name: 'Health Insurance', href: '/get-quote?type=health', description: 'Find the right health coverage' },
+	{ name: 'Disability Insurance', href: '/get-quote?type=disability', description: 'Protect your income' },
+	{ name: 'Supplemental Health', href: '/get-quote?type=supplemental-health', description: 'Cover out-of-pocket expenses' },
+];
 
-  const navigation = [
-    { name: 'Agent', href: '/agents' },
-    { name: 'Education', href: '/education' },
-  ];
+// const companyLinks = [
+// 	{ name: 'About Us', href: '/about' },
+// 	{ name: 'Contact', href: '/contact' },
+// 	{ name: 'Privacy Policy', href: '/privacy' },
+// 	{ name: 'Terms of Service', href: '/terms' },
+// ];
 
-  const handleNavClick = (text: string, path: string) => {
-    trackNavClick(text, path);
-    setMobileMenuOpen(false);
-  };
+const Header = () => {
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  return (
-    <>
-      <header className="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
-        <nav className="max-w-screen-xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-4">
-          {/* Left: Logo */}
-          <div className="flex items-center flex-shrink-0">
-            <Link 
-              href="/" 
-              className="flex items-center gap-2 transform transition-transform hover:scale-105 duration-200 focus:outline-none focus:ring-2 focus:ring-electric-blue rounded"
-              onClick={() => handleNavClick('Logo', '/')}
-              aria-label="QuoteLinker Home"
-            >
-              <Logo showText={true} className="h-8 w-auto" />
-            </Link>
-          </div>
+	return (
+		<header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+			<nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
+				<div className="flex items-center justify-between h-16">
+					<div className="flex items-center space-x-4">
+						<Logo />
+						<div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+							<Popover className="relative">
+								{({ open }) => (
+									<>
+										<Popover.Button className="group inline-flex items-center text-base font-medium text-gray-700 hover:text-cyan-500 focus:outline-none">
+											<span>Insurance</span>
+											<ChevronDown
+												className={`${open ? 'transform rotate-180' : ''} ml-1 h-5 w-5 text-gray-400 group-hover:text-cyan-500 transition-transform duration-150`}
+												aria-hidden="true"
+											/>
+										</Popover.Button>
+										<Transition
+											as={Fragment}
+											enter="transition ease-out duration-200"
+											enterFrom="opacity-0 translate-y-1"
+											enterTo="opacity-100 translate-y-0"
+											leave="transition ease-in duration-150"
+											leaveFrom="opacity-100 translate-y-0"
+											leaveTo="opacity-0 translate-y-1"
+										>
+											<Popover.Panel className="absolute z-10 -ml-4 mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
+												<div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+													<div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+														{insuranceProducts.map((item) => (
+															<Link
+																key={item.name}
+																href={item.href}
+																className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50 transition ease-in-out duration-150"
+															>
+																<div className="ml-4">
+																	<p className="text-base font-medium text-gray-900">{item.name}</p>
+																	<p className="mt-1 text-sm text-gray-500">{item.description}</p>
+																</div>
+															</Link>
+														))}
+													</div>
+												</div>
+											</Popover.Panel>
+										</Transition>
+									</>
+								)}
+							</Popover>
+							<Link href="/education" className="text-base font-medium text-gray-700 hover:text-cyan-500">Learn</Link>
+							<Link href="/agents" className="text-base font-medium text-gray-700 hover:text-cyan-500">Agents</Link>
+						</div>
+					</div>
+					
+					<div className="flex items-center">
+						<div className="hidden md:flex items-center">
+							<Link href="/get-quote" className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-cyan-500 hover:bg-cyan-600">
+								Get a Quote
+							</Link>
+						</div>
+						<div className="-mr-2 flex items-center md:hidden">
+							<button
+								type="button"
+								className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
+								onClick={() => setMobileMenuOpen(true)}
+							>
+								<span className="sr-only">Open main menu</span>
+								<Menu className="h-6 w-6" aria-hidden="true" />
+							</button>
+						</div>
+					</div>
+				</div>
+			</nav>
 
-          {/* Center: Nav links */}
-          <div className="hidden md:flex items-center justify-center space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-900 hover:text-electric-blue transition-all duration-200 text-base font-semibold hover:scale-105 transform px-1 py-2 rounded focus:outline-none focus:ring-2 focus:ring-electric-blue"
-                onClick={() => handleNavClick(item.name, item.href)}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
+			{/* Mobile menu */}
+			<Transition.Root show={mobileMenuOpen} as={Fragment}>
+				<div className="md:hidden">
+					<Transition.Child
+						as={Fragment}
+						enter="duration-150 ease-out"
+						enterFrom="opacity-0 scale-95"
+						enterTo="opacity-100 scale-100"
+						leave="duration-100 ease-in"
+						leaveFrom="opacity-100 scale-100"
+						leaveTo="opacity-0 scale-95"
+					>
+						<Popover.Panel focus className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right z-50">
+							<div className="rounded-lg shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+								<div className="px-5 pt-4 flex items-center justify-between">
+									<div>
+										<Logo />
+									</div>
+									<div className="-mr-2">
+										<Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500" onClick={() => setMobileMenuOpen(false)}>
+											<span className="sr-only">Close menu</span>
+											<X className="h-6 w-6" aria-hidden="true" />
+										</Popover.Button>
+									</div>
+								</div>
+								<div className="px-2 pt-2 pb-3 space-y-1">
+									{/* Mobile Insurance Links */}
+									{insuranceProducts.map((item) => (
+										<Link
+											key={item.name}
+											href={item.href}
+											className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+											onClick={() => setMobileMenuOpen(false)} // Close menu on click
+										>
+											{item.name}
+										</Link>
+									))}
+									<Link href="/education" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" onClick={() => setMobileMenuOpen(false)}>Learn</Link>
+									<Link href="/agents" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" onClick={() => setMobileMenuOpen(false)}>Agents</Link>
+								</div>
+								<Link
+									href="/get-quote"
+									className="block w-full px-5 py-3 text-center font-medium text-white bg-cyan-500 hover:bg-cyan-600"
+									onClick={() => setMobileMenuOpen(false)} // Close menu on click
+								>
+									Get a Quote
+								</Link>
+							</div>
+						</Popover.Panel>
+					</Transition.Child>
+				</div>
+			</Transition.Root>
+		</header>
+	);
+};
 
-          {/* Right: CTA */}
-          <div className="flex items-center gap-x-4">
-            <Link
-              href="/quote"
-              className="hidden md:inline-flex items-center justify-center rounded-lg bg-electric-blue px-6 py-2.5 text-base font-bold text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200 whitespace-nowrap"
-              onClick={() => handleNavClick('Get a Quote', '/quote')}
-              style={{ minHeight: '44px' }}
-            >
-              Get a Quote
-            </Link>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-electric-blue hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label="Toggle navigation menu"
-            >
-              <span className="sr-only">
-                {mobileMenuOpen ? 'Close main menu' : 'Open main menu'}
-              </span>
-              {mobileMenuOpen ? (
-                <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </nav>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden" id="mobile-menu">
-            <div className="space-y-1 px-4 pb-3 pt-2">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block rounded-lg px-3 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50 hover:text-electric-blue"
-                  onClick={() => handleNavClick(item.name, item.href)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Link
-                href="/quote"
-                className="mt-4 block w-full rounded-lg bg-electric-blue px-4 py-2.5 text-center text-base font-bold text-white shadow-brand hover:bg-electric-blue/90"
-                onClick={() => handleNavClick('Get a Quote', '/quote')}
-              >
-                Get a Quote
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
-      {/* Add padding to account for fixed header */}
-      <div className="h-16" />
-    </>
-  );
-} 
+export default Header;

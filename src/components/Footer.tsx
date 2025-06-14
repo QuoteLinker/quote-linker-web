@@ -1,137 +1,122 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
-import { 
-  EnvelopeIcon,
-  PhoneIcon,
-  MapPinIcon,
-} from '@heroicons/react/24/outline';
+// import Image from 'next/image'; // Commented out unused import
+import { Youtube, Linkedin, Phone, Mail, MapPin } from 'lucide-react';
 
-const navigation = {
-  quickLinks: [
-    { name: 'Home', href: '/' },
-    { name: 'Agent', href: '/agents' },
-    { name: 'Education', href: '/education' },
-  ],
-  legal: [
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
-  ],
-  social: [
-    {
-      name: 'YouTube',
-      href: 'https://www.youtube.com/@quotelinker',
-      icon: (props: React.SVGProps<SVGSVGElement>) => (
-        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-        </svg>
-      ),
-    },
-    {
-      name: 'LinkedIn',
-      href: 'https://www.linkedin.com/company/quotelinker',
-      icon: (props: React.SVGProps<SVGSVGElement>) => (
-        <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
-          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-        </svg>
-      ),
-    },
-  ],
-};
+// const SITE_NAME = "QuoteLinker"; // Commented out unused variable
+// const COMPANY_INFO = { // Commented out unused variable
+//   name: "QuoteLinker LLC",
+//   email: "support@quotelinker.com",
+//   phone: "+1 (763) 292-3692",
+//   legalAddress: "18388 60th Avenue North, Plymouth, MN 55446, USA",
+//   mailingAddress: "QuoteLinker LLC • 400 S 4th St Ste 410 PMB 629080 • Minneapolis, MN 55415-1419",
+// };
 
-export default function Footer() {
+// interface SocialLink { // Commented out unused interface
+//   name: string;
+//   href: string;
+//   icon: React.ElementType;
+// }
+
+// const SOCIAL_LINKS: SocialLink[] = [ // Commented out unused variable
+//   {
+//     name: 'YouTube',
+//     href: 'https://www.youtube.com',
+//     icon: Youtube,
+//   },
+//   {
+//     name: 'LinkedIn',
+//     href: 'https://www.linkedin.com',
+//     icon: Linkedin,
+//   },
+// ];
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-cool-gray border-t border-gray-200" aria-labelledby="footer-heading">
-      <h2 id="footer-heading" className="sr-only">Footer</h2>
-      <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <footer className="bg-gray-800 text-gray-300">
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          {/* About QuoteLinker */}
+          <div>
+            <h3 className="text-lg font-semibold text-white mb-3">About QuoteLinker</h3>
+            <p className="text-sm mb-3">
+              QuoteLinker helps you find the best insurance rates by connecting you with trusted local agents. Get free, no-obligation quotes today.
+            </p>
+            <Link href="/about" passHref>
+              <span className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer">Learn More &rarr;</span>
+            </Link>
+          </div>
+
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-dark-gray">Quick Links</h3>
-            <ul role="list" className="mt-4 space-y-3">
-              {navigation.quickLinks.map((item) => (
-                <li key={item.name}>
-                  <Link 
-                    href={item.href} 
-                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-lg font-semibold text-white mb-3">Quick Links</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/get-quote" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Get a Quote</span></Link></li>
+              <li><Link href="/insurance-quotes/auto" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Auto Insurance</span></Link></li>
+              <li><Link href="/insurance-quotes/home" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Home Insurance</span></Link></li>
+              <li><Link href="/insurance-quotes/life" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Life Insurance</span></Link></li>
+              <li><Link href="/insurance-quotes/health" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Health Insurance</span></Link></li>
+              <li><Link href="/resources" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Resources</span></Link></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h3 className="text-sm font-semibold text-dark-gray">Legal</h3>
-            <ul role="list" className="mt-4 space-y-3">
-              {navigation.legal.map((item) => (
-                <li key={item.name}>
-                  <Link 
-                    href={item.href} 
-                    className="text-sm text-muted-foreground hover:text-electric-blue transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+            <h3 className="text-lg font-semibold text-white mb-3">Legal</h3>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/privacy" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Privacy Policy</span></Link></li>
+              <li><Link href="/terms" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Terms of Service</span></Link></li>
+              <li><Link href="/data-and-cookies" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Data & Cookies</span></Link></li>
             </ul>
           </div>
 
-          {/* Contact & Social */}
+          {/* Contact Us */}
           <div>
-            <h3 className="text-sm font-semibold text-dark-gray">Contact Us</h3>
-            <ul role="list" className="mt-4 space-y-3">
-              <li>
-                <a 
-                  href="mailto:support@quotelinker.com" 
-                  className="flex items-center text-sm text-muted-foreground hover:text-electric-blue transition-colors"
-                >
-                  <EnvelopeIcon className="h-5 w-5 mr-2" />
-                  support@quotelinker.com
-                </a>
+            <h3 className="text-lg font-semibold text-white mb-3">Contact Us</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center">
+                <Mail size={18} className="mr-2 text-cyan-400" />
+                <a href="mailto:support@quotelinker.com" className="hover:text-cyan-400 transition-colors">support@quotelinker.com</a>
               </li>
-              <li>
-                <a 
-                  href="tel:+18005551234" 
-                  className="flex items-center text-sm text-muted-foreground hover:text-electric-blue transition-colors"
-                >
-                  <PhoneIcon className="h-5 w-5 mr-2" />
-                  (800) 555-1234
-                </a>
+              <li className="flex items-center">
+                <Phone size={18} className="mr-2 text-cyan-400" />
+                <a href="tel:+17632923692" className="hover:text-cyan-400 transition-colors">+1 (763) 292-3692</a>
               </li>
-              <li className="flex items-center text-sm text-muted-foreground">
-                <MapPinIcon className="h-5 w-5 mr-2" />
-                400 S 4th St Ste 410 PMB 629080
-                <br />
-                Minneapolis, MN 55415
+              <li className="flex items-start">
+                <MapPin size={18} className="mr-2 mt-1 text-cyan-400 flex-shrink-0" />
+                <div>
+                  QuoteLinker LLC<br />
+                  400 S 4th St Ste 410 PMB 629080<br />
+                  Minneapolis, MN 55415-1419
+                </div>
               </li>
             </ul>
-            <div className="mt-6 flex space-x-6">
-              {navigation.social.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-muted-foreground hover:text-electric-blue transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={item.name}
-                >
-                  <item.icon className="h-6 w-6 hover:opacity-80" aria-hidden="true" />
-                </a>
-              ))}
+            <div className="flex space-x-4 mt-6">
+              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
+                <Youtube size={28} /> {/* Increased size and added padding for better visibility */}
+              </a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-full hover:bg-gray-700">
+                <Linkedin size={28} /> {/* Increased size and added padding for better visibility */}
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gray-200 pt-8">
-          <p className="text-sm text-muted-foreground text-center">
-            © {new Date().getFullYear()} QuoteLinker LLC. All rights reserved.
+        <div className="border-t border-gray-700 pt-8 mt-8 text-center text-sm">
+          <p>&copy; {currentYear} QuoteLinker LLC. All rights reserved.</p>
+          <p className="mt-1 text-xs text-gray-500">
+            QuoteLinker is a lead generation platform. We are not an insurance agency or broker. Insurance products are offered through a network of licensed professionals.
+          </p>
+          <p className="mt-1 text-xs text-gray-500">
+            Legal Address: 18388 60th Avenue North, Plymouth, MN 55446, USA
           </p>
         </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

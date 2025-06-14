@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { insuranceTips } from '@/data/insuranceTips';
-import { FaLightbulb } from 'react-icons/fa';
+import { Lightbulb } from 'lucide-react';
 
 interface InsuranceTipProps {
   productType: string;
@@ -25,7 +25,7 @@ export default function InsuranceTip({ productType }: InsuranceTipProps) {
     <div className="bg-[#FFF3CD] border border-[#FFEEBA] rounded-lg p-4 mb-6">
       <div className="flex items-start space-x-3">
         <div className="flex-shrink-0">
-          <FaLightbulb className="w-5 h-5 text-[#856404] mt-1" />
+          <Lightbulb className="w-5 h-5 text-[#856404] mt-1" />
         </div>
         <div>
           <h4 className="text-sm font-semibold text-[#856404] mb-1">Insurance Insight</h4>

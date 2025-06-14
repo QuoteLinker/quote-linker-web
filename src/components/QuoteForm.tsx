@@ -1,342 +1,250 @@
 'use client';
 
-import React, { useState, useRef, ChangeEvent, FocusEvent, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { toast } from 'react-hot-toast';
-import { FormData, FormErrors, InsuranceType } from '@/types/insurance';
-import {
-  FaCar,
-  FaHome,
-  FaHeartbeat,
-  FaBriefcaseMedical,
-} from 'react-icons/fa';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { z } from 'zod';
+import toast from 'react-hot-toast';
+import FieldWithTooltip from '@/components/FieldWithTooltip'; 
 
-interface QuoteFormProps {
-  intent?: string;
-  className?: string;
-}
+// Define schema for validation including the consent checkbox
+const leadSchema = z.object({
+  firstName: z.string().min(2, "First name is required."),
+  lastName: z.string().min(2, "Last name is required."),
+  email: z.string().email("Invalid email address."),
+  phone: z.string().min(10, "A valid phone number is required.").regex(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/, "Invalid phone number format."),
+  zip: z.string().regex(/^\d{5}$/, "A valid 5-digit ZIP code is required."),
+  insuranceTypes: z.array(z.string()).min(1, "Please select at least one insurance type."),
+  additionalInfo: z.string().optional(),
+  consent: z.literal(true, {
+    errorMap: () => ({ message: "You must consent to be contacted." }),
+  }),
+});
 
-// Simplified insurance type icons mapping
-const InsuranceIcons: Record<string, React.ReactNode> = {
-  'AUTO': <FaCar className="text-primary h-6 w-6" />,
-  'HOME': <FaHome className="text-primary h-6 w-6" />,
-  'LIFE': <FaHeartbeat className="text-primary h-6 w-6" />,
-  'HEALTH': <FaBriefcaseMedical className="text-primary h-6 w-6" />,
-};
+type FormState = Omit<z.infer<typeof leadSchema>, 'consent'> & { consent: boolean };
+type FormErrors = z.ZodError<FormState>['formErrors']['fieldErrors'];
 
-// Simplified insurance type names
-const InsuranceTypeNames: Record<string, string> = {
-  'AUTO': 'Auto Insurance',
-  'HOME': 'Home Insurance',
-  'LIFE': 'Life Insurance',
-  'HEALTH': 'Health Insurance',
-};
+const insuranceOptions = ['Auto', 'Home', 'Life', 'Health'];
 
-function QuoteFormContent({ intent = 'general', className = '' }: QuoteFormProps) {
-  const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
+const QuoteFormComponent = () => {
+  const searchParams = useSearchParams();
 
-  // Map intent to insuranceType
-  const insuranceType = (intent || 'general').toUpperCase() as InsuranceType;
-  
-  // Simplified state
-  const [formData, setFormData] = useState<Partial<FormData>>({
+  const [formData, setFormData] = useState<FormState>({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
     zip: '',
-    insuranceType: insuranceType || 'AUTO' as InsuranceType,
+    insuranceTypes: [],
+    additionalInfo: '',
+    consent: false,
   });
+  
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    const typeFromURL = searchParams.get('type');
+    if (typeFromURL && insuranceOptions.map(o => o.toLowerCase()).includes(typeFromURL)) {
+      setFormData(prev => ({...prev, insuranceTypes: [typeFromURL.charAt(0).toUpperCase() + typeFromURL.slice(1)]}));
+    }
+  }, [searchParams]);
 
-  // Basic validation
-  const validateField = (name: string, value: string): string | undefined => {
-    switch (name) {
-      case 'firstName':
-      case 'lastName':
-        if (!value || value.length < 2) return 'Please enter a valid name (minimum 2 characters)';
-        return undefined;
-      case 'email':
-        if (!value || !value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Please enter a valid email address';
-        return undefined;
-      case 'phone': {
-        const cleaned = value.replace(/\D/g, '');
-        if (cleaned.length !== 10) return 'Please enter a valid 10-digit phone number';
-        return undefined;
-      }
-      case 'zip':
-        if (!value || !value.match(/^\d{5}$/)) return 'Please enter a valid 5-digit ZIP code';
-        return undefined;
-      default:
-        return undefined;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    if (type === 'checkbox' && name === 'consent') {
+      setFormData(prev => ({ ...prev, consent: (e.target as HTMLInputElement).checked }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    const error = validateField(name, value);
-    setFormErrors(prev => ({ ...prev, [name]: error }));
+  const handleCheckboxChange = (type: string) => {
+    setFormData(prev => ({
+      ...prev,
+      insuranceTypes: prev.insuranceTypes.includes(type)
+        ? prev.insuranceTypes.filter(t => t !== type)
+        : [...prev.insuranceTypes, type],
+    }));
   };
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setTouchedFields(prev => ({ ...prev, [name]: true }));
-    
-    const error = validateField(name, value);
-    if (error) {
-      setFormErrors(prev => ({ ...prev, [name]: error }));
+  const validate = () => {
+    const result = leadSchema.safeParse(formData);
+    if (!result.success) {
+      setErrors(result.error.formErrors.fieldErrors);
+      return false;
     }
-  };
-
-  const validateForm = (): boolean => {
-    const errors: FormErrors = {};
-    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'zip'];
-    
-    requiredFields.forEach(field => {
-      const value = formData[field as keyof FormData] as string;
-      const error = validateField(field, value || '');
-      if (error) {
-        errors[field as keyof FormErrors] = error;
-      }
-    });
-    
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    setErrors({});
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      const allFields = ['firstName', 'lastName', 'email', 'phone', 'zip'];
-      const touchedFields = allFields.reduce((acc, field) => ({
-        ...acc,
-        [field]: true
-      }), {});
-      setTouchedFields(touchedFields);
+    if (!validate()) {
+      toast.error('Please fix the errors in the form.');
       return;
     }
     
-    setIsSubmitting(true);
-    
+    setIsLoading(true);
+    const toastId = toast.loading('Submitting your information...');
+
     try {
-      const response = await fetch('/api/submit-lead', {
+      const response = await fetch('/api/leads', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          timestamp: new Date().toISOString(),
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       });
-      
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        toast.error(result.error || 'Submission failed. Please try again.', { id: toastId });
+      } else {
+        toast.success('Quote request submitted successfully!', { id: toastId });
+        // Potentially redirect to a thank you page
+        // router.push('/thank-you');
+        setFormData({ 
+          firstName: '', lastName: '', email: '', phone: '', zip: '', 
+          insuranceTypes: [], additionalInfo: '', consent: false 
+        });
       }
-      
-      toast.success('Thank you! We\'ll be in touch shortly.');
-      router.push(`/thank-you?type=${formData.insuranceType?.toLowerCase()}`);
-      
     } catch (error) {
-      console.error('Form submission error:', error);
-      toast.error('Sorry, something went wrong. Please try again or contact support.');
+      console.error("Submission error:", error);
+      let errorMessage = "An unexpected error occurred.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage, { id: toastId });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  const LoadingSpinner = () => (
-    <div className="flex items-center justify-center">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-      <span className="ml-2">Processing...</span>
-    </div>
-  );
+  const RequiredAsterisk = () => <span className="text-red-500 ml-1">*</span>;
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      <div className="bg-white p-8 rounded-xl shadow-md border border-gray-100">
-        <div className="flex items-center justify-center mb-6">
-          <div className="mr-3">
-            {InsuranceIcons[formData.insuranceType || 'AUTO']}
-          </div>
-          <h2 className="text-2xl font-bold text-center text-gray-800">
-            Get Your {InsuranceTypeNames[formData.insuranceType || 'AUTO']} Quote
-          </h2>
-        </div>
-
-        <form ref={formRef} onSubmit={handleSubmit} className={className}>
-          {/* Insurance Type Selector */}
-          <div className="mb-6">
-            <div className="block text-sm font-medium text-gray-700 mb-4">
-              Insurance Type <span className="text-red-500">*</span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {Object.entries({
-                'AUTO': { icon: <FaCar className="h-5 w-5" />, name: 'Auto' },
-                'HOME': { icon: <FaHome className="h-5 w-5" />, name: 'Home' },
-                'LIFE': { icon: <FaHeartbeat className="h-5 w-5" />, name: 'Life' },
-                'HEALTH': { icon: <FaBriefcaseMedical className="h-5 w-5" />, name: 'Health' }
-              }).map(([type, { icon, name }]) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => setFormData(prev => ({ ...prev, insuranceType: type as InsuranceType }))}
-                  className={`flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${
-                    formData.insuranceType === type 
-                      ? 'bg-blue-50 border-blue-500 shadow-sm' 
-                      : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className={`p-2 rounded-full mb-2 ${formData.insuranceType === type ? 'text-blue-600' : 'text-gray-500'}`}>
-                    {icon}
-                  </div>
-                  <span className={`text-sm font-medium ${formData.insuranceType === type ? 'text-blue-700' : 'text-gray-700'}`}>
-                    {name}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Form Fields */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                First Name <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="text"
-                name="firstName"
-                id="firstName"
-                required
-                placeholder="Enter your first name"
-                value={formData.firstName || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={touchedFields.firstName && formErrors.firstName ? 'border-red-500' : ''}
-              />
-              {touchedFields.firstName && formErrors.firstName && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.firstName}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="text"
-                name="lastName"
-                id="lastName"
-                required
-                placeholder="Enter your last name"
-                value={formData.lastName || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={touchedFields.lastName && formErrors.lastName ? 'border-red-500' : ''}
-              />
-              {touchedFields.lastName && formErrors.lastName && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.lastName}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                required
-                placeholder="Enter your email"
-                value={formData.email || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={touchedFields.email && formErrors.email ? 'border-red-500' : ''}
-              />
-              {touchedFields.email && formErrors.email && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.email}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="tel"
-                name="phone"
-                id="phone"
-                required
-                placeholder="(555) 123-4567"
-                value={formData.phone || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={touchedFields.phone && formErrors.phone ? 'border-red-500' : ''}
-              />
-              {touchedFields.phone && formErrors.phone && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.phone}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="zip" className="block text-sm font-medium text-gray-700 mb-2">
-                ZIP Code <span className="text-red-500">*</span>
-              </label>
-              <Input
-                type="text"
-                name="zip"
-                id="zip"
-                required
-                placeholder="12345"
-                value={formData.zip || ''}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={touchedFields.zip && formErrors.zip ? 'border-red-500' : ''}
-              />
-              {touchedFields.zip && formErrors.zip && (
-                <p className="mt-1 text-sm text-red-600">{formErrors.zip}</p>
-              )}
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700"
-          >
-            {isSubmitting ? (
-              <LoadingSpinner />
-            ) : (
-              `Get My Free ${(InsuranceTypeNames[formData.insuranceType as string] || 'Insurance').split(" ")[0]} Quote`
-            )}
-          </Button>
-          
-          <p className="text-xs text-center text-gray-500 mt-2">
-            No obligation • 100% free • Takes only 2 minutes
-          </p>
-        </form>
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FieldWithTooltip 
+          label="First Name" 
+          tooltip="Your legal first name." 
+          name="firstName" 
+          value={formData.firstName} 
+          onChange={handleChange} 
+          error={errors.firstName?.join(', ')} 
+          required 
+        />
+        <FieldWithTooltip 
+          label="Last Name" 
+          tooltip="Your legal last name." 
+          name="lastName" 
+          value={formData.lastName} 
+          onChange={handleChange} 
+          error={errors.lastName?.join(', ')} 
+          required 
+        />
       </div>
-    </div>
-  );
-}
 
-export default function QuoteForm({ intent = 'general', className }: QuoteFormProps) {
+      <FieldWithTooltip 
+        label="Email Address" 
+        tooltip="We'll use this to send you quote information." 
+        name="email" 
+        type="email" 
+        value={formData.email} 
+        onChange={handleChange} 
+        error={errors.email?.join(', ')} 
+        required 
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FieldWithTooltip 
+          label="Phone Number" 
+          tooltip="Agents will call this number." 
+          name="phone" 
+          type="tel" 
+          value={formData.phone} 
+          onChange={handleChange} 
+          error={errors.phone?.join(', ')} 
+          required 
+        />
+        <FieldWithTooltip 
+          label="ZIP Code" 
+          tooltip="Used to find local agents." 
+          name="zip" 
+          value={formData.zip} 
+          onChange={handleChange} 
+          error={errors.zip?.join(', ')} 
+          pattern="\d{5}" 
+          title="Enter a 5-digit ZIP code" 
+          required 
+        />
+      </div>
+      
+      <div>
+        <label htmlFor="insuranceTypes-label" className="block text-sm font-medium text-gray-700 mb-2">
+          What type(s) of insurance are you interested in?<RequiredAsterisk />
+        </label>
+        <div id="insuranceTypes-label" className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {insuranceOptions.map(type => (
+            <label key={type} htmlFor={`insurance-${type}`} className="flex items-center space-x-2 p-3 border border-gray-300 rounded-md hover:border-cyan-500 cursor-pointer has-[:checked]:bg-cyan-50 has-[:checked]:border-cyan-600 transition-colors">
+              <input
+                id={`insurance-${type}`}
+                type="checkbox"
+                name="insuranceTypes"
+                value={type}
+                checked={formData.insuranceTypes.includes(type)}
+                onChange={() => handleCheckboxChange(type)}
+                className="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+              />
+              <span className="text-sm font-medium text-gray-700">{type}</span>
+            </label>
+          ))}
+        </div>
+        {errors.insuranceTypes && <p className="text-red-500 text-sm mt-1">{errors.insuranceTypes.join(', ')}</p>}
+      </div>
+
+      <div> {/* Changed FieldWithTooltip to a simple div with label and textarea */}
+        <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700 mb-1">Additional Information (Optional)</label>
+        <textarea id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} rows={3} className="form-textarea w-full mt-1 block rounded-lg border-gray-300 shadow-sm sm:text-sm transition-colors"></textarea>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-start">
+          <div className="flex items-center h-5">
+            <input
+              id="consent"
+              name="consent"
+              type="checkbox"
+              checked={formData.consent}
+              onChange={handleChange}
+              className={`h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500 ${errors.consent ? 'border-red-500' : ''}`}
+            />
+          </div>
+          <div className="ml-3 text-sm">
+            <label htmlFor="consent" className="font-medium text-gray-700">
+              TCPA Consent <RequiredAsterisk />
+            </label>
+            <p className="text-gray-500 text-xs">
+              By checking this box, you consent to QuoteLinker and its network of insurance partners contacting you about insurance quotes via call, text, or email, including automated means, at the number and email you provided. Consent is not a condition of purchase.
+            </p>
+          </div>
+        </div>
+        {errors.consent && <p className="text-red-500 text-sm mt-1">{errors.consent.join(', ')}</p>}
+      </div>
+
+      <button 
+        type="submit" 
+        disabled={isLoading}
+        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+      >
+        {isLoading ? 'Submitting...' : 'Get My Free Quotes'}
+      </button>
+    </form>
+  );
+};
+
+// Wrap the component with Suspense for useSearchParams
+export default function QuoteForm() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <QuoteFormContent intent={intent} className={className} />
+    <Suspense fallback={<div>Loading form preferences...</div>}>
+      <QuoteFormComponent />
     </Suspense>
   );
 }

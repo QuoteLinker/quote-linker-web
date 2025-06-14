@@ -1,43 +1,31 @@
 import React from 'react';
 import { Tooltip } from './Tooltip';
 
-interface FieldWithTooltipProps {
+interface FieldWithTooltipProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  name: string;
+  name: string; // Overlaps with InputHTMLAttributes, which is fine
   tooltip: string;
-  required?: boolean;
-  type?: string;
-  min?: string | number;
-  max?: string | number;
-  step?: string | number;
-  value: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  value: string | number; // Overlaps with InputHTMLAttributes
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Overlaps with InputHTMLAttributes
   error?: string;
-  'aria-invalid'?: boolean;
-  'aria-describedby'?: string;
-  className?: string;
-  placeholder?: string;
+  // `required` is inherited from InputHTMLAttributes
+  // `className` is inherited from HTMLAttributes (via InputHTMLAttributes)
+  // Other attributes like `pattern`, `type`, `placeholder` are inherited.
 }
 
-export default function FieldWithTooltip({
-  label,
-  name,
-  tooltip,
-  required = false,
-  type = 'text',
-  min,
-  max,
-  step,
-  value,
-  onChange,
-  onBlur,
-  error,
-  'aria-invalid': ariaInvalid,
-  'aria-describedby': ariaDescribedby,
-  className = '',
-  placeholder,
-}: FieldWithTooltipProps) {
+export default function FieldWithTooltip(allProps: FieldWithTooltipProps) {
+  const {
+    label,
+    name,
+    tooltip,
+    value,
+    onChange,
+    error,
+    required, // Destructure for specific use (asterisk, pass to input)
+    className, // Destructure for specific use in className string concatenation
+    ...restInputProps // Collect all other props (including pattern, type, placeholder, etc.)
+  } = allProps;
+
   return (
     <div>
       <div className="flex items-center gap-1">
@@ -47,22 +35,17 @@ export default function FieldWithTooltip({
         <Tooltip content={tooltip} />
       </div>
       <input
-        type={type}
-        id={name}
-        name={name}
-        required={required}
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        aria-invalid={ariaInvalid}
-        aria-describedby={ariaDescribedby}
-        placeholder={placeholder}
+        id={name} // Use destructured name
+        name={name} // Use destructured name
+        value={value} // Use destructured value
+        onChange={onChange} // Use destructured onChange
+        required={required} // Pass destructured required to the input element
+        aria-invalid={!!error}
+        aria-describedby={error ? `${name}-error` : undefined}
         className={`mt-1 block w-full rounded-lg border-gray-300 shadow-sm sm:text-sm transition-colors ${
           error ? 'border-red-500' : ''
-        } ${className}`}
+        } ${className || ''}`} // Use destructured className, append if provided
+        {...restInputProps} // Spread the remaining input props (e.g., pattern, type, placeholder)
       />
       {error && (
         <div

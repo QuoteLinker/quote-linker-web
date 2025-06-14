@@ -8,6 +8,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        cyan: {
+          50: '#e0fcff',
+          100: '#befaff',
+          200: '#9ef8ff',
+          300: '#7df6ff',
+          400: '#5cf3ff', // Lighter variant for hover if needed
+          DEFAULT: '#00EEFD', // Main brand color
+          500: '#00EEFD',     // Main brand color
+          600: '#00D4E5',     // Hover/darker variant
+          700: '#00b8c9',     // Adjusted darker shades
+          800: '#009dad',
+          900: '#008191',
+          950: '#006575',
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -117,4 +131,4 @@ module.exports = {
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
   ],
-} 
+}
