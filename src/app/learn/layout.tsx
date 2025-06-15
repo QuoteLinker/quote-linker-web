@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { metadata } from './metadata';
-import EducationLayoutClient from '@/components/education/EducationLayoutClient';
+import EducationLayoutClient from '@/components/learn/EducationLayoutClient';
 
 export { metadata };
 

@@ -43,7 +43,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-3">About QuoteLinker</h3>
             <p className="text-sm mb-3">
-              QuoteLinker helps you find the best insurance rates by connecting you with trusted local agents. Get free, no-obligation quotes today.
+              QuoteLinker helps you find the best insurance rates by connecting you with trusted local agents. Get your free, no-obligation quote today.
             </p>
             <Link href="/about" passHref>
               <span className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer">Learn More &rarr;</span>
@@ -59,7 +59,7 @@ const Footer = () => {
               <li><Link href="/get-quote?type=home" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Home Insurance</span></Link></li>
               <li><Link href="/get-quote?type=life" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Life Insurance</span></Link></li>
               <li><Link href="/get-quote?type=health" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Health Insurance</span></Link></li>
-              <li><Link href="/resources" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Resources</span></Link></li>
+              <li><Link href="/learn" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Learn</span></Link></li>
             </ul>
           </div>
 
@@ -67,8 +67,8 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-3">Legal</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/privacy" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Privacy Policy</span></Link></li>
-              <li><Link href="/terms" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Terms of Service</span></Link></li>
+              <li><Link href="/privacy" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Privacy</span></Link></li>
+              <li><Link href="/terms" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Terms</span></Link></li>
               <li><Link href="/data-and-cookies" passHref><span className="hover:text-cyan-400 transition-colors cursor-pointer">Data & Cookies</span></Link></li>
             </ul>
           </div>
@@ -108,10 +108,10 @@ const Footer = () => {
         <div className="border-t border-gray-700 pt-8 mt-8 text-center text-sm">
           <p>&copy; {currentYear} QuoteLinker LLC. All rights reserved.</p>
           <p className="mt-1 text-xs text-gray-500">
-            QuoteLinker is a lead generation platform. We are not an insurance agency or broker. Insurance products are offered through a network of licensed professionals.
+            QuoteLinker is a digital lead generation platform. We are not an insurance agency or broker or carrier. Insurance products are offered through a network of licensed agents.
           </p>
           <p className="mt-1 text-xs text-gray-500">
-            Legal Address: 18388 60th Avenue North, Plymouth, MN 55446, USA
+            QuoteLinker LLC legal Address: 18388 60th Avenue North, Plymouth, MN 55446, USA
           </p>
         </div>
       </div>

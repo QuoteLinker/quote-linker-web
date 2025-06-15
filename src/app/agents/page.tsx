@@ -84,18 +84,18 @@ export default function AgentsPage() {
 						</p>
 						<div className="mt-10 flex items-center justify-center gap-6">
 							<Link
-								href="#schedule"
+								href="/agents/signup"
 								className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
-								onClick={() => trackCTAClick('Schedule Demo - Agents Page')}
+								onClick={() => trackCTAClick('Agent Signup - Agents Page Hero')}
 							>
-								Schedule a Demo
+								Sign Up Now
 							</Link>
 							<Link
-								href="#join-waitlist"
+								href="/agents/login"
 								className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20 transition-all duration-200"
-								onClick={() => trackCTAClick('Join Waitlist - Agents Page')}
+								onClick={() => trackCTAClick('Agent Login - Agents Page Hero')}
 							>
-								Join Waitlist
+								Agent Login
 							</Link>
 						</div>
 					</div>
@@ -126,6 +126,15 @@ export default function AgentsPage() {
 							</div>
 						))}
 					</dl>
+				</div>
+				<div className="mt-16 text-center">
+					<Link
+						href="/agents/signup"
+						className="inline-block rounded-lg bg-electric-blue px-4 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+						onClick={() => trackCTAClick('Agent Signup - Features Section')}
+					>
+						Get Started with Exclusive Leads
+					</Link>
 				</div>
 			</div>
 
@@ -263,11 +272,11 @@ export default function AgentsPage() {
 						</p>
 						<div className="mt-10 flex items-center justify-center gap-6">
 							<Link
-								href="/contact"
+								href="/agents/signup"
 								className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
-								onClick={() => trackCTAClick('Apply for Access - Agents Page Bottom')}
+								onClick={() => trackCTAClick('Agent Signup - Final CTA')}
 							>
-								Apply for Access
+								Unlock Your Territory Today
 							</Link>
 							<a
 								href="https://calendly.com/quotelinker/demo"

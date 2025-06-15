@@ -23,9 +23,13 @@ const leadSchema = z.object({
 type FormState = Omit<z.infer<typeof leadSchema>, 'consent'> & { consent: boolean };
 type FormErrors = z.ZodError<FormState>['formErrors']['fieldErrors'];
 
-const insuranceOptions = ['Auto', 'Home', 'Life', 'Health'];
+const insuranceOptions = ['Auto', 'Home', 'Life', 'Health']; // Simplified options
 
-const QuoteFormComponent = () => {
+interface QuoteFormProps {
+  productType?: string;
+}
+
+const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
   const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState<FormState>({
@@ -43,11 +47,15 @@ const QuoteFormComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const typeFromURL = searchParams.get('type');
-    if (typeFromURL && insuranceOptions.map(o => o.toLowerCase()).includes(typeFromURL)) {
-      setFormData(prev => ({...prev, insuranceTypes: [typeFromURL.charAt(0).toUpperCase() + typeFromURL.slice(1)]}));
+    const typeToSet = productType || searchParams.get('type');
+    // Ensure typeToSet is one of the simplified options
+    if (typeToSet && insuranceOptions.map(o => o.toLowerCase()).includes(typeToSet.toLowerCase())) {
+      const formattedType = insuranceOptions.find(opt => opt.toLowerCase() === typeToSet.toLowerCase());
+      if (formattedType) {
+        setFormData(prev => ({...prev, insuranceTypes: [formattedType]}));
+      }
     }
-  }, [searchParams]);
+  }, [searchParams, productType]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
@@ -98,114 +106,117 @@ const QuoteFormComponent = () => {
         toast.error(result.error || 'Submission failed. Please try again.', { id: toastId });
       } else {
         toast.success('Quote request submitted successfully!', { id: toastId });
-        // Potentially redirect to a thank you page
-        // router.push('/thank-you');
+        // Reset form or redirect user
         setFormData({ 
           firstName: '', lastName: '', email: '', phone: '', zip: '', 
           insuranceTypes: [], additionalInfo: '', consent: false 
         });
       }
     } catch (error) {
-      console.error("Submission error:", error);
-      let errorMessage = "An unexpected error occurred.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage, { id: toastId });
+      console.error('Submission error:', error);
+      toast.error('An unexpected error occurred.', { id: toastId });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const RequiredAsterisk = () => <span className="text-red-500 ml-1">*</span>;
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FieldWithTooltip 
-          label="First Name" 
-          tooltip="Your legal first name." 
-          name="firstName" 
-          value={formData.firstName} 
-          onChange={handleChange} 
-          error={errors.firstName?.join(', ')} 
-          required 
+    <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
+      <h2 className="text-2xl font-semibold text-gray-900 text-center">Get Your Free Quote</h2>
+      
+      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+        <FieldWithTooltip
+          label="First Name"
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          error={errors.firstName?.[0]}
+          tooltip="Please enter your first name."
+          required
         />
-        <FieldWithTooltip 
-          label="Last Name" 
-          tooltip="Your legal last name." 
-          name="lastName" 
-          value={formData.lastName} 
-          onChange={handleChange} 
-          error={errors.lastName?.join(', ')} 
-          required 
+        <FieldWithTooltip
+          label="Last Name"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          error={errors.lastName?.[0]}
+          tooltip="Please enter your last name."
+          required
         />
       </div>
 
-      <FieldWithTooltip 
-        label="Email Address" 
-        tooltip="We'll use this to send you quote information." 
-        name="email" 
-        type="email" 
-        value={formData.email} 
-        onChange={handleChange} 
-        error={errors.email?.join(', ')} 
-        required 
+      <FieldWithTooltip
+        label="Email Address"
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        error={errors.email?.[0]}
+        tooltip="We'll use this to send your quote details."
+        required
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FieldWithTooltip 
-          label="Phone Number" 
-          tooltip="Agents will call this number." 
-          name="phone" 
-          type="tel" 
-          value={formData.phone} 
-          onChange={handleChange} 
-          error={errors.phone?.join(', ')} 
-          required 
+      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+        <FieldWithTooltip
+          label="Phone Number"
+          name="phone"
+          type="tel"
+          value={formData.phone}
+          onChange={handleChange}
+          error={errors.phone?.[0]}
+          tooltip="A valid phone number where we can reach you."
+          required
         />
-        <FieldWithTooltip 
-          label="ZIP Code" 
-          tooltip="Used to find local agents." 
-          name="zip" 
-          value={formData.zip} 
-          onChange={handleChange} 
-          error={errors.zip?.join(', ')} 
-          pattern="\d{5}" 
-          title="Enter a 5-digit ZIP code" 
-          required 
+        <FieldWithTooltip
+          label="ZIP Code"
+          name="zip"
+          value={formData.zip}
+          onChange={handleChange}
+          error={errors.zip?.[0]}
+          tooltip="Your 5-digit ZIP code helps us find local rates."
+          required
         />
       </div>
-      
+
       <div>
-        <label htmlFor="insuranceTypes-label" className="block text-sm font-medium text-gray-700 mb-2">
-          What type(s) of insurance are you interested in?<RequiredAsterisk />
-        </label>
-        <div id="insuranceTypes-label" className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <label htmlFor="insuranceTypes" className="block text-sm font-medium text-gray-700 mb-2">What type(s) of insurance are you interested in? <span className="text-red-500">*</span></label>
+        <div className="flex flex-wrap gap-4">
           {insuranceOptions.map(type => (
-            <label key={type} htmlFor={`insurance-${type}`} className="flex items-center space-x-2 p-3 border border-gray-300 rounded-md hover:border-cyan-500 cursor-pointer has-[:checked]:bg-cyan-50 has-[:checked]:border-cyan-600 transition-colors">
+            <div key={type} className="flex items-center">
               <input
                 id={`insurance-${type}`}
-                type="checkbox"
                 name="insuranceTypes"
+                type="checkbox"
                 value={type}
                 checked={formData.insuranceTypes.includes(type)}
                 onChange={() => handleCheckboxChange(type)}
                 className="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
               />
-              <span className="text-sm font-medium text-gray-700">{type}</span>
-            </label>
+              <label htmlFor={`insurance-${type}`} className="ml-2 block text-sm text-gray-900">
+                {type}
+              </label>
+            </div>
           ))}
         </div>
-        {errors.insuranceTypes && <p className="text-red-500 text-sm mt-1">{errors.insuranceTypes.join(', ')}</p>}
+        {errors.insuranceTypes && <p className="mt-2 text-sm text-red-600">{errors.insuranceTypes[0]}</p>}
       </div>
 
-      <div> {/* Changed FieldWithTooltip to a simple div with label and textarea */}
-        <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700 mb-1">Additional Information (Optional)</label>
-        <textarea id="additionalInfo" name="additionalInfo" value={formData.additionalInfo} onChange={handleChange} rows={3} className="form-textarea w-full mt-1 block rounded-lg border-gray-300 shadow-sm sm:text-sm transition-colors"></textarea>
+      <div>
+        <label htmlFor="additionalInfo" className="block text-sm font-medium text-gray-700">
+          Additional Information (Optional)
+        </label>
+        <textarea
+          id="additionalInfo"
+          name="additionalInfo"
+          rows={3}
+          value={formData.additionalInfo}
+          onChange={handleChange}
+          className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500"
+          placeholder="Any specific needs or questions?"
+        />
       </div>
 
-      <div className="space-y-2">
+      <div>
         <div className="flex items-start">
           <div className="flex items-center h-5">
             <input
@@ -214,37 +225,34 @@ const QuoteFormComponent = () => {
               type="checkbox"
               checked={formData.consent}
               onChange={handleChange}
-              className={`h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500 ${errors.consent ? 'border-red-500' : ''}`}
+              className="focus:ring-cyan-500 h-4 w-4 text-cyan-600 border-gray-300 rounded"
             />
           </div>
           <div className="ml-3 text-sm">
-            <label htmlFor="consent" className="font-medium text-gray-700">
-              TCPA Consent <RequiredAsterisk />
-            </label>
-            <p className="text-gray-500 text-xs">
-              By checking this box, you consent to QuoteLinker and its network of insurance partners contacting you about insurance quotes via call, text, or email, including automated means, at the number and email you provided. Consent is not a condition of purchase.
-            </p>
+            <label htmlFor="consent" className="font-medium text-gray-700">I agree to be contacted. <span className="text-red-500">*</span></label>
           </div>
         </div>
-        {errors.consent && <p className="text-red-500 text-sm mt-1">{errors.consent.join(', ')}</p>}
+        {errors.consent && <p className="mt-2 text-sm text-red-600">{errors.consent[0]}</p>}
       </div>
 
-      <button 
-        type="submit" 
-        disabled={isLoading}
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-      >
-        {isLoading ? 'Submitting...' : 'Get My Free Quotes'}
-      </button>
+      <div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50"
+        >
+          {isLoading ? 'Submitting...' : 'Get My Free Quote'}
+        </button>
+      </div>
     </form>
   );
 };
 
-// Wrap the component with Suspense for useSearchParams
-export default function QuoteForm() {
-  return (
-    <Suspense fallback={<div>Loading form preferences...</div>}>
-      <QuoteFormComponent />
-    </Suspense>
-  );
-}
+// Wrap QuoteFormComponent with Suspense for useSearchParams
+const QuoteForm: React.FC<QuoteFormProps> = (props) => (
+  <Suspense fallback={<div>Loading form...</div>}>
+    <QuoteFormComponent {...props} />
+  </Suspense>
+);
+
+export default QuoteForm;

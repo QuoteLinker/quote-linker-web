@@ -43,7 +43,7 @@ export default function PrivacyPage() {
           <p>We do not knowingly solicit information from or market to children under the age of 13. If you become aware of any data we have collected from children under age 13, please contact us using the contact information provided below.</p>
 
           <h2>Contact Us</h2>
-          <p>If you have questions or comments about this Privacy Policy, please contact us at: <Link href="mailto:privacy@quotelinker.com">privacy@quotelinker.com</Link>.</p>
+          <p>If you have questions or comments about this Privacy Policy, please contact us at: <Link href="mailto:support@quotelinker.com">support@quotelinker.com</Link>.</p>
         </div>
       </div>
     </div>

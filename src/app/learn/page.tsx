@@ -24,7 +24,7 @@ export default async function EducationPage() {
         <div className="container max-w-screen-xl mx-auto px-4">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-              Insurance Education Hub
+              Insurance Learning Hub
             </h1>
             <p className="text-lg text-white/90 max-w-2xl mx-auto">
               Learn everything you need to know about insurance to make informed decisions for you
@@ -41,7 +41,7 @@ export default async function EducationPage() {
             {articles.map(article => (
               <Link
                 key={article.slug}
-                href={`/education/${article.slug}`}
+                href={`/learn/${article.slug}`} // Changed from /education/ to /learn/
                 className="group bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-200 overflow-hidden border border-gray-100 flex flex-col h-full transform hover:-translate-y-1"
               >
                 <div className="relative h-48 w-full flex items-center justify-center bg-gradient-to-r from-[#00EEFD]/10 to-[#00D4E5]/10">

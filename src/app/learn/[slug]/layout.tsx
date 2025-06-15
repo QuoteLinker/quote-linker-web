@@ -29,8 +29,8 @@ function ArticleBreadcrumbSchema({ slug }: { slug: string }) {
               '@type': 'ListItem',
               position: 2,
               item: {
-                '@id': 'https://www.quotelinker.com/education',
-                name: 'Education'
+                '@id': 'https://www.quotelinker.com/learn',
+                name: 'Learn'
               }
             },
             {
