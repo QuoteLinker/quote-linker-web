@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: 'Insurance Quotes - QuoteLinker',
@@ -30,8 +29,8 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Auto Insurance</h3>
             <p className="text-gray-500 mb-4">Protect your vehicle with comprehensive coverage options.</p>
-            <Link href="/auto">
-              <Button className="w-full">Get Quote</Button>
+            <Link href="/auto" className="text-electric-blue hover:underline">
+              Get Auto Insurance Quote
             </Link>
           </div>
 
@@ -44,8 +43,8 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Home Insurance</h3>
             <p className="text-gray-500 mb-4">Safeguard your home and belongings with tailored coverage.</p>
-            <Link href="/home">
-              <Button className="w-full">Get Quote</Button>
+            <Link href="/home" className="text-electric-blue hover:underline">
+              Get Home Insurance Quote
             </Link>
           </div>
 
@@ -57,9 +56,9 @@ export default function InsuranceQuotesPage() {
               </svg>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Life Insurance</h3>
-            <p className="text-gray-500 mb-4">Secure your family's future with flexible life insurance options.</p>
-            <Link href="/life">
-              <Button className="w-full">Get Quote</Button>
+            <p className="text-gray-500 mb-4">Secure your family&apos;s future with flexible life insurance options.</p>
+            <Link href="/life" className="text-electric-blue hover:underline">
+              Get Life Insurance Quote
             </Link>
           </div>
 
@@ -72,8 +71,8 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Health Insurance</h3>
             <p className="text-gray-500 mb-4">Find affordable health coverage that meets your needs.</p>
-            <Link href="/health">
-              <Button className="w-full">Get Quote</Button>
+            <Link href="/health" className="text-electric-blue hover:underline">
+              Get Health Insurance Quote
             </Link>
           </div>
         </div>
@@ -98,4 +97,4 @@ export default function InsuranceQuotesPage() {
       </div>
     </main>
   );
-} 
+}

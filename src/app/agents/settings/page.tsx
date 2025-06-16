@@ -48,25 +48,25 @@ export default function AgentSettingsPage() {
           <h2 className="text-xl font-semibold text-gray-800 mb-6">Notification Preferences</h2>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Email me for new leads</span>
-              <label htmlFor="emailNewLead" className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="emailNewLead" className="text-sm font-medium text-gray-700 cursor-pointer">Email me for new leads</label>
+              <div className="relative inline-flex items-center">
                 <input type="checkbox" id="emailNewLead" name="emailNewLead" className="sr-only peer" defaultChecked={settings.notifications.emailNewLead} onChange={handleNotificationChange} />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-              </label>
+              </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">SMS me for new leads (requires verified number)</span>
-              <label htmlFor="smsNewLead" className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="smsNewLead" className="text-sm font-medium text-gray-700 cursor-pointer">SMS me for new leads (requires verified number)</label>
+              <div className="relative inline-flex items-center">
                 <input type="checkbox" id="smsNewLead" name="smsNewLead" className="sr-only peer" defaultChecked={settings.notifications.smsNewLead} onChange={handleNotificationChange} />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-              </label>
+              </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Send weekly performance summary email</span>
-              <label htmlFor="emailWeeklySummary" className="relative inline-flex items-center cursor-pointer">
+              <label htmlFor="emailWeeklySummary" className="text-sm font-medium text-gray-700 cursor-pointer">Send weekly performance summary email</label>
+              <div className="relative inline-flex items-center">
                 <input type="checkbox" id="emailWeeklySummary" name="emailWeeklySummary" className="sr-only peer" defaultChecked={settings.notifications.emailWeeklySummary} onChange={handleNotificationChange} />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-cyan-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-              </label>
+              </div>
             </div>
           </div>
         </section>

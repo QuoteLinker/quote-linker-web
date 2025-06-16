@@ -39,6 +39,13 @@ export default function PrivacyPage() {
           <h2>Security of Your Information</h2>
           <p>We use administrative, technical, and physical security measures to help protect your personal information. While we have taken reasonable steps to secure the personal information you provide to us, please be aware that despite our efforts, no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
 
+          <h2>SMS Messaging Policy</h2>
+          <p>QuoteLinker LLC may disclose Personal Data and other information as follows:</p>
+          <ul>
+            <li><strong>Third Parties that Help Provide the Messaging Service:</strong> We will not share your opt-in to an SMS short code campaign with a third party for purposes unrelated to supporting you in connection with that campaign. We may share your Personal Data with third parties that help us provide the messaging service, including, but not limited to, platform providers, phone companies, and other vendors who assist us in the delivery of text messages.</li>
+            <li><strong>Additional Disclosures:</strong> Affiliates: We may disclose the Personal Data to our affiliates or subsidiaries; however, if we do so, their use and disclosure of your Personal Data will be subject to this Policy. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</li>
+          </ul>
+
            <h2>Policy for Children</h2>
           <p>We do not knowingly solicit information from or market to children under the age of 13. If you become aware of any data we have collected from children under age 13, please contact us using the contact information provided below.</p>
 

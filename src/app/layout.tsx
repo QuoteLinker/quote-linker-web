@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import GoogleTagManager from "@/components/GoogleTagManager";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +24,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
+      </head>
       <body className={`${inter.className} bg-gray-50 flex flex-col min-h-screen`}>
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics />
+        )}
         <Toaster position="top-center" />
         <Header />
         <main className="flex-grow">

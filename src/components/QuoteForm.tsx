@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import FieldWithTooltip from '@/components/FieldWithTooltip'; 
+import Link from 'next/link';
 
 // Define schema for validation including the consent checkbox
 const leadSchema = z.object({
@@ -229,7 +230,9 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
             />
           </div>
           <div className="ml-3 text-sm">
-            <label htmlFor="consent" className="font-medium text-gray-700">I agree to be contacted. <span className="text-red-500">*</span></label>
+            <label htmlFor="consent" className="text-xs text-gray-600">
+              By checking this box and submitting your information, you agree to our <Link href="/terms" className="text-cyan-600 hover:text-cyan-700 underline">Terms of Use</Link> and <Link href="/privacy" className="text-cyan-600 hover:text-cyan-700 underline">Privacy Policy</Link>, and you provide express written consent for QuoteLinker and its <Link href="/partners" className="text-cyan-600 hover:text-cyan-700 underline">partners</Link> to contact you at the number and email address you provided (including through automated means, such as autodialers, pre-recorded messages, and text messages) about insurance products and services, even if your number is on a Do Not Call list. You understand that your consent is not a condition of any purchase. Message and data rates may apply. You may revoke your consent at any time. TCPA Compliance: You agree to receive recurring automated promotional and personalized marketing text messages (e.g., cart reminders) from QuoteLinker at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Message frequency varies. Message and data rates may apply. View Terms & Privacy. <span className="text-red-500">*</span>
+            </label>
           </div>
         </div>
         {errors.consent && <p className="mt-2 text-sm text-red-600">{errors.consent[0]}</p>}
