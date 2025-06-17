@@ -125,8 +125,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         {/* Mobile viewport for responsive design */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Favicon icons */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        {/* Open Graph meta tags */}
+        <meta property="og:title" content="QuoteLinker - Your Link to Smarter Insurance" />
+        <meta property="og:description" content="Compare insurance quotes for auto, home, life, and health from trusted local agents. Get personalized rates in minutes." />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com'}/og-image.png`} />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com'} />
+        <meta property="og:type" content="website" />
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="QuoteLinker - Your Link to Smarter Insurance" />
+        <meta name="twitter:description" content="Compare insurance quotes for auto, home, life, and health from trusted local agents. Get personalized rates in minutes." />
+        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com'}/twitter-image.png`} />
+        <meta name="twitter:site" content="@QuoteLinker" />
+        <meta name="twitter:creator" content="@QuoteLinker" />
         {/* Preload critical font */}
         <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Structured Data */}
