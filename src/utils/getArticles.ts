@@ -5,12 +5,13 @@ import matter from 'gray-matter';
 export interface Article {
   slug: string;
   title: string;
-  description: string;
+  description?: string;
   date: string;
   coverImage?: string;
   readingTime?: string;
-  category: string;
-  content?: string; // Added content field
+  category?: string;
+  content?: string;
+  keywords?: string[]; // Added keywords field for SEO
 }
 
 export function getArticles(): Article[] {
@@ -34,6 +35,7 @@ export function getArticles(): Article[] {
           coverImage: data.coverImage,
           readingTime: data.readingTime,
           category: data.category,
+          keywords: data.keywords, // Include keywords for SEO
         };
       });
 
@@ -66,6 +68,7 @@ export function getArticleBySlug(slug: string): Article | null {
       coverImage: data.coverImage,
       readingTime: data.readingTime,
       category: data.category,
+      keywords: data.keywords, // Include keywords for SEO
       content, // Include the main content of the article
     };
   } catch (error) {
