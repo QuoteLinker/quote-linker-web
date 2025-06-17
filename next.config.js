@@ -60,4 +60,10 @@ const nextConfig = {
   // Add any other Next.js config options here
 };
 
-module.exports = nextConfig;
+import bundleAnalyzer from '@next/bundle-analyzer';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+export default withBundleAnalyzer(nextConfig);
