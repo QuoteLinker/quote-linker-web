@@ -125,6 +125,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Mobile viewport for responsive design */}
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Preload critical font */}
+        <link rel="preload" href="/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Structured Data */}
+        <Script id="ld-org" type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "QuoteLinker",
+            "url": "https://www.quotelinker.com",
+            "logo": "https://www.quotelinker.com/quotelinker_logo.png",
+            "sameAs": ["https://www.facebook.com/quotelinker","https://twitter.com/quotelinker"]
+          }`}
+        </Script>
+        <Script id="ld-breadcrumb" type="application/ld+json">
+          {`{
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": []
+          }`}
+        </Script>
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
         )}
