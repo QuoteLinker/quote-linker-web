@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QuoteLinker OG Image Template</title>
+  <style>
+    body {
+      width: 1200px;
+      height: 630px;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 60px;
+      /* Updated gradient to match QuoteLinker's brand colors */
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      /* Updated to match QuoteLinker's cyan color */
+      background: linear-gradient(to right, #00EEFD, #00D4E5);
+    }
+    .top-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 2;
+    }
+    .logo-placeholder {
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
+      border-radius: 10px;
+      background: #00EEFD;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 36px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .brand-name {
+      font-size: 38px;
+      font-weight: 700;
+      /* Updated to be the brand color */
+      color: #00EEFD;
+      letter-spacing: -0.5px;
+    }
+    .main-section {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+    .headline {
+      font-size: 68px;
+      font-weight: 800;
+      line-height: 1.1;
+      /* Updated darker headline color for better contrast */
+      color: #0c4a6e;
+      margin-bottom: 30px;
+      letter-spacing: -1.5px;
+      max-width: 85%;
+      /* Add text shadow for better readability */
+      text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .sub-headline {
+      font-size: 32px;
+      color: #475569;
+      max-width: 75%;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .bottom-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 50px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .tagline {
+      font-size: 24px;
+      color: #64748b;
+      font-weight: 500;
+    }
+    .website {
+      font-size: 26px;
+      color: #00EEFD;
+      font-weight: 600;
+    }
+    .trust-badge {
+      position: absolute;
+      top: 60px;
+      right: 60px;
+      background-color: #ffffff;
+      border-radius: 50px;
+      padding: 10px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+    .trust-badge-text {
+      color: #475569;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    /* Adding a circular check icon instead of SVG */
+    .check-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #00EEFD;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar"></div>
+    <div class="top-section">
+      <div class="logo-placeholder">QL</div>
+      <span class="brand-name">QuoteLinker</span>
+    </div>
+    <div class="main-section">
+      <h1 class="headline">Your Link to Smarter Insurance</h1>
+      <p class="sub-headline">Compare personalized quotes from trusted local agents and save up to 30% on coverage.</p>
+    </div>
+    <div class="bottom-section">
+      <span class="tagline">Auto • Home • Life • Health</span>
+      <span class="website">quotelinker.com</span>
+    </div>
+    <div class="trust-badge">
+      <div class="check-icon">✓</div>
+      <span class="trust-badge-text">Trusted by 10,000+ Customers</span>
+    </div>
+  </div>
+</body>
+</html>

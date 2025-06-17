@@ -1,13 +1,45 @@
 # https://www.robotstxt.org/robotstxt.html
-# QuoteLinker robots.txt
+# QuoteLinker robots.txt - Last Updated: June 16, 2025
+
+# Allow all well-behaved crawlers
 User-agent: *
 Allow: /
+
+# Block specific crawler from high-traffic sections
+User-agent: AhrefsBot
+Disallow: /get-quote/
+Disallow: /agents/
+
+# Block AI crawlers from sensitive pages
+User-agent: GPTBot
+Disallow: /dashboard/
+Disallow: /agents/billing/
+Disallow: /thank-you/
+
+# Block AI crawlers from sensitive pages
+User-agent: ChatGPT-User
+Disallow: /dashboard/
+Disallow: /agents/billing/
+Disallow: /thank-you/
+
+# Block archive.org from archiving user-specific pages
+User-agent: ia_archiver
+Disallow: /dashboard/
+Disallow: /agents/billing/
+Disallow: /thank-you/
+
+# Common sense disallows for all crawlers
+User-agent: *
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /dashboard/
+Disallow: /agents/billing/
+Disallow: /agents/dashboard/
 
 # Sitemaps
 Sitemap: https://www.quotelinker.com/sitemap.xml
 
-# Disallow admin and api routes
-Disallow: /api/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/ 
+# Host directive to indicate preferred domain
+Host: https://www.quotelinker.com

@@ -6,8 +6,8 @@ export const metadata: Metadata = {
     'Learn everything you need to know about insurance coverage. Compare products, understand policy types, and make informed decisions for your family.',
   openGraph: {
     title: 'Insurance Learning Hub | QuoteLinker',
-    description: 'Learn about insurance coverage, compare products, and make informed decisions.',
-    images: [{ url: '/images/education-hub-og.png', width: 1200, height: 630 }],
+    description: 'Learn about insurance coverage, compare products, and make informed decisions with expert guides and resources.',
+    images: [{ url: '/images/learn-og-image.png', width: 1200, height: 630 }],
     type: 'website',
     locale: 'en_US',
     siteName: 'QuoteLinker',
@@ -15,8 +15,13 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Insurance Learning Hub | QuoteLinker',
-    description: 'Learn about insurance coverage, compare products, and make informed decisions.',
-    images: ['/images/education-hub-og.png'],
+    description: 'Learn about insurance coverage, compare products, and make informed decisions with expert guides and resources.',
+    images: [{ 
+      url: '/images/learn-twitter-image.png', 
+      width: 1200, 
+      height: 628,
+      alt: 'Insurance Learning Hub | QuoteLinker'
+    }],
   },
   alternates: {
     canonical: 'https://www.quotelinker.com/learn',

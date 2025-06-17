@@ -23,6 +23,7 @@ export interface SalesforceLeadData {
   Coverage_Type__c?: string;
   Pre_Existing_Conditions__c?: string;
   Status: string;
+  Description?: string; // Added for additional info
 }
 
 interface SalesforceConfig {
@@ -93,8 +94,8 @@ export async function authenticateWithSalesforce(): Promise<SalesforceAuthRespon
 
     console.log('Salesforce authentication successful');
     return response.data;
-  } catch (error: any) {
-    if (error?.response) {
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error('Salesforce Authentication Error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
@@ -136,8 +137,8 @@ export async function createSalesforceLead(
     );
 
     console.log('Lead creation response:', response.data);
-  } catch (error: any) {
-    if (error?.response) {
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
       console.error('Salesforce Lead Creation Error:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
@@ -176,17 +177,47 @@ function validateConfig(): SalesforceConfig {
 }
 
 export async function submitToSalesforce(leadData: LeadData): Promise<void> {
-  const config = validateConfig();
-  
-  // TODO: Implement Salesforce API integration
-  // 1. Authenticate with Salesforce using OAuth 2.0
-  // 2. Create Lead record with provided data
-  // 3. Handle errors and retries
-  // 4. Log success/failure
-  
-  console.log('Salesforce integration not yet implemented');
-  console.log('Config validated:', config);
-  console.log('Lead data:', leadData);
+  try {
+    // Validate configuration first
+    validateConfig(); // Just validate but don't need the result directly
+    
+    // Authenticate with Salesforce
+    const { access_token, instance_url } = await authenticateWithSalesforce();
+    
+    // Map lead data to Salesforce format
+    const sfLeadData: SalesforceLeadData = {
+      FirstName: leadData.firstName,
+      LastName: leadData.lastName,
+      Email: leadData.email,
+      Phone: leadData.phone,
+      Company: `${leadData.firstName} ${leadData.lastName}`, // Required by Salesforce
+      PostalCode: leadData.zipCode,
+      LeadSource: 'QuoteLinker Website',
+      Product_Type__c: leadData.insuranceType,
+      Status: 'New'
+    };
+    
+    // Add optional fields if available
+    if (leadData.age) {
+      sfLeadData.Age__c = leadData.age.toString();
+    }
+    
+    if (leadData.preExistingConditions !== undefined) {
+      sfLeadData.Pre_Existing_Conditions__c = leadData.preExistingConditions ? 'Yes' : 'No';
+    }
+    
+    if (leadData.additionalInfo) {
+      sfLeadData.Description = leadData.additionalInfo;
+    }
+    
+    // Send to Salesforce
+    await createSalesforceLead(sfLeadData, access_token, instance_url);
+    
+    console.log('Successfully submitted lead to Salesforce');
+  } catch (error) {
+    console.error('Failed to submit lead to Salesforce:', error);
+    throw new SalesforceError(error instanceof Error ? error.message : 'Unknown error occurred');
+  }
 }
 
 // Export types for use in other files

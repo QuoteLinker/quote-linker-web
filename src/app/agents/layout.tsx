@@ -17,11 +17,12 @@ export default function AgentLayout({
   const pathname = usePathname();
 
   useEffect(() => {
-    // Simulate an auth check. Replace with your actual authentication logic.
-    const IS_AUTHENTICATED = false; // Example: replace with actual check like `localStorage.getItem('agentToken')`
+    // Check if the user is authenticated by looking for a token in localStorage
+    const agentToken = typeof window !== 'undefined' ? localStorage.getItem('agentToken') : null;
+    const IS_AUTHENTICATED = !!agentToken;
 
     if (!IS_AUTHENTICATED && !isAuthenticatedPath(pathname)) {
-      router.push('/agents/signup'); // Or '/agents/login' if that's preferred
+      router.push('/agents/login');
     }
   }, [pathname, router]);
 

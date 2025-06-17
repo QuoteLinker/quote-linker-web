@@ -6,13 +6,21 @@
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "generate-og-images": "node scripts/generate-og-images.js",
+    "generate-og-images:alt": "node scripts/generate-og-images-alternative.js",
+    "generate-og-images:fixed": "node scripts/generate-og-images-fixed.js",
+    "generate-og-images:simple": "node scripts/generate-og-images-simple.js",
+    "build:with-assets": "npm run generate-sitemap && npm run generate-og-images:simple && npm run build",
+    "build:production": "npm run build:with-assets"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@sendgrid/mail": "^8.1.5",
     "@upstash/ratelimit": "^2.0.5",
     "@upstash/redis": "^1.34.8",
     "axios": "^1.9.0",
@@ -30,6 +38,7 @@
     "react-calendly": "^4.3.1",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
+    "stripe": "^15.2.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.3"
@@ -55,6 +64,7 @@
     "eslint-config-prettier": "^9.1.0",
     "husky": "^9.0.11",
     "postcss": "^8",
+    "puppeteer": "^21.10.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

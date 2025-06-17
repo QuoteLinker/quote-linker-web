@@ -1,8 +1,13 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function AgentPackagesPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<string | null>(null);
+  
   const availablePackages = [
     { id: 'auto_basic', name: 'Auto Leads - Basic', price: 99, interval: 'month', description: '50 exclusive auto leads per month.', features: ['Standard ZIP code targeting', 'Email notifications', 'Basic dashboard access'] },
     { id: 'auto_premium', name: 'Auto Leads - Premium', price: 189, interval: 'month', description: '100 exclusive auto leads, priority matching.', features: ['Precision ZIP+radius targeting', 'SMS & Email notifications', 'Advanced dashboard analytics', 'Dedicated support'], popular: true },
@@ -14,6 +19,40 @@ export default function AgentPackagesPage() {
     { id: 'bundle_pro', name: 'Pro Bundle (Auto+Home)', price: 299, interval: 'month', description: '80 Auto + 60 Home leads, best value.', features: ['Premium features for both Auto & Home', '20% bundle discount', 'Dedicated support'], popular: true },
     { id: 'enterprise', name: 'Enterprise Custom', price: "Contact Us", interval: 'year', description: 'Tailored solutions for large agencies & call centers.', features: ['Volume discounts', 'API access', 'Custom integrations', 'Dedicated account manager'] },
   ];
+
+  const handleSubscribe = async (packageId: string) => {
+    // Handle "Contact Us" differently
+    if (packageId === 'enterprise') {
+      router.push('/contact?subject=Enterprise%20Lead%20Package');
+      return;
+    }
+
+    setIsLoading(packageId);
+    try {
+      // In a real application, you would have the agent's ID from authentication
+      const agentId = 'demo_agent_123'; // Placeholder
+      
+      const response = await fetch('/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ packageId, agentId }),
+      });
+
+      const { sessionUrl, error } = await response.json();
+      
+      if (error || !sessionUrl) {
+        throw new Error(error || 'Failed to create checkout session');
+      }
+      
+      // Redirect to Stripe Checkout
+      window.location.href = sessionUrl;
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      alert('Failed to process your subscription. Please try again.');
+    } finally {
+      setIsLoading(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 py-12">
@@ -72,10 +111,11 @@ export default function AgentPackagesPage() {
 
               <div className="mt-8">
                 <button
-                  onClick={() => alert(pkg.price === "Contact Us" ? `Contacting sales for ${pkg.name} (placeholder)` : `Subscribing to ${pkg.name} (placeholder)`)}
-                  className={`w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${pkg.popular ? 'bg-cyan-500 hover:bg-cyan-600' : 'bg-cyan-600 hover:bg-cyan-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500`}
+                  onClick={() => handleSubscribe(pkg.id)}
+                  disabled={isLoading === pkg.id}
+                  className={`w-full px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white ${pkg.popular ? 'bg-cyan-500 hover:bg-cyan-600' : 'bg-cyan-600 hover:bg-cyan-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50`}
                 >
-                  {pkg.price === "Contact Us" ? "Contact Sales" : "Choose Plan"}
+                  {isLoading === pkg.id ? 'Processing...' : pkg.price === "Contact Us" ? "Contact Sales" : "Choose Plan"}
                 </button>
               </div>
             </div>
