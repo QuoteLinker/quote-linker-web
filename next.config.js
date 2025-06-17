@@ -1,19 +1,42 @@
 /** @type {import('next').NextConfig} */
+import bundleAnalyzer from '@next/bundle-analyzer';
+import nextMDX from '@next/mdx';
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+const withMDX = nextMDX({
+  extension: /\.mdx?$/,
+  options: {
+    // remarkPlugins: [],
+    // rehypePlugins: [],
+    // providerImportSource: "@mdx-js/react",
+  },
+});
+
 const nextConfig = {
   // --- ADD THIS LINE FOR GOOGLE CLOUD RUN ---
   output: 'standalone',
   // -----------------------------------------
 
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'], // Add 'md' and 'mdx'
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com', 'www.quotelinker.com', 'assets.quotelinker.com'],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
   },
+  env: {
+    SENTRY_DSN_CLIENT: process.env.SENTRY_DSN_CLIENT,
+    SENTRY_DSN_SERVER: process.env.SENTRY_DSN_SERVER,
+  },
+  // integrate next-sitemap plugin
   experimental: {
+    appDir: true,
     optimizePackageImports: ['@heroicons/react', 'lodash'],
   },
   compiler: {
@@ -57,13 +80,7 @@ const nextConfig = {
       },
     ];
   },
-  // Add any other Next.js config options here
 };
 
-import bundleAnalyzer from '@next/bundle-analyzer';
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
-export default withBundleAnalyzer(nextConfig);
+// Apply MDX and Bundle Analyzer to the Next.js config
+export default withBundleAnalyzer(withMDX(nextConfig));

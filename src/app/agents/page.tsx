@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ChartBarIcon, ShieldCheckIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 const features = [
@@ -55,7 +54,9 @@ const testimonial = {
 	author: {
 		name: 'Sarah Johnson',
 		role: 'Independent Insurance Agent',
-		image: '/images/testimonials/sarah-johnson.jpg',
+		// Replaced placeholder image with a generic avatar or icon (using a simple div for now)
+		// Consider adding a proper SVG icon or a generic avatar image if available
+		imageComponent: <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">SJ</div>,
 	},
 };
 
@@ -73,7 +74,8 @@ export default function AgentsPage() {
 		<div className="bg-white">
 			{/* Hero Section */}
 			<div className="relative isolate overflow-hidden">
-				<div className="absolute inset-0 bg-gradient-to-b from-electric-blue/50 to-white" />
+				{/* Removed transparency from gradient */}
+				<div className="absolute inset-0 bg-gradient-to-b from-electric-blue to-white" />
 				<div className="container max-w-screen-xl mx-auto px-4 py-24 sm:py-32">
 					<div className="mx-auto max-w-3xl text-center">
 						<span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-cyan-100 text-cyan-800 text-sm font-semibold tracking-wide">
@@ -306,13 +308,9 @@ export default function AgentsPage() {
 					</blockquote>
 					<figcaption className="mt-8 flex items-center justify-center gap-x-6">
 						<div className="relative h-12 w-12 rounded-full bg-gray-50">
-							<Image
-								src={testimonial.author.image}
-								alt={testimonial.author.name}
-								className="rounded-full object-cover"
-								fill
-								sizes="(max-width: 768px) 3rem, 3rem"
-							/>
+							{/* Replaced placeholder image with a generic avatar or icon (using a simple div for now) */}
+							{/* Consider adding a proper SVG icon or a generic avatar image if available */}
+							{testimonial.author.imageComponent}
 						</div>
 						<div className="text-base">
 							<div className="font-semibold text-gray-900">{testimonial.author.name}</div>

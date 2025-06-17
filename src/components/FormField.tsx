@@ -186,8 +186,10 @@ export default function FormField({
       </div>
       {renderInput()}
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-2 text-sm text-red-600" id={`${inputId}-error`}>
+          {error}
+        </p>
       )}
     </div>
   );
-} 
+}

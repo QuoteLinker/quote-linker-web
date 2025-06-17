@@ -41,7 +41,9 @@ export function getArticles(): Article[] {
 
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
-    console.error('Error loading articles:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error loading articles:', error);
+    }
     return [];
   }
 }
@@ -72,7 +74,9 @@ export function getArticleBySlug(slug: string): Article | null {
       content, // Include the main content of the article
     };
   } catch (error) {
-    console.error(`Error loading article by slug ${slug}:`, error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`Error loading article by slug ${slug}:`, error);
+    }
     return null;
   }
 }

@@ -31,27 +31,31 @@ function FormLoadingState() {
 
 export default function GetQuotePage() {
   return (
+    // Ensure the main div takes full height and uses flex to center content
     <div className="min-h-screen flex flex-col items-center py-12 md:py-16 bg-gradient-to-b from-white to-slate-50 px-4 sm:px-6 lg:px-8">
-      {/* Header section with value proposition */}
-      <div className="text-center max-w-3xl mx-auto mb-10">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-5 tracking-tight">
-          Get Matched With Top Insurance Providers
-        </h1>
-        <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-          Compare personalized quotes from trusted insurance companies in minutes.
-        </p>
-      </div>
-      
-      {/* The multi-step form wrapped in Suspense */}
-      <div className="w-full max-w-2xl mx-auto">
-        <Suspense fallback={<FormLoadingState />}>
-          <MultiStepQuoteForm />
-        </Suspense>
-      </div>
-      
-      {/* Trust indicators below the form */}
-      <div className="mt-16 w-full max-w-4xl px-2 md:px-0">
-        <TrustIndicators />
+      {/* Container to maintain consistent width and alignment */}
+      <div className="w-full max-w-4xl mx-auto">
+        {/* Header section with value proposition */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-5 tracking-tight">
+            Get Matched With Top Insurance Providers
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 mx-auto">
+            Compare personalized quotes from trusted insurance companies in minutes.
+          </p>
+        </div>
+        
+        {/* The multi-step form wrapped in Suspense - ensure it's centered */}
+        <div className="w-full mx-auto">
+          <Suspense fallback={<FormLoadingState />}>
+            <MultiStepQuoteForm />
+          </Suspense>
+        </div>
+        
+        {/* Trust indicators below the form */}
+        <div className="mt-16 w-full">
+          <TrustIndicators />
+        </div>
       </div>
     </div>
   );

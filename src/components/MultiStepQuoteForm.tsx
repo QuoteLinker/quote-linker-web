@@ -73,7 +73,7 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
     email: '',
     phone: '',
     zip: '',
-    insuranceType: productType || '',
+    insuranceType: productType || searchParams.get('type') || '',
     additionalInfo: '',
     consent: false,
   });
@@ -188,7 +188,9 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
         router.push(`/thank-you?type=${formData.insuranceType}`);
       }
     } catch (error) {
-      console.error('Submission error:', error);
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Submission error:', error);
+      }
       toast.error('An unexpected error occurred.', { id: toastId });
     } finally {
       setIsLoading(false);
@@ -202,10 +204,12 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
         {/* Connecting line between steps */}
         <div className="absolute top-4 left-0 w-full h-0.5 bg-gray-200" />
         
+        {/* Ensure equal spacing between steps with equal widths */}
         {steps.map((step, index) => (
           <div 
             key={step} 
-            className={`flex flex-col items-center relative z-10 ${index <= currentStep ? 'text-cyan-600' : 'text-gray-400'}`}
+            className={`flex flex-col items-center justify-center relative z-10 flex-1 
+              ${index <= currentStep ? 'text-cyan-600' : 'text-gray-400'}`}
           >
             <div 
               className={`w-8 h-8 rounded-full flex items-center justify-center text-white mb-2
@@ -231,9 +235,9 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
     switch(currentStep) {
       case 0: // Insurance Type Selection
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full max-w-xl mx-auto">
             <h2 className="text-2xl font-semibold text-gray-900 text-center">What type of insurance are you looking for?</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
               {insuranceOptions.map((option) => (
                 <motion.button
                   key={option.id}
@@ -244,7 +248,10 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
                     ${formData.insuranceType === option.id 
                       ? 'border-cyan-500 bg-cyan-50' 
                       : 'border-gray-200 hover:border-cyan-300'}`}
-                  onClick={() => handleInsuranceTypeSelect(option.id)}
+                  onClick={() => {
+                    // Direct users to the specific insurance type page with the quote flow started
+                    router.push(`/${option.id}?startQuote=true`);
+                  }}
                 >
                   <div className="text-cyan-600 mb-3">
                     {React.createElement(option.icon, { size: 48, strokeWidth: 1.5 })}
@@ -255,17 +262,17 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
               ))}
             </div>
             {errors.insuranceType && (
-              <p className="text-sm text-red-600 text-center">{errors.insuranceType[0]}</p>
+              <p className="text-sm text-red-600 text-center mt-2">{errors.insuranceType[0]}</p>
             )}
           </div>
         );
       
       case 1: // Personal Information
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 w-full max-w-xl mx-auto">
             <h2 className="text-2xl font-semibold text-gray-900 text-center">Tell us about yourself</h2>
             
-            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2 mt-6">
               <FieldWithTooltip
                 label="First Name"
                 name="firstName"

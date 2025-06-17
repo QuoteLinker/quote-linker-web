@@ -210,7 +210,9 @@ const benefits: Record<InsuranceType, Benefit[]> = {
 
 export default function WhyChoose({ insuranceType }: WhyChooseProps) {
   if (!insuranceType || !benefits[insuranceType]) {
-    console.error('WhyChoose: Invalid or missing insuranceType:', insuranceType);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('WhyChoose: Invalid or missing insuranceType:', insuranceType);
+    }
     return (
       <section className="py-16 bg-white text-center text-red-600">
         <h2 className="text-2xl font-bold mb-2">Benefits Error</h2>
@@ -256,4 +258,4 @@ export default function WhyChoose({ insuranceType }: WhyChooseProps) {
       </div>
     </section>
   );
-} 
+}

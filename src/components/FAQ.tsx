@@ -148,7 +148,9 @@ const faqContent: Record<InsuranceType, FAQItem[]> = {
 
 export default function FAQ({ insuranceType }: FAQProps) {
   if (!insuranceType || !faqContent[insuranceType]) {
-    console.error('FAQ: Invalid or missing insuranceType:', insuranceType);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('FAQ: Invalid or missing insuranceType:', insuranceType);
+    }
     return (
       <section className="py-16 bg-gray-50 text-center text-red-600">
         <h2 className="text-2xl font-bold mb-2">FAQ Error</h2>
@@ -205,4 +207,4 @@ export default function FAQ({ insuranceType }: FAQProps) {
       </div>
     </section>
   );
-} 
+}
