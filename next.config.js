@@ -1,21 +1,23 @@
 /** @type {import('next').NextConfig} */
-const bundleAnalyzer = require('@next/bundle-analyzer');
-const nextMDX = require('@next/mdx');
 
-const withBundleAnalyzer = bundleAnalyzer({
+// Import the required packages
+var bundleAnalyzer = require('@next/bundle-analyzer');
+var nextMDX = require('@next/mdx');
+
+var withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 });
 
-const withMDX = nextMDX({
+var withMDX = nextMDX({
   extension: /\.mdx?$/,
   options: {
     // remarkPlugins: [],
     // rehypePlugins: [],
-    // providerImportSource: "@mdx-js/react",
+    // Remove providerImportSource as it's not needed with Next.js App Router
   },
 });
 
-const nextConfig = {
+var nextConfig = {
   // --- ADD THIS LINE FOR GOOGLE CLOUD RUN ---
   output: 'standalone',
   // -----------------------------------------
@@ -46,7 +48,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  headers: async () => {
+  headers: function() {
     return [
       {
         source: '/:path*',
