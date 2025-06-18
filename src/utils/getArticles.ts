@@ -12,6 +12,7 @@ export interface Article {
   category?: string;
   content?: string;
   keywords?: string[]; // Added keywords field for SEO
+  faq?: Array<{ question: string; answer: string }>; // Support for FAQ schema
 }
 
 export function getArticles(): Article[] {
@@ -60,19 +61,27 @@ export function getArticleBySlug(slug: string): Article | null {
     }
 
     const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data, content } = matter(fileContents);
-
-    return {
-      slug,
-      title: data.title,
-      description: data.description,
-      date: data.date,
-      coverImage: data.coverImage,
-      readingTime: data.readingTime,
-      category: data.category,
-      keywords: data.keywords, // Include keywords for SEO
-      content, // Include the main content of the article
-    };
+    
+    // Handle potential parsing errors in frontmatter
+    try {
+      const { data, content } = matter(fileContents);
+      
+      return {
+        slug,
+        title: data.title || slug,
+        description: data.description,
+        date: data.date,
+        coverImage: data.coverImage,
+        readingTime: data.readingTime,
+        category: data.category,
+        keywords: data.keywords,
+        content: content,
+        faq: data.faq,
+      };
+    } catch (parseError) {
+      console.error(`Error parsing frontmatter for ${slug}:`, parseError);
+      return null;
+    }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error(`Error loading article by slug ${slug}:`, error);

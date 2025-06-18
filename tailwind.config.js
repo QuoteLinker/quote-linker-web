@@ -23,6 +23,7 @@ module.exports = {
           '900': '#312e81',
           '950': '#1e1b4b'
         },
+        'electric-blue': '#00D4E5',
         secondary: {
           '50': '#f8fafc',
           '100': '#f1f5f9',
