@@ -300,6 +300,7 @@ function processMdxFile(filePath) {
     })
     .catch(function(error) {
       console.error('Error processing ' + filePath + ':', error);
+      return Promise.resolve();
     });
 }
 

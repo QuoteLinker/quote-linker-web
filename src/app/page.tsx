@@ -10,7 +10,7 @@ const SimpleHero = () => (
     </div>
     <div className="relative z-10 container mx-auto px-4 text-center">
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 text-gray-900"> {/* Ensured high contrast for heading */}
-        Your Fast and Free Link for Shopping Insurance.
+        Your Link to Smarter Insurance Shopping
       </h1>
       <p className="text-lg md:text-xl max-w-3xl mx-auto mb-10 text-gray-700"> {/* Ensured high contrast for paragraph */}
         Select an insurance type to get free, no-obligation quotes from a licensed local agent.

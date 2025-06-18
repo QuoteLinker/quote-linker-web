@@ -85,7 +85,7 @@ export default function RootLayout({
   // Generate organization schema
   const organizationSchema = generateOrganizationSchema({
     name: 'QuoteLinker',
-    legalName: 'QuoteLinker Insurance Services, LLC',
+    legalName: 'QuoteLinker LLC',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com',
     logo: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com'}/logo.svg`,
     description: 'QuoteLinker connects consumers with trusted insurance agents for auto, home, life, and health insurance quotes.',

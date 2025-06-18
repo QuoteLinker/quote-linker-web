@@ -18,6 +18,8 @@
     "link-mdx": "node scripts/link-mdx.cjs",
     "update-meta": "node scripts/updateMetaDescriptions.cjs",
     "generate-faqs": "node scripts/generateFAQs.cjs",
+    "standardize-mdx": "node scripts/standardize-mdx.cjs",
+    "lint-mdx": "node scripts/enhanced-mdx-lint.cjs",
     "build:with-assets": "npm run generate-sitemap && npm run generate-og-images:simple && npm run build",
     "build:production": "npm run build:with-assets"
   },
@@ -82,6 +84,13 @@
     "playwright": "^1.37.0",
     "postcss": "^8",
     "puppeteer": "^21.10.0",
+    "reading-time": "^1.5.0",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-lint": "^10.0.1",
+    "remark-preset-lint-consistent": "^6.0.1",
+    "remark-preset-lint-recommended": "^7.0.1",
+    "strip-markdown": "^6.0.0",
     "tailwindcss": "^3.3.0",
     "ts-jest": "^29.0.5",
     "typescript": "^5"

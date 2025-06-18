@@ -108,4 +108,4 @@ export const TrustIndicator: React.FC<TrustIndicatorProps> = ({
       </div>
     </div>
   );
-}; 
+};

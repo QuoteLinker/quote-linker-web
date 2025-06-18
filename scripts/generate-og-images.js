@@ -80,15 +80,14 @@ function generateOGImages() {
           timeout: 60000 // Increase timeout to 60s
         });
       })
-      .then(function(browser) {
-        var page = browser.newPage();
-        
+      .then(async function(browser) {
+        // Await the new page creation
+        var page = await browser.newPage();
         // Enable console logs from the browser to help with debugging
         page.on('console', function(msg) { console.log('Browser console: ' + msg.text()); });
         page.on('pageerror', function(error) { console.error('Browser page error: ' + error.message); });
-        page.on('error', function(err) { console.error('Browser error: ' + err); });
-        page.on('requestfailed', function(request) { console.error('Request failed: ' + request.url()); });
-        
+        page.on('error', function(err) { console.error('Browser error event:', err); });
+        page.on('requestfailed', function(request) { console.error('Browser request failed:', request.url(), request.failure()); });
         // Load the template HTML file
         var templatePath = path.join(__dirname, '..', 'templates', 'og-image-template.html');
         var templateHtml = fs.readFileSync(templatePath, 'utf8');

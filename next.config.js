@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
-import bundleAnalyzer from '@next/bundle-analyzer';
-import nextMDX from '@next/mdx';
+const bundleAnalyzer = require('@next/bundle-analyzer');
+const nextMDX = require('@next/mdx');
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -36,7 +36,6 @@ const nextConfig = {
   },
   // integrate next-sitemap plugin
   experimental: {
-    appDir: true,
     optimizePackageImports: ['@heroicons/react', 'lodash'],
   },
   compiler: {
@@ -83,4 +82,4 @@ const nextConfig = {
 };
 
 // Apply MDX and Bundle Analyzer to the Next.js config
-export default withBundleAnalyzer(withMDX(nextConfig));
+module.exports = withBundleAnalyzer(withMDX(nextConfig));

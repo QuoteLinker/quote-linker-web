@@ -7,9 +7,10 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import Script from 'next/script';
 
 const categories = [
-  { name: 'Life Insurance', slug: 'life-insurance' },
-  { name: 'Health Insurance', slug: 'health-insurance' },
-  { name: 'Auto & Home', slug: 'auto-home' },
+  { name: 'Auto Insurance', slug: 'auto-insurance' },
+  { name: 'Home Insurance', slug: 'home-insurance' },
+  { name: 'Life', slug: 'life-insurance' },
+  { name: 'Health', slug: 'health-insurance' },
 ];
 
 export default function EducationLayoutClient({

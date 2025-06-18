@@ -114,10 +114,14 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
         });
       }
     } catch (error) {
-      console.error('Submission error:', error);
-      toast.error('An unexpected error occurred.', { id: toastId });
+      toast.error('An error occurred while submitting your information.');
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.error('QuoteForm submission error:', error);
+      }
     } finally {
       setIsLoading(false);
+      toast.dismiss(toastId);
     }
   };
 
@@ -125,25 +129,26 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
     <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
       <h2 className="text-2xl font-semibold text-gray-900 text-center">Get Your Free Quote</h2>
       
-      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
-        <FieldWithTooltip
-          label="First Name"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          error={errors.firstName?.[0]}
-          tooltip="Please enter your first name."
-          required
-        />
-        <FieldWithTooltip
-          label="Last Name"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          error={errors.lastName?.[0]}
-          tooltip="Please enter your last name."
-          required
-        />
+      <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">      <FieldWithTooltip
+        label="First Name"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleChange}
+        error={errors.firstName?.[0]}
+        tooltip="Please enter your first name."
+        required
+        className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      <FieldWithTooltip
+        label="Last Name"
+        name="lastName"
+        value={formData.lastName}
+        onChange={handleChange}
+        error={errors.lastName?.[0]}
+        tooltip="Please enter your last name."
+        required
+        className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
       </div>
 
       <FieldWithTooltip
@@ -155,6 +160,7 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
         error={errors.email?.[0]}
         tooltip="We'll use this to send your quote details."
         required
+        className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
       <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
@@ -167,6 +173,7 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
           error={errors.phone?.[0]}
           tooltip="A valid phone number where we can reach you."
           required
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <FieldWithTooltip
           label="ZIP Code"
@@ -176,30 +183,44 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
           error={errors.zip?.[0]}
           tooltip="Your 5-digit ZIP code helps us find local rates."
           required
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
 
       <div>
-        <label htmlFor="insuranceTypes" className="block text-sm font-medium text-gray-700 mb-2">What type(s) of insurance are you interested in? <span className="text-red-500">*</span></label>
-        <div className="flex flex-wrap gap-4">
-          {insuranceOptions.map(type => (
-            <div key={type} className="flex items-center">
-              <input
-                id={`insurance-${type}`}
-                name="insuranceTypes"
-                type="checkbox"
-                value={type}
-                checked={formData.insuranceTypes.includes(type)}
-                onChange={() => handleCheckboxChange(type)}
-                className="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
-              />
-              <label htmlFor={`insurance-${type}`} className="ml-2 block text-sm text-gray-900">
-                {type}
-              </label>
-            </div>
-          ))}
-        </div>
-        {errors.insuranceTypes && <p className="mt-2 text-sm text-red-600">{errors.insuranceTypes[0]}</p>}
+        <fieldset>
+          <legend className="block text-sm font-medium text-gray-700 mb-2">What type(s) of insurance are you interested in? <span className="text-red-500">*</span></legend>
+          <div className="flex flex-wrap gap-4">
+            {insuranceOptions.map(type => (
+              <div key={type} className="flex items-center">
+                <input
+                  id={`insurance-${type}`}
+                  name="insuranceTypes"
+                  type="checkbox"
+                  value={type}
+                  checked={formData.insuranceTypes.includes(type)}
+                  onChange={() => handleCheckboxChange(type)}
+                  aria-invalid={!!errors.insuranceTypes}
+                  aria-describedby={errors.insuranceTypes ? "insuranceTypes-error" : undefined}
+                  className="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <label htmlFor={`insurance-${type}`} className="ml-2 block text-sm text-gray-900">
+                  {type}
+                </label>
+              </div>
+            ))}
+          </div>
+        </fieldset>
+        {errors.insuranceTypes && (
+          <p 
+            id="insuranceTypes-error"
+            className="mt-2 text-sm text-red-600"
+            role="alert"
+            aria-live="assertive"
+          >
+            {errors.insuranceTypes[0]}
+          </p>
+        )}
       </div>
 
       <div>
@@ -212,7 +233,7 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
           rows={3}
           value={formData.additionalInfo}
           onChange={handleChange}
-          className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500"
+          className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Any specific needs or questions?"
         />
       </div>
@@ -226,7 +247,9 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
               type="checkbox"
               checked={formData.consent}
               onChange={handleChange}
-              className="focus:ring-cyan-500 h-4 w-4 text-cyan-600 border-gray-300 rounded"
+              aria-invalid={!!errors.consent}
+              aria-describedby={errors.consent ? "consent-error" : undefined}
+              className="h-4 w-4 text-cyan-600 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div className="ml-3 text-sm">
@@ -235,14 +258,23 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
             </label>
           </div>
         </div>
-        {errors.consent && <p className="mt-2 text-sm text-red-600">{errors.consent[0]}</p>}
+        {errors.consent && (
+          <p 
+            id="consent-error"
+            className="mt-2 text-sm text-red-600"
+            role="alert"
+            aria-live="assertive"
+          >
+            {errors.consent[0]}
+          </p>
+        )}
       </div>
 
       <div>
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50"
+          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-cyan-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Submitting...' : 'Get My Free Quote'}
         </button>

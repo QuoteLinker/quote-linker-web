@@ -12,7 +12,7 @@ export default function AboutPage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-8">About QuoteLinker</h1>
         
         <p className="text-xl text-gray-600 leading-relaxed mb-8">
-          QuoteLinker LLC is a SaaS lead generation platform connecting insurance seekers to local agents via automated funnels and calendar booking. We charge agents per lead at the time of purchase.
+          QuoteLinker LLC is an digital insurance marketplace focused on connecting consumers seeking insurance with licensed agents. It operates as a SaaS lead generation platform connecting insurance seekers to local agents via automated funnels and calendar booking. We charge agents per lead at the time of purchase.
         </p>
 
         <section className="mt-12">
