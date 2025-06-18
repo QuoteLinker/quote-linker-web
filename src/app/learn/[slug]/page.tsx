@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getArticleBySlug, getArticles } from '@/utils/getArticles';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import { ArrowRight } from 'lucide-react';
+import Script from 'next/script';
 
 type Props = {
   params: { slug: string };
@@ -19,23 +20,28 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const article = await getArticleBySlug(params.slug); // Assuming getArticleBySlug is async or remove await
+  const article = await getArticleBySlug(params.slug);
 
   if (!article) {
-    return {
-      title: 'Article Not Found',
-    };
+    return { title: 'Article Not Found' };
   }
 
   return {
     title: article.title,
-    description: article.description, // Used for meta tags
-    keywords: article.keywords, // Used for meta tags
+    description: article.description,
+    keywords: article.keywords,
     openGraph: {
       title: article.title,
       description: article.description,
       type: 'article',
-      url: `/learn/${article.slug}`,
+      url: `https://www.quotelinker.com/learn/${article.slug}`,
+      images: article.coverImage ? [{ url: article.coverImage }] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.description,
+      images: article.coverImage ? [article.coverImage] : undefined,
     },
   };
 }
@@ -91,23 +97,38 @@ function getQuoteTypeDisplayName(quoteType: string): string {
   return displayNames[quoteType] || 'Insurance';
 }
 
+function getFAQJsonLd(article: any) {
+  if (!article?.faq) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": article.faq.map((item: any) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
+  };
+}
+
 export default async function LearnArticlePage({ params }: Props) {
-  const article = await getArticleBySlug(params.slug); // Assuming getArticleBySlug is async or remove await
+  const article = await getArticleBySlug(params.slug);
 
   if (!article || !article.content) {
-    notFound(); // This will render the not-found.tsx page
+    notFound();
   }
-  
-  // Determine the related quote type
+
   const quoteType = getRelatedQuoteType(params.slug, article);
   const quoteTypeDisplay = getQuoteTypeDisplayName(quoteType);
+  const faqJsonLd = getFAQJsonLd(article);
 
   return (
     <div className="bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <article className="bg-white shadow-sm rounded-lg p-8 max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
-          
           {article.date && (
             <p className="text-gray-500 text-sm mb-6">
               Published on {new Date(article.date).toLocaleDateString('en-US', {
@@ -117,12 +138,10 @@ export default async function LearnArticlePage({ params }: Props) {
               })}
             </p>
           )}
-          
           {/* Main content */}
           <div className="prose prose-lg max-w-none">
             <MDXRemote source={article.content} />
           </div>
-          
           {/* Action section with quote CTA */}
           <div className="mt-12 pt-8 border-t border-gray-200">
             {quoteType ? (
@@ -134,6 +153,7 @@ export default async function LearnArticlePage({ params }: Props) {
                 <Link
                   href={`/quote${quoteType ? `?type=${quoteType}` : ''}`}
                   className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
+                  rel="nofollow"
                 >
                   Get Your Free {quoteTypeDisplay} Quote <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -147,20 +167,20 @@ export default async function LearnArticlePage({ params }: Props) {
                 <Link
                   href="/quote"
                   className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
+                  rel="nofollow"
                 >
                   Get a Free Insurance Quote <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </div>
             )}
-            
             <div className="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
               <Link
                 href="/learn"
                 className="text-cyan-600 hover:text-cyan-800 mb-4 sm:mb-0"
+                rel="prev"
               >
                 ← Back to Insurance Learning Center
               </Link>
-              
               <Link
                 href="/contact"
                 className="text-cyan-600 hover:text-cyan-800"
@@ -170,6 +190,14 @@ export default async function LearnArticlePage({ params }: Props) {
             </div>
           </div>
         </article>
+        {/* Inject FAQ JSON-LD if present */}
+        {faqJsonLd && (
+          <Script
+            id="faq-jsonld"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
+        )}
       </div>
     </div>
   );

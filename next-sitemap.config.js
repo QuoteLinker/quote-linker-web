@@ -7,4 +7,5 @@ module.exports = {
   generateRobotsTxt: true,
   // optional: exclude certain pages
   // exclude: ['/admin/*'],
+  // Add custom transformation for FAQ/structured data if needed in the future
 };
