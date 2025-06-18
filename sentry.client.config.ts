@@ -7,9 +7,8 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0,
   replaysSessionSampleRate: 0.1,
   integrations: [
-    // ...existing integrations
-    new Sentry.Integrations.Http({ tracing: true }), // Capture server errors
-    new Sentry.BrowserTracing(), // Capture client errors
+    // Standard integrations
+    // Add any specific integrations here if needed
   ],
   beforeSend(event, hint) {
     // Optionally filter or modify events here
@@ -17,8 +16,7 @@ Sentry.init({
   },
   // Ensure both uncaught exceptions and unhandled rejections are captured
   attachStacktrace: true,
-  autoSessionTracking: true,
-  // Optionally, set environment
+  // Set environment
   environment: process.env.NODE_ENV,
 });
 

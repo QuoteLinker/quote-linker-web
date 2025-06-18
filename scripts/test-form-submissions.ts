@@ -136,7 +136,8 @@ async function main() {
   const results: TestResult[] = [];
   
   for (const [type, data] of Object.entries(TEST_DATA)) {
-    console.log(`Testing ${data.insuranceType} - ${data.subType || 'N/A'}...`);
+    const subType = 'subType' in data ? data.subType : 'N/A';
+    console.log(`Testing ${data.insuranceType} - ${subType}...`);
     const result = await testFormSubmission(data);
     results.push(result);
     console.log(`Result for ${result.productDetails}: ${result.status} (${result.responseCode})`);

@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
-const API_URL = process.env.NEXT_PUBLIC_VERCEL_URL 
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/submit-lead`
+const API_URL = process.env.NEXT_PUBLIC_API_URL 
+  ? `${process.env.NEXT_PUBLIC_API_URL}/api/submit-lead`
   : 'http://localhost:3000/api/submit-lead';
 
 interface TestLead {

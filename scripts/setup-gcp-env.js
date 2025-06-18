@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * This script helps set up the environment variables in Vercel.
- * It reads from .env.local and outputs the commands to set up the variables in Vercel.
+ * This script helps set up environment variables in Google Cloud Run.
+ * It reads from .env.local and outputs the commands to set up the variables in GCP.
  */
 
 const fs = require('fs');
@@ -75,24 +75,33 @@ if (missingVars.length > 0) {
   process.exit(1);
 }
 
-// Generate Vercel CLI commands
-console.log('\n# Vercel Environment Variables Setup\n');
-console.log('# Run the following commands to set up your Vercel environment variables:');
-console.log('# vercel env add SALESFORCE_LOGIN_URL');
-console.log('# vercel env add SALESFORCE_CLIENT_ID');
-console.log('# vercel env add SALESFORCE_CLIENT_SECRET');
-console.log('# vercel env add SALESFORCE_USERNAME');
-console.log('# vercel env add SALESFORCE_PASSWORD');
-console.log('# vercel env add SALESFORCE_TOKEN');
-console.log('# vercel env add SF_API_VERSION');
-console.log('# vercel env add SF_AGENT_RECORD_TYPE_ID');
-console.log('# vercel env add SF_AGENT_OPPORTUNITY_RECORD_TYPE_ID\n');
+// Generate Google Cloud Run commands
+console.log('\n# Google Cloud Run Environment Variables Setup\n');
+console.log('# Run the following commands to set up your Cloud Run environment variables:\n');
 
-console.log('# Or use the following command to set all variables at once:');
-console.log('vercel env pull .env.production.local');
-console.log('vercel env push .env.production.local\n');
+// Command to list current service details
+console.log('# First, get your current service details:');
+console.log('gcloud run services describe quotelinkercom --region us-central1 --format json | jq .spec.template.spec.containers[0].env\n');
 
-console.log('# To deploy with these environment variables:');
-console.log('vercel deploy --prod\n');
+// Command to update environment variables
+console.log('# Then, update with new environment variables:');
+console.log('gcloud run services update quotelinkercom --region us-central1 \\');
 
-rl.close(); 
+// Add each environment variable
+Object.entries(envVars).forEach(([key, value], index, array) => {
+  const isLast = index === array.length - 1;
+  console.log(`  --set-env-vars "${key}=${value}"${isLast ? '' : ' \\'}`);
+});
+
+console.log('\n# Alternatively, you can use a YAML file for configuration:');
+console.log('# 1. Create a file named env-vars.yaml with the following content:');
+console.log('```yaml');
+console.log('env_variables:');
+Object.entries(envVars).forEach(([key, value]) => {
+  console.log(`  ${key}: "${value}"`);
+});
+console.log('```');
+console.log('\n# 2. Update your service with the YAML file:');
+console.log('gcloud run services update quotelinkercom --region us-central1 --env-vars-file env-vars.yaml\n');
+
+rl.close();

@@ -85,7 +85,7 @@ This guide provides instructions for integrating Salesforce and Google Analytics
 
 3. **Add Environment Variables**
 
-   In your Vercel project settings, add the following environment variables:
+   In your Google Cloud Run service settings, add the following environment variables:
 
    - `SF_USERNAME`: Your Salesforce username
    - `SF_PASSWORD`: Your Salesforce password

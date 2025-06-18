@@ -1,15 +1,15 @@
 # Dockerfile for a Next.js Standalone Application
 
 # === Base Image for Dependencies (deps) ===
-# Use the official Node.js 18 image on Alpine Linux for a small footprint
-FROM node:18-alpine AS deps
+# Use the official Node.js 20 image on Alpine Linux for a small footprint
+FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
 # === Builder Image ===
 # Build the application
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -19,7 +19,7 @@ RUN npm run build
 
 # === Production Image ===
 # This is the final, small image that will be deployed
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 # Set the environment to production
 ENV NODE_ENV production
