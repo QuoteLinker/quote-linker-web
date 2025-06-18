@@ -15,6 +15,9 @@
     "generate-og-images:alt": "node scripts/generate-og-images-alternative.js",
     "generate-og-images:fixed": "node scripts/generate-og-images-fixed.js",
     "generate-og-images:simple": "node scripts/generate-og-images-simple.js",
+    "link-mdx": "node scripts/link-mdx.cjs",
+    "update-meta": "node scripts/updateMetaDescriptions.cjs",
+    "generate-faqs": "node scripts/generateFAQs.cjs",
     "build:with-assets": "npm run generate-sitemap && npm run generate-og-images:simple && npm run build",
     "build:production": "npm run build:with-assets"
   },
@@ -40,6 +43,8 @@
     "lucide-react": "^0.503.0",
     "next": "^14.1.0",
     "next-mdx-remote": "^5.0.0",
+    "next-seo": "^6.8.0",
+    "openai": "^5.5.1",
     "react": "^18",
     "react-calendly": "^4.3.1",
     "react-dom": "^18",

@@ -2,12 +2,14 @@
 title: Understanding Life Insurance Basics
 date: '2024-03-20'
 category: Life Insurance
-excerpt: Learn the fundamentals of life insurance, including types of policies, coverage options, and how to choose the right plan for your needs.
+excerpt: >-
+  Learn the fundamentals of life insurance, including types of policies,
+  coverage options, and how to choose the right plan for your needs.
 ---
 
 # Understanding Life Insurance Basics
 
-Life insurance is a crucial financial tool that provides protection and peace of mind for you and your loved ones. In this comprehensive guide, we'll explore the essential aspects of life insurance to help you make informed decisions.
+<Link href="/learn/understanding-life-insurance">Life insurance</Link> is a crucial financial tool that provides protection and peace of mind for you and your loved ones. In this comprehensive guide, we'll explore the essential aspects of life insurance to help you make informed decisions.
 
 ## What is Life Insurance?
 
