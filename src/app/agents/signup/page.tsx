@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import Logo from '@/components/Logo';
+import FormField from '@/components/FormField';
 
 export default function AgentSignupPage() {
   const [formData, setFormData] = useState({
@@ -56,99 +57,55 @@ export default function AgentSignupPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-xl rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-              <div className="mt-1">
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  disabled={isLoading}
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm disabled:opacity-75 disabled:bg-gray-100"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label htmlFor="agencyName" className="block text-sm font-medium text-gray-700">
-                Agency Name (Optional)
-              </label>
-              <div className="mt-1">
-                <input
-                  id="agencyName"
-                  name="agencyName"
-                  type="text"
-                  autoComplete="organization"
-                  disabled={isLoading}
-                  value={formData.agencyName}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm disabled:opacity-75 disabled:bg-gray-100"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  disabled={isLoading}
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm disabled:opacity-75 disabled:bg-gray-100"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  disabled={isLoading}
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm disabled:opacity-75 disabled:bg-gray-100"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  disabled={isLoading}
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-cyan-500 focus:border-cyan-500 sm:text-sm disabled:opacity-75 disabled:bg-gray-100"
-                />
-              </div>
-            </div>
+            <FormField
+              label="Full Name"
+              name="fullName"
+              type="text"
+              autoComplete="name"
+              required
+              disabled={isLoading}
+              value={formData.fullName}
+              onChange={handleChange}
+            />
+            <FormField
+              label="Agency Name (Optional)"
+              name="agencyName"
+              type="text"
+              autoComplete="organization"
+              disabled={isLoading}
+              value={formData.agencyName}
+              onChange={handleChange}
+            />
+            <FormField
+              label="Email address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              disabled={isLoading}
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <FormField
+              label="Password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+              disabled={isLoading}
+              value={formData.password}
+              onChange={handleChange}
+            />
+            <FormField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              autoComplete="new-password"
+              required
+              disabled={isLoading}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
 
             {error && (
               <div>

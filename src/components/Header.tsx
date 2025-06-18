@@ -16,7 +16,7 @@ const Header = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	return (
-		<header className="bg-white/95 backdrop-blur-md sticky top-0 z-40 shadow-sm">
+		<header className="bg-primary-50/95 backdrop-blur-md sticky top-0 z-40 shadow-sm">
 			<nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
 				<div className="flex items-center justify-between h-16">
 					<div className="flex items-center space-x-4">
@@ -29,9 +29,9 @@ const Header = () => {
 						<Popover className="relative">
 							{({ open: desktopMenuOpen, close: closeDesktopMenu }) => (
 								<>
-									<Popover.Button className="group inline-flex items-center text-base font-medium text-gray-700 hover:text-cyan-500 focus:outline-none">
+									<Popover.Button className="group inline-flex items-center text-base font-medium text-secondary-700 hover:text-accent-500 focus:outline-none">
 										<span>Insurance Type</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`${desktopMenuOpen ? 'transform rotate-180' : ''} ml-1 h-5 w-5 text-gray-400 group-hover:text-cyan-500 transition-transform duration-150`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`${desktopMenuOpen ? 'transform rotate-180' : ''} ml-1 h-5 w-5 text-secondary-400 group-hover:text-accent-500 transition-transform duration-150`}>
                                           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.06z" clipRule="evenodd" />
                                         </svg>
 									</Popover.Button>
@@ -45,17 +45,17 @@ const Header = () => {
 										leaveTo="opacity-0 translate-y-1"
 									>
 										<Popover.Panel className="absolute z-10 mt-3 transform px-2 w-screen max-w-xs sm:px-0 lg:left-1/2 lg:-translate-x-1/2">
-											<div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-												<div className="relative grid gap-2 bg-white px-5 py-6 sm:gap-4 sm:p-8 justify-items-center">
+											<div className="rounded-lg shadow-lg ring-1 ring-secondary-900 ring-opacity-5 overflow-hidden">
+												<div className="relative grid gap-2 bg-primary-50 px-5 py-6 sm:gap-4 sm:p-8 justify-items-center">
 													{insuranceProducts.map((item) => (
 														<Link
 															key={item.name}
 															href={item.href}
-															className="-m-3 p-3 w-full flex flex-col items-center rounded-lg hover:bg-gray-50 transition ease-in-out duration-150 text-center"
+															className="-m-3 p-3 w-full flex flex-col items-center rounded-lg hover:bg-primary-100 transition ease-in-out duration-150 text-center"
 															onClick={() => closeDesktopMenu()} 
 														>
-															<p className="text-base font-medium text-gray-900">{item.name}</p>
-															<p className="mt-1 text-sm text-gray-500">{item.description}</p>
+															<p className="text-base font-medium text-secondary-900">{item.name}</p>
+															<p className="mt-1 text-sm text-secondary-500">{item.description}</p>
 														</Link>
 													))}
 												</div>
@@ -66,14 +66,14 @@ const Header = () => {
 							)}
 						</Popover>
                         <div className="ml-auto flex items-center space-x-6 lg:space-x-8">
-                            <Link href="/learn" className="text-base font-medium text-gray-700 hover:text-cyan-500">Learn</Link>
-                            <Link href="/agents" className="text-base font-medium text-gray-700 hover:text-cyan-500">Agents</Link>
+                            <Link href="/learn" className="text-base font-medium text-secondary-700 hover:text-accent-500">Learn</Link>
+                            <Link href="/agents" className="text-base font-medium text-secondary-700 hover:text-accent-500">Agents</Link>
                         </div>
 					</div>
 					
 					<div className="flex items-center">
 						<div className="hidden md:flex items-center">
-							<Link href="/get-quote" className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-cyan-500 hover:bg-cyan-600">
+							<Link href="/get-quote" className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-accent-500 hover:bg-accent-600">
 								Get a Quote
 							</Link>
 						</div>
@@ -81,7 +81,7 @@ const Header = () => {
 						<div className="-mr-2 flex items-center md:hidden">
 							<button
 								type="button"
-								className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500"
+								className="bg-primary-50 rounded-md p-2 inline-flex items-center justify-center text-secondary-400 hover:text-secondary-500 hover:bg-primary-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent-500"
 								onClick={() => {
 									try {
 										setIsMobileMenuOpen(prevState => !prevState);
@@ -149,7 +149,7 @@ const Header = () => {
 						</div>
 						<Link
 							href="/get-quote"
-							className="block w-full px-5 py-3 text-center font-medium text-white bg-cyan-500 hover:bg-cyan-600"
+							className="block w-full px-5 py-3 text-center font-medium text-white bg-accent-500 hover:bg-accent-600"
 							onClick={() => setIsMobileMenuOpen(false)}
 						>
 							Get a Quote

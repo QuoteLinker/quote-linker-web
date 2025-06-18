@@ -1,3 +1,5 @@
+var defaultTheme = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -8,127 +10,71 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cyan: {
-          50: '#e0fcff',
-          100: '#befaff',
-          200: '#9ef8ff',
-          300: '#7df6ff',
-          400: '#5cf3ff', // Lighter variant for hover if needed
-          DEFAULT: '#00EEFD', // Main brand color
-          500: '#00EEFD',     // Main brand color
-          600: '#00D4E5',     // Hover/darker variant
-          700: '#00b8c9',     // Adjusted darker shades
-          800: '#009dad',
-          900: '#008191',
-          950: '#006575',
-        },
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          '50': '#eef2ff',
+          '100': '#e0e7ff',
+          '200': '#c7d2fe',
+          '300': '#a5b4fc',
+          '400': '#818cf8',
+          '500': '#6366f1',
+          '600': '#4f46e5',
+          '700': '#4338ca',
+          '800': '#3730a3',
+          '900': '#312e81',
+          '950': '#1e1b4b'
         },
         secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+          '50': '#f8fafc',
+          '100': '#f1f5f9',
+          '200': '#e2e8f0',
+          '300': '#cbd5e1',
+          '400': '#94a3b8',
+          '500': '#64748b',
+          '600': '#475569',
+          '700': '#334155',
+          '800': '#1e293b',
+          '900': '#0f172a',
+          '950': '#020617'
         },
-        accent: '#00EEFD', // Use for highlights and CTAs
-        'electric-blue': '#00EEFD', // Main CTA color
-        'deep-navy': '#0B0B45', // For hero backgrounds
-        'cool-gray': '#F5F7FA', // For section backgrounds
-        'dark-gray': '#212529', // For main text
-        'white': '#FFFFFF',
-        muted: {
-          foreground: '#64748b', // For muted text
-        },
+        accent: {
+          '50': '#f0f9ff',
+          '100': '#e0f2fe',
+          '200': '#bae6fd',
+          '300': '#7dd3fc',
+          '400': '#38bdf8',
+          '500': '#0ea5e9',
+          '600': '#0284c7',
+          '700': '#0369a1',
+          '800': '#075985',
+          '900': '#0c4a6e',
+          '950': '#082f49'
+        }
       },
-      fontFamily: {
-        sans: ['Inter', 'Inter var', 'sans-serif'],
-      },
-      screens: {
-        'xs': '375px', // iPhone 12 width
-        'sm': '640px',
-        'md': '768px',
-        'lg': '1024px',
-        'xl': '1280px',
-        '2xl': '1536px',
+      fontSize: {
+        'h1': ['2.25rem', { lineHeight: '2.5rem' }],
+        'h2': ['1.875rem', { lineHeight: '2.25rem' }],
+        'h3': ['1.5rem', { lineHeight: '2rem' }],
+        'h4': ['1.25rem', { lineHeight: '1.75rem' }],
+        'h5': ['1.125rem', { lineHeight: '1.75rem' }],
+        'h6': ['1rem', { lineHeight: '1.5rem' }],
+        'body': ['1rem', { lineHeight: '1.5rem' }],
+        'caption': ['0.875rem', { lineHeight: '1.25rem' }],
       },
       spacing: {
-        '18': '4.5rem',
-        '112': '28rem',
-        '128': '32rem',
-      },
-      maxWidth: {
-        '8xl': '88rem',
-        '9xl': '96rem',
+        '1': '0.25rem', '2': '0.5rem', '3': '0.75rem', '4': '1rem', '5': '1.25rem', '6': '1.5rem', '8': '2rem', '10': '2.5rem', '12': '3rem', '16': '4rem', '20': '5rem', '24': '6rem', '32': '8rem',
       },
       borderRadius: {
+        'sm': '0.25rem',
+        'DEFAULT': '0.5rem',
+        'lg': '0.75rem',
         'xl': '1rem',
         '2xl': '1.5rem',
-        '3xl': '2rem',
+        'full': '9999px',
       },
-      boxShadow: {
-        'inner-lg': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-        'brand': '0 4px 14px 0 rgba(0, 238, 253, 0.2)',
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-        'card-hover': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
+      fontFamily: {
+        sans: ["var(--font-sans)"].concat(defaultTheme.fontFamily.sans),
       },
-      container: {
-        center: true,
-        padding: {
-          DEFAULT: '1rem',
-          sm: '2rem',
-          lg: '4rem',
-          xl: '5rem',
-          '2xl': '6rem',
-        },
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'gradient-fade': 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%)',
-      },
-      ringColor: {
-        DEFAULT: '#00EEFD',
-      },
-      ringOffsetColor: {
-        DEFAULT: '#FFFFFF',
-      },
-      ringOffsetWidth: {
-        DEFAULT: '2px',
-      },
-      typography: (theme) => ({
-        DEFAULT: {
-          css: {
-            maxWidth: '65ch',
-            color: theme('colors.dark-gray'),
-            a: {
-              color: theme('colors.electric-blue'),
-              '&:hover': {
-                color: theme('colors.primary.600'),
-              },
-            },
-          },
-        },
-      }),
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
-}
+  plugins: [require("@tailwindcss/typography")],
+};
