@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import FormField from '@/components/FormField'; // Import the new FormField
@@ -32,6 +32,7 @@ interface QuoteFormProps {
 
 const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [formData, setFormData] = useState<FormState>({
     firstName: '',
@@ -107,11 +108,7 @@ const QuoteFormComponent: React.FC<QuoteFormProps> = ({ productType }) => {
         toast.error(result.error || 'Submission failed. Please try again.', { id: toastId });
       } else {
         toast.success('Quote request submitted successfully!', { id: toastId });
-        // Reset form or redirect user
-        setFormData({ 
-          firstName: '', lastName: '', email: '', phone: '', zip: '', 
-          insuranceTypes: [], additionalInfo: '', consent: false 
-        });
+        router.push('/thank-you?from=QuoteForm');
       }
     } catch (error) {
       toast.error('An error occurred while submitting your information.');

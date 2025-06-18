@@ -2,10 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import Logo from '@/components/Logo';
 import FormField from '@/components/FormField';
+import { trackEvent } from '@/utils/analytics'; // Import the event tracker
 
 export default function AgentSignupPage() {
+  const router = useRouter(); // Initialize the router
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -28,13 +31,28 @@ export default function AgentSignupPage() {
       return;
     }
     setIsLoading(true);
-    // Placeholder for actual signup logic with Firebase
-    console.log('Agent signup data:', formData);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    alert('Signup submitted (placeholder). Check console. In a real app, you would be redirected or shown a success message.');
-    // Potentially redirect to /agents/dashboard or /agents/login
+    try {
+      // Placeholder for actual signup logic with Firebase
+      console.log('Agent signup data:', formData);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Track the conversion event
+      trackEvent('generate_lead', {
+        category: 'Agent Signup',
+        label: formData.agencyName || 'Individual Agent',
+      });
+
+      // Redirect to the thank you page
+      router.push('/thank-you?from=AgentSignup');
+
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      // In a real app, you would log this error
+      console.error('Signup Error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

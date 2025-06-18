@@ -3,14 +3,15 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Toaster } from 'react-hot-toast';
 import QuoteForm from './QuoteForm';
 
-// Mock Firestore and GA4
-jest.mock('@/utils/firebase', () => ({
-  db: { collection: jest.fn(() => ({ add: jest.fn() })) }
-}));
-
-const mockGA4 = jest.fn();
-jest.mock('@/utils/ga4', () => ({
-  fireEvent: (...args: any[]) => mockGA4(...args)
+// Mock next/navigation
+const mockPush = jest.fn();
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+  useSearchParams: () => ({
+    get: jest.fn(),
+  }),
 }));
 
 global.fetch = jest.fn();
@@ -39,10 +40,10 @@ describe('QuoteForm', () => {
     expect(await screen.findByText(/you must consent to be contacted/i)).toBeInTheDocument();
   });
 
-  it('submits successfully and fires GA4 event', async () => {
+  it('submits successfully and redirects', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ message: 'Lead submitted successfully!' })
+      json: async () => ({ message: 'Lead submitted successfully!' }),
     });
     renderForm();
     fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
@@ -55,6 +56,6 @@ describe('QuoteForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /get my free quote/i }));
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
     expect(await screen.findByText(/quote request submitted successfully!/i)).toBeInTheDocument();
-    expect(mockGA4).toHaveBeenCalledWith('lead_submit', expect.any(Object));
+    await waitFor(() => expect(mockPush).toHaveBeenCalledWith('/thank-you?from=QuoteForm'));
   });
 });
