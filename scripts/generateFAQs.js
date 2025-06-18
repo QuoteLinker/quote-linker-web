@@ -8,15 +8,15 @@
  */
 
 require('dotenv').config();
-const fs = require('fs');
-const path = require('path');
-const matter = require('gray-matter');
-const { promisify } = require('util');
-const { OpenAI } = require('openai');
+var fs = require('fs');
+var path = require('path');
+var matter = require('gray-matter');
+var promisify = require('util').promisify;
+var OpenAI = require('openai').OpenAI;
 
-const readDir = promisify(fs.readdir);
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
+var readDir = promisify(fs.readdir);
+var readFile = promisify(fs.readFile);
+var writeFile = promisify(fs.writeFile);
 
 // Check if OpenAI API key is set
 if (!process.env.OPENAI_API_KEY) {
@@ -26,11 +26,11 @@ if (!process.env.OPENAI_API_KEY) {
 }
 
 // Initialize OpenAI client
-const openai = new OpenAI({
+var openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'learn');
+var CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'learn');
 const FAQ_MARKER = '<!-- FAQ_SECTION -->';
 
 /**

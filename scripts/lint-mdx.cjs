@@ -146,144 +146,105 @@ function fixHeadingHierarchy(content) {
 }
 
 // Main linting function
-async function lintMDXFile(filePath) {
-  var content = await readFile(filePath, 'utf8');
-  var parsed = matter(content);
-  var data = parsed.data;
-  var issues = [];
-  
-  // Check required frontmatter
-  for (var i = 0; i < REQUIRED_FRONTMATTER.length; i++) {
-    var field = REQUIRED_FRONTMATTER[i];
-    if (!data[field]) {
-      issues.push("Missing required frontmatter field: " + field);
+function lintMDXFile(filePath) {
+  return readFile(filePath, 'utf8').then(function(content) {
+    var parsed = matter(content);
+    var data = parsed.data;
+    var issues = [];
+
+    // Check required frontmatter
+    REQUIRED_FRONTMATTER.forEach(function(field) {
+      if (!data[field]) {
+        issues.push("Missing required frontmatter field: " + field);
+      }
+    });
+
+    // Check for H1
+    var h1Match = content.match(/^#\s+(.*?)$/m);
+    if (!h1Match) {
+      issues.push(RULES.MUST_HAVE_H1);
+    } else if (h1Match[1] !== data.title) {
+      issues.push('H1 heading "' + h1Match[1] + '" does not match title in frontmatter "' + data.title + '"');
     }
-  }
-  
-  // Check for H1
-  var h1Match = content.match(/^#\s+(.*?)$/m);
-  if (!h1Match) {
-    issues.push(RULES.MUST_HAVE_H1);
-  } else if (h1Match[1] !== data.title) {
-    issues.push("H1 heading \"" + h1Match[1] + "\" does not match title in frontmatter \"" + data.title + "\"");
-  }
-  
-  // Check description format
-  if (typeof data.description === 'string' && 
-     (data.description.endsWith('>-') || data.description.includes('...'))) {
-    issues.push(RULES.FULL_DESCRIPTION);
-  }
-  
-  // Check reading time format
-  if (data.readingTime) {
-    var readingTimeStr = data.readingTime.toString();
-    if (!readingTimeStr.match(/^\d+\s*min\s*read$/i)) {
-      issues.push(RULES.READING_TIME_FORMAT);
+
+    // Check description format
+    if (typeof data.description === 'string' && (data.description.endsWith('>-') || data.description.includes('...'))) {
+      issues.push(RULES.FULL_DESCRIPTION);
     }
-  }
-  
-  // Apply fixes
-  var updatedContent = content;
-  
-  var hasFullDescriptionIssue = false;
-  for (var j = 0; j < issues.length; j++) {
-    if (issues[j] === RULES.FULL_DESCRIPTION) {
-      hasFullDescriptionIssue = true;
-      break;
+
+    // Check reading time format
+    if (data.readingTime) {
+      var readingTimeStr = data.readingTime.toString();
+      if (!readingTimeStr.match(/^\d+\s*min\s*read$/i)) {
+        issues.push(RULES.READING_TIME_FORMAT);
+      }
     }
-  }
-  
-  if (hasFullDescriptionIssue) {
-    updatedContent = fixIncompleteDescription(updatedContent);
-  }
-  
-  var hasReadingTimeFormatIssue = false;
-  for (var k = 0; k < issues.length; k++) {
-    if (issues[k] === RULES.READING_TIME_FORMAT) {
-      hasReadingTimeFormatIssue = true;
-      break;
+
+    // Apply fixes
+    var updatedContent = content;
+    if (issues.includes(RULES.FULL_DESCRIPTION)) {
+      updatedContent = fixIncompleteDescription(updatedContent);
     }
-  }
-  
-  if (hasReadingTimeFormatIssue) {
-    updatedContent = fixReadingTimeFormat(updatedContent);
-  }
-  
-  var hasMustHaveH1Issue = false;
-  for (var l = 0; l < issues.length; l++) {
-    if (issues[l] === RULES.MUST_HAVE_H1) {
-      hasMustHaveH1Issue = true;
-      break;
+    if (issues.includes(RULES.READING_TIME_FORMAT)) {
+      updatedContent = fixReadingTimeFormat(updatedContent);
     }
-  }
-  
-  if (hasMustHaveH1Issue) {
-    updatedContent = fixHeadingHierarchy(updatedContent);
-  }
-  
-  // Always ensure Link component is used
-  updatedContent = ensureLinkComponentUsage(updatedContent);
-  
-  // Write back the updated content if it changed
-  if (updatedContent !== content) {
-    await writeFile(filePath, updatedContent, 'utf8');
-    console.log("✅ Fixed issues in " + path.basename(filePath));
-  } else if (issues.length === 0) {
-    console.log("✅ No issues found in " + path.basename(filePath));
-  } else {
-    console.log("❌ Unfixed issues in " + path.basename(filePath) + ":");
-    for (var m = 0; m < issues.length; m++) {
-      console.log("   - " + issues[m]);
+    if (issues.includes(RULES.MUST_HAVE_H1)) {
+      updatedContent = fixHeadingHierarchy(updatedContent);
     }
-  }
-  
-  return {
-    file: path.basename(filePath),
-    issues: issues,
-    fixed: updatedContent !== content
-  };
+    updatedContent = ensureLinkComponentUsage(updatedContent);
+
+    // Write back the updated content if it changed
+    if (updatedContent !== content) {
+      return writeFile(filePath, updatedContent, 'utf8').then(function() {
+        console.log("✅ Fixed issues in " + path.basename(filePath));
+        return { file: path.basename(filePath), issues: issues, fixed: true };
+      });
+    } else {
+      if (issues.length === 0) {
+        console.log("✅ No issues found in " + path.basename(filePath));
+      } else {
+        console.log("❌ Unfixed issues in " + path.basename(filePath) + ":");
+        issues.forEach(function(issue) {
+          console.log("   - " + issue);
+        });
+      }
+      return Promise.resolve({ file: path.basename(filePath), issues: issues, fixed: false });
+    }
+  });
 }
 
 // Process all MDX files recursively
-async function processDirectory(dirPath) {
-  var entries = await readDir(dirPath, { withFileTypes: true });
-  var results = [];
-  
-  for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i];
-    var entryPath = path.join(dirPath, entry.name);
-    
-    if (entry.isDirectory()) {
-      var subResults = await processDirectory(entryPath);
-      for (var j = 0; j < subResults.length; j++) {
-        results.push(subResults[j]);
+function processDirectory(dirPath) {
+  return readDir(dirPath, { withFileTypes: true }).then(function(entries) {
+    var promises = entries.map(function(entry) {
+      var entryPath = path.join(dirPath, entry.name);
+      if (entry.isDirectory()) {
+        return processDirectory(entryPath);
+      } else if (entry.name.endsWith('.mdx')) {
+        return lintMDXFile(entryPath);
       }
-    } else if (entry.name.endsWith('.mdx')) {
-      var result = await lintMDXFile(entryPath);
-      results.push(result);
-    }
-  }
-  
-  return results;
+      return null;
+    });
+
+    return Promise.all(promises).then(function(results) {
+      return results.reduce(function(acc, val) {
+        return val ? acc.concat(val) : acc;
+      }, []);
+    });
+  });
 }
 
 // Generate a report
 function generateReport(results) {
-  var fixedCount = 0;
-  var fileWithIssues = 0;
-  
-  for (var i = 0; i < results.length; i++) {
-    var result = results[i];
-    if (result.fixed) fixedCount++;
-    if (result.issues.length > 0) fileWithIssues++;
-  }
-  
+  var fixedCount = results.filter(function(r) { return r.fixed; }).length;
+  var fileWithIssues = results.filter(function(r) { return r.issues.length > 0; }).length;
+
   console.log('\n===== MDX Lint Report =====');
   console.log("Total MDX files: " + results.length);
   console.log("Files with issues: " + fileWithIssues);
   console.log("Files fixed automatically: " + fixedCount);
   console.log('===========================\n');
-  
+
   if (fileWithIssues > fixedCount) {
     console.log('⚠️  Some issues require manual fixing. Please review the logs above.');
   } else if (fileWithIssues > 0) {
@@ -294,15 +255,14 @@ function generateReport(results) {
 }
 
 // Main function
-async function main() {
-  try {
-    console.log('🔍 Starting MDX linting process...');
-    var results = await processDirectory(CONTENT_DIR);
-    generateReport(results);
-  } catch (error) {
-    console.error('Error:', error);
-    process.exit(1);
-  }
+function main() {
+  console.log('🔍 Starting MDX linting process...');
+  processDirectory(CONTENT_DIR)
+    .then(generateReport)
+    .catch(function(error) {
+      console.error('Error:', error);
+      process.exit(1);
+    });
 }
 
 main();
