@@ -6,17 +6,17 @@ import { Fragment, useState } from 'react';
 import Logo from './Logo';
 
 const insuranceProducts = [
-	{ name: 'Auto Insurance', href: '/quote?type=auto', description: 'Get a quote for your car' },
-	{ name: 'Home Insurance', href: '/quote?type=home', description: 'Protect your home and belongings' },
-	{ name: 'Life Insurance', href: '/quote?type=life', description: "Secure your family's future" },
-	{ name: 'Health Insurance', href: '/quote?type=health', description: 'Find the right health coverage' },
+	{ name: 'Auto Insurance', href: '/get-quote?type=auto', description: 'Get a quote for your car' },
+	{ name: 'Home Insurance', href: '/get-quote?type=home', description: 'Protect your home and belongings' },
+	{ name: 'Life Insurance', href: '/get-quote?type=life', description: "Secure your family's future" },
+	{ name: 'Health Insurance', href: '/get-quote?type=health', description: 'Find the right health coverage' },
 ];
 
 const Header = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
 	return (
-		<header className="bg-primary-50/95 backdrop-blur-md sticky top-0 z-40 shadow-sm">
+		<header className="bg-primary-50/95 backdrop-blur-md sticky top-0 z-40 shadow-md">
 			<nav className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Top">
 				<div className="flex items-center justify-between h-16">
 					<div className="flex items-center space-x-4">
@@ -126,7 +126,7 @@ const Header = () => {
 								<Link
 									key={item.name}
 									href={item.href}
-									className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 text-center"
+									className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-accent-500 hover:bg-gray-50 text-center transition-colors"
 									onClick={() => setIsMobileMenuOpen(false)}
 								>
 									{item.name}
@@ -134,14 +134,14 @@ const Header = () => {
 							))}
 							<Link 
 								href="/learn" 
-								className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 text-center" 
+								className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-accent-500 hover:bg-gray-50 text-center transition-colors" 
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								Learn
 							</Link>
 							<Link 
 								href="/agents" 
-								className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 text-center" 
+								className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-accent-500 hover:bg-gray-50 text-center transition-colors" 
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								Agents

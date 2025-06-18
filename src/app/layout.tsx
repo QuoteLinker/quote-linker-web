@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
 import { Toaster } from "react-hot-toast";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GoogleTagManager from "@/components/GoogleTagManager";
@@ -196,6 +197,7 @@ export default function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
+        <BackToTop />
         <Footer />
       </body>
     </html>
