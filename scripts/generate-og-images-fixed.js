@@ -3,17 +3,15 @@
  * This combines best practices from both original scripts but with improved error handling
  */
 
-import puppeteer from 'puppeteer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { promises as fsPromises } from 'fs';
+var puppeteer = require('puppeteer');
+var path = require('path');
+var fs = require('fs').promises;
 
-// Get the directory name in ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Get the directory name
+var __dirname = path.resolve();
 
 // Handle unhandled promise rejections
-process.on('unhandledRejection', (error) => {
+process.on('unhandledRejection', function(error) {
   console.error('Unhandled promise rejection:', error);
   // Allow the process to continue rather than crash
 });
@@ -21,7 +19,7 @@ process.on('unhandledRejection', (error) => {
 /**
  * Product-specific content for OG images
  */
-const PRODUCTS = {
+var PRODUCTS = {
   default: {
     headline: 'Your Link to Smarter Insurance',
     subheadline: 'Compare personalized quotes from trusted local agents and save up to 30% on coverage.',
@@ -63,298 +61,192 @@ const PRODUCTS = {
  * Generate inline HTML content for OG images
  */
 function generateHTML(content) {
-  return `<!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <style>
-        body {
-          width: 1200px;
-          height: 630px;
-          margin: 0;
-          padding: 0;
-          background-color: #ffffff;
-          display: flex;
-          flex-direction: column;
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-          overflow: hidden;
-          position: relative;
-        }
-        .container {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          padding: 60px;
-          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-          position: relative;
-          z-index: 1;
-          overflow: hidden;
-        }
-        .top-bar {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 8px;
-          background: linear-gradient(to right, #00EEFD, #00D4E5);
-        }
-        .top-section {
-          display: flex;
-          align-items: center;
-          margin-bottom: 40px;
-          position: relative;
-          z-index: 2;
-        }
-        .logo-placeholder {
-          width: 100px;
-          height: 100px;
-          margin-right: 20px;
-          border-radius: 10px;
-          background: #00EEFD;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-weight: bold;
-          font-size: 36px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .brand-name {
-          font-size: 38px;
-          font-weight: 700;
-          color: #00EEFD;
-          letter-spacing: -0.5px;
-        }
-        .main-section {
-          flex-grow: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          position: relative;
-          z-index: 2;
-        }
-        .headline {
-          font-size: 68px;
-          font-weight: 800;
-          line-height: 1.1;
-          color: #0c4a6e;
-          margin-bottom: 30px;
-          letter-spacing: -1.5px;
-          max-width: 85%;
-          text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .sub-headline {
-          font-size: 32px;
-          color: #475569;
-          max-width: 75%;
-          line-height: 1.4;
-          font-weight: 500;
-        }
-        .bottom-section {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          margin-top: 50px;
-          border-top: 1px solid #e2e8f0;
-          padding-top: 24px;
-          position: relative;
-          z-index: 2;
-        }
-        .tagline {
-          font-size: 24px;
-          color: #64748b;
-          font-weight: 500;
-        }
-        .website {
-          font-size: 26px;
-          color: #00EEFD;
-          font-weight: 600;
-        }
-        .trust-badge {
-          position: absolute;
-          top: 60px;
-          right: 60px;
-          background-color: #ffffff;
-          border-radius: 50px;
-          padding: 10px 20px;
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-          display: flex;
-          align-items: center;
-          z-index: 2;
-        }
-        .trust-badge-text {
-          color: #475569;
-          font-weight: 600;
-          font-size: 16px;
-        }
-        .check-icon {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background-color: #00EEFD;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-right: 8px;
-          font-size: 14px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="top-bar"></div>
-        <div class="top-section">
-          <div class="logo-placeholder">QL</div>
-          <span class="brand-name">QuoteLinker</span>
-        </div>
-        <div class="main-section">
-          <h1 class="headline">${content.headline}</h1>
-          <p class="sub-headline">${content.subheadline}</p>
-        </div>
-        <div class="bottom-section">
-          <span class="tagline">Auto • Home • Life • Health</span>
-          <span class="website">quotelinker.com</span>
-        </div>
-        <div class="trust-badge">
-          <div class="check-icon">✓</div>
-          <span class="trust-badge-text">${content.badgeText}</span>
-        </div>
-      </div>
-    </body>
-    </html>`;
+  return '<!DOCTYPE html>' +
+    '<html>' +
+    '<head>' +
+      '<meta charset="utf-8">' +
+      '<style>' +
+        'body {' +
+          'width: 1200px;' +
+          'height: 630px;' +
+          'margin: 0;' +
+          'padding: 0;' +
+          'background-color: #ffffff;' +
+          'display: flex;' +
+          'flex-direction: column;' +
+          'font-family: system-ui, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif;' +
+          'overflow: hidden;' +
+          'position: relative;' +
+        '}' +
+        '.container {' +
+          'display: flex;' +
+          'flex-direction: column;' +
+          'height: 100%;' +
+          'padding: 60px;' +
+          'background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);' +
+          'position: relative;' +
+          'z-index: 1;' +
+          'overflow: hidden;' +
+        '}' +
+        '.top-bar {' +
+          'position: absolute;' +
+          'top: 0;' +
+          'left: 0;' +
+          'width: 100%;' +
+          'height: 8px;' +
+          'background: linear-gradient(to right, #00EEFD, #00D4E5);' +
+        '}' +
+        '.top-section {' +
+          'display: flex;' +
+          'justify-content: space-between;' +
+          'align-items: flex-start;' +
+          'width: 100%;' +
+        '}' +
+        '.logo-container {' +
+          'display: flex;' +
+          'align-items: center;' +
+        '}' +
+        '.logo {' +
+          'width: 80px;' +
+          'height: 80px;' +
+          'margin-right: 20px;' +
+        '}' +
+        '.logo-text {' +
+          'font-size: 36px;' +
+          'font-weight: 600;' +
+          'color: #1e293b;' +
+        '}' +
+        '.badge {' +
+          'background-color: #e0f2fe;' +
+          'color: #0c4a6e;' +
+          'padding: 12px 24px;' +
+          'border-radius: 9999px;' +
+          'font-size: 24px;' +
+          'font-weight: 500;' +
+          'border: 2px solid #7dd3fc;' +
+        '}' +
+        '.content-section {' +
+          'flex-grow: 1;' +
+          'display: flex;' +
+          'flex-direction: column;' +
+          'justify-content: center;' +
+          'align-items: center;' +
+          'text-align: center;' +
+        '}' +
+        'h1 {' +
+          'font-size: 84px;' +
+          'font-weight: 800;' +
+          'color: #0f172a;' +
+          'margin: 0 0 20px;' +
+          'line-height: 1.1;' +
+        '}' +
+        'p {' +
+          'font-size: 48px;' +
+          'color: #475569;' +
+          'margin: 0;' +
+          'max-width: 1000px;' +
+        '}' +
+        '.pattern {' +
+          'position: absolute;' +
+          'bottom: -100px;' +
+          'left: -100px;' +
+          'width: 500px;' +
+          'height: 500px;' +
+          'opacity: 0.05;' +
+          'z-index: 0;' +
+        '}' +
+      '</style>' +
+    '</head>' +
+    '<body>' +
+      '<div class="top-bar"></div>' +
+      '<div class="container">' +
+        '<img src="data:image/svg+xml;base64,' + Buffer.from('<svg width="500" height="500" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path fill="#0EA5E9" d="M100 0L0 100l100 100 100-100z"/></svg>').toString('base64') + '" class="pattern" />' +
+        '<div class="top-section">' +
+          '<div class="logo-container">' +
+            '<img src="https://www.quotelinker.com/quotelinker_icon.png" class="logo" />' +
+            '<div class="logo-text">QuoteLinker</div>' +
+          '</div>' +
+          '<div class="badge">' + content.badgeText + '</div>' +
+        '</div>' +
+        '<div class="content-section">' +
+          '<h1>' + content.headline + '</h1>' +
+          '<p>' + content.subheadline + '</p>' +
+        '</div>' +
+      '</div>' +
+    '</body>' +
+    '</html>';
 }
 
 /**
- * Generate social media sharing images using a more stable approach
+ * Main function to generate OG images
  */
-async function generateOGImages() {
-  console.log('Generating social sharing images with improved stability...');
-  
-  // Create the images directory if it doesn't exist
-  const imagesDir = path.join(__dirname, '..', 'public', 'images');
-  try {
-    await fsPromises.mkdir(imagesDir, { recursive: true });
-  } catch (err) {
-    if (err.code !== 'EEXIST') {
-      console.error(`Error creating directory: ${err.message}`);
-      return;
-    }
-  }
-  
-  let browser;
-  
-  try {
-    // Launch a headless browser with minimal options for better stability
-    // Use browser.launch() option "pipe: true" to avoid WebSocket connection issues
-    browser = await puppeteer.launch({
-      headless: "new",
-      pipe: true, // Use pipes instead of WebSockets for better stability
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage', // Overcome limited resource problems
-        '--disable-gpu',
-        '--font-render-hinting=none' // Improves font rendering
-      ],
-      timeout: 30000 // 30 second timeout
+function generateOGImages() {
+  var browser;
+  console.log('Initializing Puppeteer...');
+  puppeteer.launch({
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    protocolTimeout: 60000, // Increase timeout to 60 seconds
+  }).then(function(b) {
+    browser = b;
+    return browser.newPage();
+  }).then(function(page) {
+    return page.setViewport({ width: 1200, height: 630 }).then(function() {
+      var outputDir = path.join(__dirname, '..', 'public', 'images');
+      return fs.mkdir(outputDir, { recursive: true }).then(function() {
+        var products = Object.keys(PRODUCTS);
+        var promiseChain = Promise.resolve();
+
+        products.forEach(function(product) {
+          promiseChain = promiseChain.then(function() {
+            var content = PRODUCTS[product];
+            var html = generateHTML(content);
+            var fileName = product + '-og-image.png';
+            var filePath = path.join(outputDir, fileName);
+
+            console.log('Generating OG image for ' + product + '...');
+
+            var attempts = 3;
+            function setContentWithRetry() {
+              return page.setContent(html, { waitUntil: 'networkidle0', timeout: 30000 })
+                .catch(function(error) {
+                  attempts--;
+                  console.error('Error setting content for ' + product + ' (attempt ' + (3 - attempts) + '):', error.message);
+                  if (attempts === 0) {
+                    return Promise.reject(new Error('Failed to set content for ' + product + ' after 3 attempts.'));
+                  }
+                  return new Promise(function(resolve) { setTimeout(resolve, 2000); }).then(setContentWithRetry);
+                });
+            }
+
+            return setContentWithRetry().then(function() {
+              return new Promise(function(resolve) { setTimeout(resolve, 1000); });
+            }).then(function() {
+              return page.screenshot({ path: filePath });
+            }).then(function() {
+              console.log('Successfully generated ' + filePath);
+            });
+          });
+        });
+
+        return promiseChain;
+      });
     });
-    
-    const page = await browser.newPage();
-    
-    // Set higher quality screenshot options
-    const screenshotOptions = {
-      type: 'png',
-      omitBackground: false,
-      encoding: 'binary'
-    };
-    
-    // Set viewport for device pixel ratio 2 for better quality on retina displays
-    const viewportOptions = {
-      width: 1200,
-      height: 630,
-      deviceScaleFactor: 2
-    };
-    
-    // Process each product type in sequence
-    for (const [key, content] of Object.entries(PRODUCTS)) {
-      console.log(`Processing: ${key}`);
-      
-      try {
-        // Generate HTML for this product
-        const html = generateHTML(content);
-        
-        // Set content
-        await page.setContent(html, { 
-          waitUntil: 'networkidle0',
-          timeout: 10000
-        });
-        
-        // Set viewport
-        await page.setViewport(viewportOptions);
-        
-        // Determine file paths
-        let ogImagePath, twitterImagePath;
-        
-        if (key === 'default') {
-          // Main OG and Twitter images in the public root
-          ogImagePath = path.join(__dirname, '..', 'public', 'og-image.png');
-          twitterImagePath = path.join(__dirname, '..', 'public', 'twitter-image.png');
-        } else {
-          // Product-specific images in the images folder
-          ogImagePath = path.join(__dirname, '..', 'public', 'images', `${key}-og-image.png`);
-          twitterImagePath = path.join(__dirname, '..', 'public', 'images', `${key}-twitter-image.png`);
-        }
-        
-        // Generate OG Image
-        await page.screenshot({ 
-          path: ogImagePath, 
-          ...screenshotOptions 
-        });
-        console.log(`✅ Generated OG image: ${ogImagePath}`);
-        
-        // Adjust viewport slightly for Twitter
-        await page.setViewport({
-          ...viewportOptions,
-          height: 628
-        });
-        
-        // Generate Twitter Image
-        await page.screenshot({ 
-          path: twitterImagePath, 
-          ...screenshotOptions 
-        });
-        console.log(`✅ Generated Twitter image: ${twitterImagePath}`);
-        
-      } catch (productError) {
-        // Log error but continue with next product
-        console.error(`Error generating images for ${key}:`, productError.message);
-      }
+  }).catch(function(error) {
+    console.error('Error generating OG images:', error.message);
+    if (error.stack) {
+      console.error(error.stack);
     }
-    
-  } catch (error) {
-    console.error('Fatal error in generateOGImages:', error);
-    throw error;
-  } finally {
-    // Make sure browser always closes even if there are errors
+    process.exit(1); // Exit with an error code
+  }).finally(function() {
     if (browser) {
-      try {
-        await browser.close();
-      } catch (closeError) {
+      return browser.close().then(function() {
+        console.log('Browser closed successfully.');
+      }).catch(function(closeError) {
         console.error('Error closing browser:', closeError.message);
-      }
+      });
     }
-    console.log('🎉 Social sharing images generation process completed!');
-  }
+  });
 }
 
-// Run the function
-(async () => {
-  try {
-    await generateOGImages();
-    process.exit(0); // Ensure clean exit
-  } catch (error) {
-    console.error('Script execution failed:', error);
-    process.exit(1);
-  }
-})();
+generateOGImages();
