@@ -1,3 +1,11 @@
+import { ReactNode } from 'react';
+import {
+  UserGroupIcon,
+  ShieldCheckIcon,
+  UserIcon,
+  SparklesIcon,
+} from '@heroicons/react/24/outline';
+
 export type MainInsuranceType = 'AUTO' | 'HOME' | 'LIFE' | 'HEALTH' | 'DISABILITY' | 'SUPPLEMENTAL';
 export type LifeSubType = 'TERM' | 'PERMANENT';
 export type HealthSubType = 'SHORT_TERM_DISABILITY' | 'SUPPLEMENTAL';
@@ -25,6 +33,7 @@ interface FAQ {
 interface InsuranceProduct {
   title: string;
   subtitle: string;
+  metaDescription: string;
   benefits: Benefit[];
   faqs: FAQ[];
 }
@@ -33,26 +42,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   AUTO: {
     title: 'Auto Insurance',
     subtitle: 'Get the right auto coverage for Minnesota drivers',
+    metaDescription: 'Protect your vehicle with our comprehensive auto insurance plans, tailored for Minnesota drivers. Get a quote today!',
     benefits: [
       {
         title: 'Adequate Liability',
-        description: 'Protect your assets with proper liability limits'
+        description: 'Protect your assets with proper liability limits',
       },
       {
         title: 'PIP Coverage',
-        description: 'Essential medical coverage for Minnesota drivers'
+        description: 'Essential medical coverage for Minnesota drivers',
       },
       {
         title: 'Uninsured Protection',
-        description: 'Coverage when others lack insurance'
+        description: 'Coverage when others lack insurance',
       },
       {
         title: 'Comprehensive',
-        description: 'Protection against Minnesota weather and theft'
+        description: 'Protection against Minnesota weather and theft',
       },
       {
         title: 'Local Support',
-        description: 'Work with licensed Minnesota agents'
+        description: 'Work with licensed Minnesota agents',
       }
     ],
     faqs: [
@@ -77,26 +87,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   HOME: {
     title: 'Home Insurance',
     subtitle: 'Protect your Minnesota home with comprehensive coverage',
+    metaDescription: 'Secure your home with our reliable home insurance policies. Get comprehensive coverage and peace of mind today!',
     benefits: [
       {
         title: 'Adequate Liability',
-        description: 'Protect your assets with proper liability limits'
+        description: 'Protect your assets with proper liability limits',
       },
       {
         title: 'Property Coverage',
-        description: 'Full replacement cost for your home'
+        description: 'Full replacement cost for your home',
       },
       {
         title: 'Weather Protection',
-        description: 'Coverage for Minnesota weather-related damage'
+        description: 'Coverage for Minnesota weather-related damage',
       },
       {
         title: 'Additional Living',
-        description: 'Coverage for temporary housing if needed'
+        description: 'Coverage for temporary housing if needed',
       },
       {
         title: 'Local Expertise',
-        description: 'Minnesota agents who know your area'
+        description: 'Minnesota agents who know your area',
       }
     ],
     faqs: [
@@ -121,26 +132,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   LIFE: {
     title: 'Life Insurance',
     subtitle: 'Protect your family\'s future with customized life insurance',
+    metaDescription: 'Ensure your family\'s financial security with our tailored life insurance policies. Get started with a free quote!',
     benefits: [
       {
         title: 'Term Options',
-        description: 'Affordable term life coverage options'
+        description: 'Affordable term life coverage options',
       },
       {
         title: 'Permanent Coverage',
-        description: 'Whole life insurance with cash value'
+        description: 'Whole life insurance with cash value',
       },
       {
         title: 'Flexible Solutions',
-        description: 'Coverage tailored to your needs'
+        description: 'Coverage tailored to your needs',
       },
       {
         title: 'Quick Application',
-        description: 'Streamlined application process'
+        description: 'Streamlined application process',
       },
       {
         title: 'Expert Guidance',
-        description: 'Professional insurance guidance'
+        description: 'Professional insurance guidance',
       }
     ],
     faqs: [
@@ -165,26 +177,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   HEALTH: {
     title: 'Health Insurance',
     subtitle: 'Find the right health insurance coverage for your needs',
+    metaDescription: 'Explore our health insurance options to find the perfect coverage for your medical needs and budget. Get a quote now!',
     benefits: [
       {
         title: 'Comprehensive Coverage',
-        description: 'Comprehensive health coverage'
+        description: 'Comprehensive health coverage',
       },
       {
         title: 'Flexible Options',
-        description: 'Flexible plan options'
+        description: 'Flexible plan options',
       },
       {
         title: 'Competitive Rates',
-        description: 'Competitive rates from licensed agents'
+        description: 'Competitive rates from licensed agents',
       },
       {
         title: 'Simple Process',
-        description: 'Simple application process'
+        description: 'Simple application process',
       },
       {
         title: 'Expert Guidance',
-        description: 'Expert guidance from licensed agents'
+        description: 'Expert guidance from licensed agents',
       }
     ],
     faqs: [
@@ -209,26 +222,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   LIFE_TERM: {
     title: 'Term Life Insurance',
     subtitle: 'Affordable protection for your family\'s needs',
+    metaDescription: 'Get affordable term life insurance to protect your family\'s financial future. Choose from flexible terms and coverage amounts.',
     benefits: [
       {
         title: 'Flexible Terms',
-        description: '10, 20, or 30-year terms available'
+        description: '10, 20, or 30-year terms available',
       },
       {
         title: 'Level Premiums',
-        description: 'Rates stay the same for your term'
+        description: 'Rates stay the same for your term',
       },
       {
         title: 'High Coverage',
-        description: 'More coverage for your money'
+        description: 'More coverage for your money',
       },
       {
         title: 'Conversion Option',
-        description: 'Convert to permanent coverage later'
+        description: 'Convert to permanent coverage later',
       },
       {
         title: 'Simple Process',
-        description: 'Easy application and approval'
+        description: 'Easy application and approval',
       }
     ],
     faqs: [
@@ -253,26 +267,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   LIFE_PERMANENT: {
     title: 'Whole Life Insurance',
     subtitle: 'Lifetime protection with guaranteed cash value growth',
+    metaDescription: 'Secure lifetime coverage with our whole life insurance. Enjoy guaranteed cash value growth and peace of mind.',
     benefits: [
       {
         title: 'Lifetime Coverage',
-        description: 'Protection that never expires'
+        description: 'Protection that never expires',
       },
       {
         title: 'Guaranteed Cash Value',
-        description: 'Tax-deferred growth you can access'
+        description: 'Tax-deferred growth you can access',
       },
       {
         title: 'Level Premiums',
-        description: 'Premiums never increase'
+        description: 'Premiums never increase',
       },
       {
         title: 'Dividend Potential',
-        description: 'Opportunity for additional benefits'
+        description: 'Opportunity for additional benefits',
       },
       {
         title: 'Living Benefits',
-        description: 'Access your policy\'s cash value'
+        description: 'Access your policy\'s cash value',
       }
     ],
     faqs: [
@@ -297,26 +312,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   HEALTH_SHORT_TERM_DISABILITY: {
     title: 'Short-Term Disability Insurance',
     subtitle: 'Protect your income during recovery',
+    metaDescription: 'Get short-term disability insurance to replace lost income and cover expenses during your recovery. Apply now for peace of mind.',
     benefits: [
       {
         title: 'Income Protection',
-        description: 'Replace up to 60% of your income'
+        description: 'Replace up to 60% of your income',
       },
       {
         title: 'Quick Benefits',
-        description: 'Benefits start after short waiting period'
+        description: 'Benefits start after short waiting period',
       },
       {
         title: 'Flexible Coverage',
-        description: 'Choose 3, 6, or 12-month terms'
+        description: 'Choose 3, 6, or 12-month terms',
       },
       {
         title: 'Guaranteed Renewable',
-        description: 'Cannot be cancelled if you pay premiums'
+        description: 'Cannot be cancelled if you pay premiums',
       },
       {
         title: 'Portable Coverage',
-        description: 'Keep your coverage when changing jobs'
+        description: 'Keep your coverage when changing jobs',
       }
     ],
     faqs: [
@@ -341,26 +357,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   HEALTH_SUPPLEMENTAL: {
     title: 'Supplemental Health Insurance',
     subtitle: 'Extra protection for unexpected medical expenses',
+    metaDescription: 'Enhance your health coverage with supplemental insurance for unexpected medical expenses. Get a free quote today!',
     benefits: [
       {
         title: 'Fixed Benefits',
-        description: 'Cash payments directly to you'
+        description: 'Cash payments directly to you',
       },
       {
         title: 'No Network Restrictions',
-        description: 'Use any healthcare provider'
+        description: 'Use any healthcare provider',
       },
       {
         title: 'Guaranteed Renewable',
-        description: 'Keep your coverage as long as you pay'
+        description: 'Keep your coverage as long as you pay',
       },
       {
         title: 'Critical Illness',
-        description: 'Lump sum payments for serious conditions'
+        description: 'Lump sum payments for serious conditions',
       },
       {
         title: 'Accident Coverage',
-        description: 'Emergency and follow-up care benefits'
+        description: 'Emergency and follow-up care benefits',
       }
     ],
     faqs: [
@@ -385,26 +402,27 @@ export const insuranceProducts: Record<InsuranceType, InsuranceProduct> = {
   DISABILITY: {
     title: 'Disability Insurance',
     subtitle: 'Protect your income with comprehensive disability coverage',
+    metaDescription: 'Safeguard your income with our disability insurance. Get comprehensive coverage and support for a secure financial future.',
     benefits: [
       {
         title: 'Income Protection',
-        description: 'Replace your income if you become disabled'
+        description: 'Replace your income if you become disabled',
       },
       {
         title: 'Flexible Coverage',
-        description: 'Choose the coverage that fits your needs'
+        description: 'Choose the coverage that fits your needs',
       },
       {
         title: 'Quick Benefits',
-        description: 'Get benefits when you need them most'
+        description: 'Get benefits when you need them most',
       },
       {
         title: 'Easy Application',
-        description: 'Simple application process'
+        description: 'Simple application process',
       },
       {
         title: 'Expert Support',
-        description: 'Guidance from licensed agents'
+        description: 'Guidance from licensed agents',
       }
     ],
     faqs: [

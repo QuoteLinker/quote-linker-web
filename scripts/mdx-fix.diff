@@ -1,0 +1,27 @@
+diff --git a/src/components/mdx-components.tsx b/src/components/mdx-components.tsx
+--- a/src/components/mdx-components.tsx
++++ b/src/components/mdx-components.tsx
+@@ -1,9 +1,8 @@
+ import Head from 'next/head'
+ import Link from 'next/link'
+-import CustomLink from '@/components/CustomLink'
++import CustomLink from '@/components/CustomLink'
+ 
+ export const mdxComponents = {
+   Head,
+   Link,
+-  a: CustomLink
+-}
++  a: CustomLink
++}
+diff --git a/src/app/learn/[slug]/page.tsx b/src/app/learn/[slug]/page.tsx
+--- a/src/app/learn/[slug]/page.tsx
++++ b/src/app/learn/[slug]/page.tsx
+@@ -1,7 +1,6 @@
+ import React from 'react';
+ import { Metadata } from 'next';
+ import { notFound } from 'next/navigation';
+-import Link from 'next/link';
+ import { getArticleBySlug, getArticles } from '@/utils/getArticles';
+ import { MDXRemote } from 'next-mdx-remote/rsc';
+ import { ArrowRight } from 'lucide-react';

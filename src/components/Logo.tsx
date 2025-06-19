@@ -12,12 +12,7 @@ interface LogoProps {
 export default function Logo({ className = '', showText = true, iconOnly = false }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
-      <Image src="/quotelinker_icon.png" alt="QuoteLinker" width={32} height={32} className="object-contain" />
-      {!iconOnly && showText && (
-        <span className="ml-2 text-[#00ECFF] font-bold text-xl tracking-tight hover:text-[#00D4E5] transition-colors">
-          QuoteLinker
-        </span>
-      )}
+      <Image src="/quotelinker_logo.png" alt="QuoteLinker" width={150} height={40} className="object-contain" />
     </div>
   );
-} 
+}

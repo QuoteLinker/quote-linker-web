@@ -7,7 +7,7 @@ import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 
 // Dynamic imports for client components
-const Hero = dynamic(() => import('@/components/Hero'), {
+const InsuranceHero = dynamic(() => import('@/components/InsuranceHero'), {
   loading: () => <LoadingSpinner />, ssr: true
 });
 // Lazy-load QuoteForm (heaviest dependency)
@@ -95,7 +95,7 @@ function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Suspense fallback={<LoadingSpinner />}>
-        <Hero insuranceType={type} />
+        <InsuranceHero insuranceType={type} />
       </Suspense>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

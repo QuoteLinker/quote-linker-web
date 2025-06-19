@@ -1,22 +1,16 @@
+// App Router compatible MDX components
 import Link from 'next/link';
 import Image from 'next/image';
 import { FAQ } from '@/components/MDXComponents/FAQ';
+import MDXHeadWrapper from '@/components/MDXHeadWrapper';
+import CustomLink from '@/components/CustomLink';
 
 // Define custom MDX components - Next.js app router looks for this specific export
-export function useMDXComponents(components: Record<string, React.ComponentType>) {
+export function useMDXComponents() {
   return {
-    ...components,
     // Map HTML elements to React components
-    a: ({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-      if (!href) return <a {...props} />;
-      
-      return href.startsWith('/') || href.startsWith('#') ? (
-        <Link href={href} {...props} />
-      ) : (
-        <a href={href} target="_blank" rel="noopener noreferrer" {...props} />
-      );
-    },
-    img: ({ src, alt, width, height, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    a: CustomLink,
+    img: ({ src, alt, width, height, ...props }) => {
       if (!src) return null;
       
       return (
@@ -33,5 +27,7 @@ export function useMDXComponents(components: Record<string, React.ComponentType>
     // Add custom components
     Link,
     FAQ,
+    // Use a wrapper for Head that's safe with App Router
+    Head: MDXHeadWrapper,
   };
 }

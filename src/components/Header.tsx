@@ -1,19 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { Popover, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 
-const insuranceProducts = [
-	{ name: 'Auto Insurance', href: '/get-quote?type=auto', description: 'Get a quote for your car' },
-	{ name: 'Home Insurance', href: '/get-quote?type=home', description: 'Protect your home and belongings' },
-	{ name: 'Life Insurance', href: '/get-quote?type=life', description: "Secure your family's future" },
-	{ name: 'Health Insurance', href: '/get-quote?type=health', description: 'Find the right health coverage' },
+const mainNavLinks = [
+	{ name: 'Auto', href: '/auto', description: 'Get a quote for your car' },
+	{ name: 'Home', href: '/home', description: 'Protect your home and belongings' },
+	{ name: 'Life', href: '/life', description: "Secure your family's future" },
+	{ name: 'Health', href: '/health', description: 'Find the right health coverage' },
 ];
 
 const Header = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const pathname = usePathname();
+
+	// Check if the current path matches the nav link
+	const isActive = (path: string) => {
+		return pathname === path || pathname.startsWith(`${path}/`);
+	};
 
 	return (
 		<header className="bg-primary-50/95 backdrop-blur-md sticky top-0 z-40 shadow-md">
@@ -26,45 +32,21 @@ const Header = () => {
 					</div>
                     {/* Desktop Menu Links */}
 					<div className="hidden md:flex flex-grow items-center justify-start ml-6 lg:ml-8">
-						<Popover className="relative">
-							{({ open: desktopMenuOpen, close: closeDesktopMenu }) => (
-								<>
-									<Popover.Button className="group inline-flex items-center text-base font-medium text-secondary-700 hover:text-accent-500 focus:outline-none">
-										<span>Insurance Type</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`${desktopMenuOpen ? 'transform rotate-180' : ''} ml-1 h-5 w-5 text-secondary-400 group-hover:text-accent-500 transition-transform duration-150`}>
-                                          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                                        </svg>
-									</Popover.Button>
-									<Transition
-										as={Fragment}
-										enter="transition ease-out duration-200"
-										enterFrom="opacity-0 translate-y-1"
-										enterTo="opacity-100 translate-y-0"
-										leave="transition ease-in duration-150"
-										leaveFrom="opacity-100 translate-y-0"
-										leaveTo="opacity-0 translate-y-1"
-									>
-										<Popover.Panel className="absolute z-10 mt-3 transform px-2 w-screen max-w-xs sm:px-0 lg:left-1/2 lg:-translate-x-1/2">
-											<div className="rounded-lg shadow-lg ring-1 ring-secondary-900 ring-opacity-5 overflow-hidden">
-												<div className="relative grid gap-2 bg-primary-50 px-5 py-6 sm:gap-4 sm:p-8 justify-items-center">
-													{insuranceProducts.map((item) => (
-														<Link
-															key={item.name}
-															href={item.href}
-															className="-m-3 p-3 w-full flex flex-col items-center rounded-lg hover:bg-primary-100 transition ease-in-out duration-150 text-center"
-															onClick={() => closeDesktopMenu()} 
-														>
-															<p className="text-base font-medium text-secondary-900">{item.name}</p>
-															<p className="mt-1 text-sm text-secondary-500">{item.description}</p>
-														</Link>
-													))}
-												</div>
-											</div>
-										</Popover.Panel>
-									</Transition>
-								</>
-							)}
-						</Popover>
+						<div className="flex space-x-8">
+							{mainNavLinks.map((item) => (
+								<Link
+									key={item.name}
+									href={item.href}
+									className={`text-base font-medium transition-colors duration-150 ${
+										isActive(item.href) 
+											? 'text-accent-500' 
+											: 'text-secondary-700 hover:text-accent-500'
+									}`}
+								>
+									{item.name}
+								</Link>
+							))}
+						</div>
                         <div className="ml-auto flex items-center space-x-6 lg:space-x-8">
                             <Link href="/learn" className="text-base font-medium text-secondary-700 hover:text-accent-500">Learn</Link>
                             <Link href="/agents" className="text-base font-medium text-secondary-700 hover:text-accent-500">Agents</Link>
@@ -110,23 +92,18 @@ const Header = () => {
 				</div>
 				
 				{/* Mobile menu panel */}
-				<Transition
-					show={isMobileMenuOpen}
-					as={Fragment}
-					enter="transition ease-out duration-100"
-					enterFrom="transform opacity-0 scale-95"
-					enterTo="transform opacity-100 scale-100"
-					leave="transition ease-in duration-75"
-					leaveFrom="transform opacity-100 scale-100"
-					leaveTo="transform opacity-0 scale-95"
-				>
+				{isMobileMenuOpen && (
 					<div className="md:hidden border-t border-gray-200 absolute left-0 right-0 bg-white shadow-lg z-50">
 						<div className="px-2 pt-2 pb-3 space-y-1">
-							{insuranceProducts.map((item) => (
+							{mainNavLinks.map((item) => (
 								<Link
 									key={item.name}
 									href={item.href}
-									className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-accent-500 hover:bg-gray-50 text-center transition-colors"
+									className={`block px-3 py-2 rounded-md text-base font-medium text-center transition-colors ${
+										isActive(item.href)
+											? 'text-accent-500 bg-gray-50'
+											: 'text-gray-700 hover:text-accent-500 hover:bg-gray-50'
+									}`}
 									onClick={() => setIsMobileMenuOpen(false)}
 								>
 									{item.name}
@@ -155,7 +132,7 @@ const Header = () => {
 							Get a Quote
 						</Link>
 					</div>
-				</Transition>
+				)}
 			</nav>
 		</header>
 	);

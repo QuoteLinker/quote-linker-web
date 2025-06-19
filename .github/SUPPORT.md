@@ -14,9 +14,7 @@ If you're looking for support for QuoteLinker, here are a few options:
 
 ## Contact
 
-* For security issues, please email security@quotelinker.com
 * For general inquiries, reach out to support@quotelinker.com
-* For business inquiries, contact sales@quotelinker.com
 
 ## Community
 

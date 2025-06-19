@@ -40,3 +40,6 @@ test-forms-errors.sh
 # Cursor-specific files (keep private)
 .cursor/
 cursor.* .cursor/
+
+# 
+.github/instructions/

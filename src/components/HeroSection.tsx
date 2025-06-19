@@ -21,10 +21,13 @@ export default function HeroSection({
   subtitle,
   ctaText,
   ctaLink,
-  bgColor = 'bg-gradient-to-br from-electric-blue to-primary-600',
+  bgColor,
 }: HeroSectionProps) {
+  // Use the provided bgColor or default to a modern gradient
+  const backgroundClass = bgColor || 'bg-gradient-to-br from-[#00EEFD] to-[#4F46E5]';
+  
   return (
-    <section className={`${bgColor} py-16 md:py-24 overflow-hidden`}>
+    <section className={`${backgroundClass} py-16 md:py-24 overflow-hidden`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Left Column: Text Content */}

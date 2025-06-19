@@ -1,6 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { serialize } from 'next-mdx-remote/serialize';
+
+import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 export interface Article {
   slug: string;
@@ -10,7 +13,7 @@ export interface Article {
   coverImage?: string;
   readingTime?: string;
   category?: string;
-  content?: string;
+  content?: MDXRemoteSerializeResult | string;
   keywords?: string[]; // Added keywords field for SEO
   faq?: Array<{ question: string; answer: string }>; // Support for FAQ schema
 }
@@ -50,7 +53,7 @@ export function getArticles(): Article[] {
 }
 
 // New function to get a single article by slug
-export function getArticleBySlug(slug: string): Article | null {
+export async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
     const articlesDirectory = path.join(process.cwd(), 'src/content/learn');
     const fullPath = path.join(articlesDirectory, `${slug}.mdx`);
@@ -66,6 +69,15 @@ export function getArticleBySlug(slug: string): Article | null {
     try {
       const { data, content } = matter(fileContents);
       
+      // Serialize the MDX content for next-mdx-remote
+      const mdxSource = await serialize(content, {
+        // Optionally add MDX plugins if needed
+        mdxOptions: {
+          // development: process.env.NODE_ENV === 'development',
+        },
+        scope: data,
+      });
+      
       return {
         slug,
         title: data.title || slug,
@@ -75,7 +87,7 @@ export function getArticleBySlug(slug: string): Article | null {
         readingTime: data.readingTime,
         category: data.category,
         keywords: data.keywords,
-        content: content,
+        content: mdxSource,
         faq: data.faq,
       };
     } catch (parseError) {

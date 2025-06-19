@@ -9,8 +9,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import GoogleTagManager from "@/components/GoogleTagManager";
 import { generateOrganizationSchema, generateInsuranceProductSchema } from "@/utils/schema";
 import Script from "next/script";
-import { DefaultSeo } from "next-seo";
-import SEO from "../../next-seo.config";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -128,7 +127,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <DefaultSeo {...SEO} />
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

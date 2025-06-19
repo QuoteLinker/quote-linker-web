@@ -2,10 +2,11 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getArticleBySlug, getArticles } from '@/utils/getArticles';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { getArticleBySlug, getArticles, Article } from '@/utils/getArticles';
 import { ArrowRight } from 'lucide-react';
 import Script from 'next/script';
+import ClientProviders from '@/components/ClientProviders';
+import { MdxClient } from '@/components/MdxClient';
 
 type Props = {
   params: { slug: string };
@@ -47,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // Helper function to determine related quote type based on slug or keywords
-function getRelatedQuoteType(slug: string, article: ReturnType<typeof getArticleBySlug>): string {
+function getRelatedQuoteType(slug: string, article: Article | null): string {
   // Map slugs directly to quote types
   const slugMappings: Record<string, string> = {
     'auto': 'auto',
@@ -63,20 +64,19 @@ function getRelatedQuoteType(slug: string, article: ReturnType<typeof getArticle
     return slugMappings[slug];
   }
   
-  // Otherwise infer from content if possible
-  const content = article?.content?.toLowerCase() || '';
+  // Otherwise infer from keywords if possible
   const keywords = article?.keywords || [];
   const keywordsStr = Array.isArray(keywords) ? keywords.join(' ').toLowerCase() : '';
   
-  if (slug.includes('auto') || content.includes('auto insurance') || keywordsStr.includes('auto')) {
+  if (slug.includes('auto') || keywordsStr.includes('auto')) {
     return 'auto';
-  } else if (slug.includes('home') || content.includes('home insurance') || keywordsStr.includes('home')) {
+  } else if (slug.includes('home') || keywordsStr.includes('home')) {
     return 'home';
-  } else if (slug.includes('life') || content.includes('life insurance') || keywordsStr.includes('life')) {
+  } else if (slug.includes('life') || keywordsStr.includes('life')) {
     return 'life';
-  } else if (slug.includes('disability') || content.includes('disability insurance') || keywordsStr.includes('disability')) {
+  } else if (slug.includes('disability') || keywordsStr.includes('disability')) {
     return 'disability';
-  } else if (slug.includes('health') || content.includes('health insurance') || keywordsStr.includes('health')) {
+  } else if (slug.includes('health') || keywordsStr.includes('health')) {
     return 'health';
   }
   
@@ -120,85 +120,88 @@ export default async function LearnArticlePage({ params }: Props) {
     notFound();
   }
 
+  // Now article is resolved
   const quoteType = getRelatedQuoteType(params.slug, article);
   const quoteTypeDisplay = getQuoteTypeDisplayName(quoteType);
   const faqJsonLd = getFAQJsonLd(article);
 
   return (
-    <div className="bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <article className="bg-white shadow-sm rounded-lg p-8 max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
-          {article.date && (
-            <p className="text-gray-500 text-sm mb-6">
-              Published on {new Date(article.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </p>
-          )}
-          {/* Main content */}
-          <div className="prose prose-lg max-w-none">
-            <MDXRemote source={article.content} />
-          </div>
-          {/* Action section with quote CTA */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            {quoteType ? (
-              <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Ready to explore your options?</h2>
-                <p className="text-gray-700 mb-4">
-                  Get personalized {quoteTypeDisplay.toLowerCase()} quotes from top-rated providers. Our licensed agents will help you find the perfect coverage for your needs and budget.
-                </p>
-                <Link
-                  href={`/quote${quoteType ? `?type=${quoteType}` : ''}`}
-                  className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-                  rel="nofollow"
-                >
-                  Get Your Free {quoteTypeDisplay} Quote <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
-            ) : (
-              <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Have questions about insurance?</h2>
-                <p className="text-gray-700 mb-4">
-                  Our team of licensed agents is ready to help you find the right coverage for your unique needs.
-                </p>
-                <Link
-                  href="/quote"
-                  className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-                  rel="nofollow"
-                >
-                  Get a Free Insurance Quote <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </div>
+    <ClientProviders>
+      <div className="bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <article className="bg-white shadow-sm rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
+            {article.date && (
+              <p className="text-gray-500 text-sm mb-6">
+                Published on {new Date(article.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </p>
             )}
-            <div className="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
-              <Link
-                href="/learn"
-                className="text-cyan-600 hover:text-cyan-800 mb-4 sm:mb-0"
-                rel="prev"
-              >
-                ← Back to Insurance Learning Center
-              </Link>
-              <Link
-                href="/contact"
-                className="text-cyan-600 hover:text-cyan-800"
-              >
-                Questions? Contact our team →
-              </Link>
+            {/* Main content */}
+            <div className="prose prose-lg max-w-none">
+              <MdxClient source={article.content} />
             </div>
-          </div>
-        </article>
-        {/* Inject FAQ JSON-LD if present */}
-        {faqJsonLd && (
-          <Script
-            id="faq-jsonld"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-          />
-        )}
+            {/* Action section with quote CTA */}
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              {quoteType ? (
+                <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Ready to explore your options?</h2>
+                  <p className="text-gray-700 mb-4">
+                    Get personalized {quoteTypeDisplay.toLowerCase()} quotes from top-rated providers. Our licensed agents will help you find the perfect coverage for your needs and budget.
+                  </p>
+                  <Link
+                    href={`/quote${quoteType ? `?type=${quoteType}` : ''}`}
+                    className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
+                    rel="nofollow"
+                  >
+                    Get Your Free {quoteTypeDisplay} Quote <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
+                  <h2 className="text-xl font-bold text-gray-900 mb-2">Have questions about insurance?</h2>
+                  <p className="text-gray-700 mb-4">
+                    Our team of licensed agents is ready to help you find the right coverage for your unique needs.
+                  </p>
+                  <Link
+                    href="/quote"
+                    className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
+                    rel="nofollow"
+                  >
+                    Get a Free Insurance Quote <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </div>
+              )}
+              <div className="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
+                <Link
+                  href="/learn"
+                  className="text-cyan-600 hover:text-cyan-800 mb-4 sm:mb-0"
+                  rel="prev"
+                >
+                  ← Back to Insurance Learning Center
+                </Link>
+                <Link
+                  href="/contact"
+                  className="text-cyan-600 hover:text-cyan-800"
+                >
+                  Questions? Contact our team →
+                </Link>
+              </div>
+            </div>
+          </article>
+          {/* Inject FAQ JSON-LD if present */}
+          {faqJsonLd && (
+            <Script
+              id="faq-jsonld"
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </ClientProviders>
   );
 }

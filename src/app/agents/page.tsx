@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Script from 'next/script';
 import { ChartBarIcon, ShieldCheckIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 const features = [
@@ -301,10 +302,8 @@ export default function AgentsPage() {
 			{/* Testimonial Section */}
 			<div className="container max-w-screen-xl mx-auto px-4 py-24">
 				<figure className="mx-auto max-w-2xl">
-					<blockquote className="relative text-center text-xl font-medium leading-8 text-gray-900 sm:text-2xl sm:leading-9">
-						<p className="before:content-['\u201C'] after:content-['\u201D'] italic">
-							{testimonial.content}
-						</p>
+					<blockquote className="relative text-center text-xl font-medium leading-8 text-gray-900 sm:text-2xl sm:leading-9 before:content-['\u201C'] after:content-['\u201D'] italic">
+						{testimonial.content}
 					</blockquote>
 					<figcaption className="mt-8 flex items-center justify-center gap-x-6">
 						<div className="relative h-12 w-12 rounded-full bg-gray-50">
@@ -337,11 +336,10 @@ export default function AgentsPage() {
 							data-url="https://calendly.com/quotelinker/demo"
 							style={{ minWidth: '320px', height: '700px' }}
 						></div>
-						<script
+						<Script
 							type="text/javascript"
 							src="https://assets.calendly.com/assets/external/widget.js"
-							async
-						></script>
+						></Script>
 					</div>
 				</div>
 			</div>
