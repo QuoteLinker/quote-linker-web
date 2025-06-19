@@ -5,6 +5,25 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/quote-linker-web:$COMMIT_SHA']
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'quote-linker-web', '--image', 'gcr.io/$PROJECT_ID/quote-linker-web:$COMMIT_SHA', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated']
+    args: 
+      - 'run'
+      - 'deploy'
+      - 'quotelinkercom'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/quote-linker-web:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'run'
+      - 'domain-mappings'
+      - 'create'
+      - '--service=quotelinkercom'
+      - '--domain=quotelinker.com'
+      - '--region=us-central1'
+      - '--force-override'
 images:
   - 'gcr.io/$PROJECT_ID/quote-linker-web:$COMMIT_SHA'
