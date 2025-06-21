@@ -76,7 +76,7 @@ export default function AgentsPage() {
 			{/* Hero Section */}
 			<div className="relative isolate overflow-hidden">
 				{/* Removed transparency from gradient */}
-				<div className="absolute inset-0 bg-gradient-to-b from-electric-blue to-white" />
+				<div className="absolute inset-0 bg-gradient-to-b from-primary-500 to-white" />
 				<div className="container max-w-screen-xl mx-auto px-4 py-24 sm:py-32">
 					<div className="mx-auto max-w-3xl text-center">
 						<span className="inline-block mb-4 px-4 py-1.5 rounded-full bg-cyan-100 text-cyan-800 text-sm font-semibold tracking-wide">
@@ -110,7 +110,7 @@ export default function AgentsPage() {
 						<div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
 							<Link
 								href="/agents/signup"
-								className="w-full sm:w-auto rounded-lg bg-electric-blue px-8 py-3 text-base font-medium text-white shadow-lg hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+								className="w-full sm:w-auto rounded-lg bg-primary-500 px-8 py-3 text-base font-medium text-white shadow-lg hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200"
 								onClick={() => trackCTAClick('Agent Signup - Agents Page Hero')}
 							>
 								Start Getting Leads Now
@@ -145,7 +145,7 @@ export default function AgentsPage() {
 								<tr className="bg-white border-b">
 									<th className="py-4 px-6 text-left font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">Feature</th>
 									<th className="py-4 px-6 text-center font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">
-										<span className="text-electric-blue font-bold">QuoteLinker</span>
+										<span className="text-primary-500 font-bold">QuoteLinker</span>
 									</th>
 									<th className="py-4 px-6 text-center font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">EverQuote</th>
 									<th className="py-4 px-6 text-center font-medium text-gray-500 uppercase tracking-wider min-w-[180px]">ZipQuote</th>
@@ -218,7 +218,7 @@ export default function AgentsPage() {
 						<Link 
 							href="/agents/signup"
 							onClick={() => trackCTAClick('Agent Signup - Comparison Table')}
-							className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-electric-blue hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-electric-blue"
+							className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-500 hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 						>
 							Start Getting Exclusive Leads
 						</Link>
@@ -241,7 +241,7 @@ export default function AgentsPage() {
 						{features.map((feature) => (
 							<div key={feature.name} className="flex flex-col">
 								<dt className="flex items-center gap-x-3 text-lg font-semibold leading-7 text-gray-900">
-									<feature.icon className="h-6 w-6 flex-none text-electric-blue" aria-hidden="true" />
+									<feature.icon className="h-6 w-6 flex-none text-primary-500" aria-hidden="true" />
 									{feature.name}
 								</dt>
 								<dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
@@ -254,7 +254,7 @@ export default function AgentsPage() {
 				<div className="mt-16 text-center">
 					<Link
 						href="/agents/signup"
-						className="inline-block rounded-lg bg-electric-blue px-4 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+						className="inline-block rounded-lg bg-primary-500 px-4 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200"
 						onClick={() => trackCTAClick('Agent Signup - Features Section')}
 					>
 						Get Started with Exclusive Leads
@@ -283,7 +283,7 @@ export default function AgentsPage() {
 									{integration.name}
 								</h3>
 								<p className="mt-2 text-base leading-7 text-gray-600">{integration.description}</p>
-								<p className="mt-6 text-sm font-medium text-electric-blue">{integration.status}</p>
+								<p className="mt-6 text-sm font-medium text-primary-500">{integration.status}</p>
 							</div>
 						))}
 					</div>
@@ -362,12 +362,12 @@ export default function AgentsPage() {
 								name="email"
 								id="email"
 								placeholder="Enter your email"
-								className="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-electric-blue sm:text-sm"
+								className="block w-full rounded-lg border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm"
 								required
 							/>
 							<button
 								type="submit"
-								className="rounded-lg bg-electric-blue px-6 py-3 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+								className="rounded-lg bg-primary-500 px-6 py-3 text-sm font-medium text-white shadow-brand hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200"
 								onClick={() => trackCTAClick('Submit Waitlist - Agents Page')}
 							>
 								Join Waitlist
@@ -390,7 +390,7 @@ export default function AgentsPage() {
 						<div className="mt-10 flex items-center justify-center gap-6">
 							<Link
 								href="/agents/signup"
-								className="rounded-lg bg-electric-blue px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-electric-blue/90 focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2 transition-all duration-200"
+								className="rounded-lg bg-primary-500 px-6 py-2.5 text-sm font-medium text-white shadow-brand hover:bg-primary-500/90 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all duration-200"
 								onClick={() => trackCTAClick('Agent Signup - Final CTA')}
 							>
 								Unlock Your Territory Today

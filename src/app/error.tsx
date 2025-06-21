@@ -32,7 +32,7 @@ export default function Error({
           {!isInsuranceTypeError && (
             <button
               onClick={reset}
-              className="px-6 py-2 bg-electric-blue text-white rounded-lg hover:bg-[#00D4E5] transition-colors shadow-brand hover:shadow-lg"
+              className="px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-[#00D4E5] transition-colors shadow-brand hover:shadow-lg"
             >
               Try again
             </button>

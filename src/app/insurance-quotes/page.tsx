@@ -29,7 +29,7 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Auto Insurance</h3>
             <p className="text-gray-500 mb-4">Protect your vehicle with comprehensive coverage options.</p>
-            <Link href="/auto" className="text-electric-blue hover:underline">
+            <Link href="/auto" className="text-primary-500 hover:underline">
               Get Auto Insurance Quote
             </Link>
           </div>
@@ -43,7 +43,7 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Home Insurance</h3>
             <p className="text-gray-500 mb-4">Safeguard your home and belongings with tailored coverage.</p>
-            <Link href="/home" className="text-electric-blue hover:underline">
+            <Link href="/home" className="text-primary-500 hover:underline">
               Get Home Insurance Quote
             </Link>
           </div>
@@ -57,7 +57,7 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Life Insurance</h3>
             <p className="text-gray-500 mb-4">Secure your family&apos;s future with flexible life insurance options.</p>
-            <Link href="/life" className="text-electric-blue hover:underline">
+            <Link href="/life" className="text-primary-500 hover:underline">
               Get Life Insurance Quote
             </Link>
           </div>
@@ -71,7 +71,7 @@ export default function InsuranceQuotesPage() {
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Health Insurance</h3>
             <p className="text-gray-500 mb-4">Find affordable health coverage that meets your needs.</p>
-            <Link href="/health" className="text-electric-blue hover:underline">
+            <Link href="/health" className="text-primary-500 hover:underline">
               Get Health Insurance Quote
             </Link>
           </div>
@@ -81,15 +81,15 @@ export default function InsuranceQuotesPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Why Choose QuoteLinker?</h2>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             <div className="bg-white rounded-lg shadow-card p-6">
-              <div className="text-3xl font-bold text-electric-blue mb-2">4.8/5</div>
+              <div className="text-3xl font-bold text-primary-500 mb-2">4.8/5</div>
               <p className="text-gray-600">Customer Rating</p>
             </div>
             <div className="bg-white rounded-lg shadow-card p-6">
-              <div className="text-3xl font-bold text-electric-blue mb-2">10k+</div>
+              <div className="text-3xl font-bold text-primary-500 mb-2">10k+</div>
               <p className="text-gray-600">Quotes Generated</p>
             </div>
             <div className="bg-white rounded-lg shadow-card p-6">
-              <div className="text-3xl font-bold text-electric-blue mb-2">98%</div>
+              <div className="text-3xl font-bold text-primary-500 mb-2">98%</div>
               <p className="text-gray-600">Satisfaction Rate</p>
             </div>
           </div>

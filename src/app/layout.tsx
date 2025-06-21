@@ -186,7 +186,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: productsSchema }}
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 flex flex-col min-h-screen`}>
+      <body className={`${inter.className} bg-background-primary flex flex-col min-h-screen text-text-body`}>
         {process.env.NEXT_PUBLIC_GA_ID && (
           <GoogleAnalytics />
         )}

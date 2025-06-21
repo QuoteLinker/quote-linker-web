@@ -34,40 +34,38 @@ var RATE_LIMIT_DELAY = 1000; // Delay between API calls in ms
  * @param {string} existingContent - The existing content for context
  * @returns {Promise<string>} - The generated description
  */
-async function generateOpenAIDescription(title, existingContent) {
+function generateOpenAIDescription(title, existingContent) {
   if (!OPENAI_API_KEY) {
-    throw new Error('OPENAI_API_KEY environment variable is required');
+    return Promise.reject(new Error('OPENAI_API_KEY environment variable is required'));
   }
 
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful SEO assistant that writes concise meta descriptions.'
-          },
-          {
-            role: 'user',
-            content: `Write a compelling meta description for an insurance article with the title: "${title}". 
-            The description should be exactly 155 characters or less to fit in search results. 
-            Focus on value to the reader and include relevant keywords.
-            Here's some context from the article: ${existingContent.substring(0, 500)}`
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 100
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
+  return axios.post(
+    'https://api.openai.com/v1/chat/completions',
+    {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a helpful SEO assistant that writes concise meta descriptions.'
+        },
+        {
+          role: 'user',
+          content: 'Write a compelling meta description for an insurance article with the title: "' + title + '". ' +
+                  'The description should be exactly 155 characters or less to fit in search results. ' + 
+                  'Focus on value to the reader and include relevant keywords. ' +
+                  'Here\'s some context from the article: ' + existingContent.substring(0, 500)
         }
+      ],
+      temperature: 0.7,
+      max_tokens: 100
+    },
+    {
+      headers: {
+        'Authorization': 'Bearer ' + OPENAI_API_KEY,
+        'Content-Type': 'application/json'
       }
-    );
-
+    }
+  ).then(function(response) {
     var description = response.data.choices[0].message.content.trim();
     
     // Remove quotes if the API returns them
@@ -82,10 +80,10 @@ async function generateOpenAIDescription(title, existingContent) {
     }
     
     return description;
-  } catch (error) {
+  }).catch(function(error) {
     console.error('Error generating description with OpenAI:', error.response ? error.response.data : error.message);
     throw error;
-  }
+  });
 }
 
 /**
@@ -94,40 +92,40 @@ async function generateOpenAIDescription(title, existingContent) {
  * @param {string} existingContent - The existing content for context
  * @returns {Promise<string>} - The generated description
  */
-async function generateVertexAIDescription(title, existingContent) {
+function generateVertexAIDescription(title, existingContent) {
   if (!VERTEX_AI_PROJECT) {
-    throw new Error('VERTEX_AI_PROJECT environment variable is required');
+    return Promise.reject(new Error('VERTEX_AI_PROJECT environment variable is required'));
   }
 
-  try {
-    const endpoint = `https://${VERTEX_AI_LOCATION}-aiplatform.googleapis.com/v1/projects/${VERTEX_AI_PROJECT}/locations/${VERTEX_AI_LOCATION}/publishers/google/models/${VERTEX_AI_MODEL}:predict`;
-    
-    const response = await axios.post(
-      endpoint,
-      {
-        instances: [
-          {
-            prompt: `Write a compelling meta description for an insurance article with the title: "${title}". 
-            The description should be exactly 155 characters or less to fit in search results. 
-            Focus on value to the reader and include relevant keywords.
-            Here's some context from the article: ${existingContent.substring(0, 500)}`
-          }
-        ],
-        parameters: {
-          temperature: 0.7,
-          maxOutputTokens: 100,
-          topK: 40,
-          topP: 0.95
+  var endpoint = 'https://' + VERTEX_AI_LOCATION + '-aiplatform.googleapis.com/v1/projects/' + 
+                VERTEX_AI_PROJECT + '/locations/' + VERTEX_AI_LOCATION + 
+                '/publishers/google/models/' + VERTEX_AI_MODEL + ':predict';
+  
+  return axios.post(
+    endpoint,
+    {
+      instances: [
+        {
+          prompt: 'Write a compelling meta description for an insurance article with the title: "' + title + '". ' +
+                 'The description should be exactly 155 characters or less to fit in search results. ' + 
+                 'Focus on value to the reader and include relevant keywords. ' +
+                 'Here\'s some context from the article: ' + existingContent.substring(0, 500)
         }
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.GOOGLE_APPLICATION_CREDENTIALS}`,
-          'Content-Type': 'application/json'
-        }
+      ],
+      parameters: {
+        temperature: 0.7,
+        maxOutputTokens: 100,
+        topK: 40,
+        topP: 0.95
       }
-    );
-
+    },
+    {
+      headers: {
+        'Authorization': 'Bearer ' + process.env.GOOGLE_APPLICATION_CREDENTIALS,
+        'Content-Type': 'application/json'
+      }
+    }
+  ).then(function(response) {
     var description = response.data.predictions[0].content.trim();
     
     // Remove quotes if the API returns them
@@ -142,10 +140,10 @@ async function generateVertexAIDescription(title, existingContent) {
     }
     
     return description;
-  } catch (error) {
+  }).catch(function(error) {
     console.error('Error generating description with Vertex AI:', error.response ? error.response.data : error.message);
     throw error;
-  }
+  });
 }
 
 /**
@@ -154,13 +152,13 @@ async function generateVertexAIDescription(title, existingContent) {
  * @param {string} existingContent - The existing content for context
  * @returns {Promise<string>} - The generated description
  */
-async function generateMetaDescription(title, existingContent) {
+function generateMetaDescription(title, existingContent) {
   if (API_PROVIDER === 'openai') {
     return generateOpenAIDescription(title, existingContent);
   } else if (API_PROVIDER === 'vertex') {
     return generateVertexAIDescription(title, existingContent);
   } else {
-    throw new Error(`Unsupported API provider: ${API_PROVIDER}`);
+    return Promise.reject(new Error('Invalid AI provider: ' + API_PROVIDER));
   }
 }
 
@@ -170,7 +168,9 @@ async function generateMetaDescription(title, existingContent) {
  * @returns {Promise<void>}
  */
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise(function(resolve) {
+    setTimeout(resolve, ms);
+  });
 }
 
 /**
@@ -179,42 +179,50 @@ function sleep(ms) {
  * @param {boolean} force - Whether to force regeneration of existing descriptions
  * @returns {Promise<boolean>} - Whether the file was updated
  */
-async function processMdxFile(filePath, force = false) {
-  try {
-    var fileContent = await readFile(filePath, 'utf8');
-    var { data, content } = matter(fileContent);
-    
-    // Skip if already has a description and not forcing
-    if (data.description && !force) {
-      console.log(`Skipping ${filePath} - already has description`);
+function processMdxFile(filePath, force) {
+  if (force === undefined) force = false;
+  
+  return readFile(filePath, 'utf8')
+    .then(function(fileContent) {
+      var parsed = matter(fileContent);
+      var data = parsed.data;
+      var content = parsed.content;
+      
+      // Skip if already has a description and not forcing
+      if (data.description && !force) {
+        console.log('Skipping ' + filePath + ' (already has description)');
+        return false;
+      }
+      
+      // Check for title
+      if (!data.title) {
+        console.warn('Skipping ' + filePath + ' (no title)');
+        return false;
+      }
+      
+      console.log('Processing ' + filePath + ' - title: ' + data.title);
+      
+      // Generate description from title
+      return generateMetaDescription(data.title, content)
+        .then(function(description) {
+          console.log('Generated description (' + description.length + ' chars): ' + description);
+          
+          // Update frontmatter
+          data.description = description;
+          
+          // Write updated file
+          var updatedFileContent = matter.stringify(content, data);
+          return writeFile(filePath, updatedFileContent)
+            .then(function() {
+              console.log('Updated ' + filePath + ' with new description');
+              return true;
+            });
+        });
+    })
+    .catch(function(error) {
+      console.error('Error processing ' + filePath + ':', error);
       return false;
-    }
-    
-    // Check for title
-    if (!data.title) {
-      console.warn(`Warning: No title found in ${filePath}, skipping...`);
-      return false;
-    }
-    
-    console.log(`Processing ${filePath} - title: ${data.title}`);
-    
-    // Generate description from title
-    var description = await generateMetaDescription(data.title, content);
-    console.log(`Generated description (${description.length} chars): ${description}`);
-    
-    // Update frontmatter
-    data.description = description;
-    
-    // Write updated file
-    var updatedFileContent = matter.stringify(content, data);
-    await writeFile(filePath, updatedFileContent);
-    
-    console.log(`Updated ${filePath} with new description`);
-    return true;
-  } catch (error) {
-    console.error(`Error processing ${filePath}:`, error);
-    return false;
-  }
+    });
 }
 
 /**
@@ -222,23 +230,29 @@ async function processMdxFile(filePath, force = false) {
  * @param {string} dir - The directory to scan
  * @returns {Promise<string[]>} - Array of file paths
  */
-async function getMdxFiles(dir) {
+function getMdxFiles(dir) {
   var allFiles = [];
-  var files = await readDir(dir);
   
-  for (var i = 0; i < files.length; i++) {
-    var filePath = path.join(dir, files[i]);
-    var stats = await stat(filePath);
-    
-    if (stats.isDirectory()) {
-      var subFiles = await getMdxFiles(filePath);
-      allFiles = allFiles.concat(subFiles);
-    } else if (filePath.endsWith('.mdx') || filePath.endsWith('.md')) {
-      allFiles.push(filePath);
-    }
-  }
-  
-  return allFiles;
+  return readDir(dir)
+    .then(function(files) {
+      var promises = files.map(function(file) {
+        var filePath = path.join(dir, file);
+        return stat(filePath)
+          .then(function(stats) {
+            if (stats.isDirectory()) {
+              return getMdxFiles(filePath);
+            } else if (file.endsWith('.mdx')) {
+              return [filePath];
+            }
+            return [];
+          });
+      });
+      
+      return Promise.all(promises);
+    })
+    .then(function(fileArrays) {
+      return fileArrays.flat();
+    });
 }
 
 /**
@@ -247,63 +261,70 @@ async function getMdxFiles(dir) {
  * @param {boolean} force - Whether to force regeneration
  * @returns {Promise<number>} - Number of files updated
  */
-async function processBatches(files, force) {
+function processBatches(files, force) {
   var updated = 0;
   
-  for (var i = 0; i < files.length; i += BATCH_SIZE) {
-    var batch = files.slice(i, i + BATCH_SIZE);
-    console.log(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(files.length / BATCH_SIZE)}`);
-    
-    // Process each file in the batch
-    for (var j = 0; j < batch.length; j++) {
-      var wasUpdated = await processMdxFile(batch[j], force);
-      if (wasUpdated) updated++;
-      
-      // Respect rate limits
-      if (j < batch.length - 1) {
-        await sleep(RATE_LIMIT_DELAY);
-      }
+  // Process each batch sequentially
+  function processBatch(startIndex) {
+    if (startIndex >= files.length) {
+      return Promise.resolve(updated);
     }
     
-    // Add extra delay between batches
-    if (i + BATCH_SIZE < files.length) {
-      console.log('Waiting between batches...');
-      await sleep(RATE_LIMIT_DELAY * 2);
-    }
+    var endIndex = Math.min(startIndex + BATCH_SIZE, files.length);
+    var batch = files.slice(startIndex, endIndex);
+    console.log('Processing batch ' + (Math.floor(startIndex / BATCH_SIZE) + 1) + '/' + 
+                Math.ceil(files.length / BATCH_SIZE));
+    
+    // Process files in the current batch
+    var promises = batch.map(function(file) {
+      return processMdxFile(file, force)
+        .then(function(wasUpdated) {
+          if (wasUpdated) updated++;
+        });
+    });
+    
+    return Promise.all(promises)
+      .then(function() {
+        if (endIndex < files.length) {
+          // Add delay between batches
+          return sleep(RATE_LIMIT_DELAY)
+            .then(function() {
+              return processBatch(endIndex);
+            });
+        }
+        return updated;
+      });
   }
   
-  return updated;
+  // Start processing from the first batch
+  return processBatch(0);
 }
 
 /**
  * Main function
  */
-async function main() {
-  try {
-    // Parse command line arguments
-    var args = process.argv.slice(2);
-    var force = args.includes('--force');
-    
-    console.log(`Starting meta description updates (${API_PROVIDER})...`);
-    console.log(`Force mode: ${force ? 'enabled' : 'disabled'}`);
-    
-    // Get all MDX files
-    var files = await getMdxFiles(CONTENT_DIR);
-    console.log(`Found ${files.length} MDX files to process`);
-    
-    if (files.length === 0) {
-      console.log('No files to process');
-      return;
-    }
-    
-    // Process files in batches
-    var updatedCount = await processBatches(files, force);
-    
-    console.log(`Completed! Updated ${updatedCount}/${files.length} files`);
-  } catch (error) {
-    console.error('Error in main process:', error);
-    process.exit(1);
-  }
+function main() {
+  // Parse command line arguments
+  var args = process.argv.slice(2);
+  var force = args.includes('--force');
+  
+  console.log('Starting meta description updates (' + API_PROVIDER + ')...');
+  console.log('Force mode: ' + (force ? 'enabled' : 'disabled'));
+  
+  // Get all MDX files
+  getMdxFiles(CONTENT_DIR)
+    .then(function(files) {
+      console.log('Found ' + files.length + ' MDX files');
+      return processBatches(files, force);
+    })
+    .then(function(updatedCount) {
+      console.log('Completed! Updated ' + updatedCount + ' files');
+      process.exit(0);
+    })
+    .catch(function(error) {
+      console.error('Fatal error:', error);
+      process.exit(1);
+    });
 }
 
 // Run the script

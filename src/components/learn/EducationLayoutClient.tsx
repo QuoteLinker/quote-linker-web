@@ -97,7 +97,7 @@ export default function EducationLayoutClient({
                   href={`/education/${category.slug}`}
                   className={`block px-4 py-3 text-sm transition-colors ${
                     pathname === `/education/${category.slug}`
-                      ? 'bg-blue-50 text-electric-blue font-medium'
+                      ? 'bg-blue-50 text-primary-500 font-medium'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -130,7 +130,7 @@ export default function EducationLayoutClient({
                           href={`/education/${category.slug}`}
                           className={`block px-4 py-2 rounded-md text-sm transition-colors ${
                             pathname === `/education/${category.slug}`
-                              ? 'bg-blue-50 text-electric-blue font-medium'
+                              ? 'bg-blue-50 text-primary-500 font-medium'
                               : 'text-gray-700 hover:bg-gray-50'
                           }`}
                         >

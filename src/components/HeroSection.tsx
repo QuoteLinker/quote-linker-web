@@ -41,7 +41,7 @@ export default function HeroSection({
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href={ctaLink}
-                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-lg font-bold text-electric-blue shadow-brand hover:bg-white/90 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-electric-blue"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-8 py-3 text-lg font-bold text-primary-500 shadow-brand hover:bg-white/90 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500"
                 aria-label={ctaText}
               >
                 {ctaText}
@@ -49,7 +49,7 @@ export default function HeroSection({
               </Link>
               <Link
                 href="/agent"
-                className="inline-flex items-center justify-center rounded-lg border-2 border-white/20 bg-transparent px-8 py-3 text-lg font-semibold text-white hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-electric-blue"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white/20 bg-transparent px-8 py-3 text-lg font-semibold text-white hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-500"
               >
                 For Agents
               </Link>

@@ -21,6 +21,23 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface ArticleDetails {
+  title: string;
+  description: string;
+  url: string;
+  author: string;
+  datePublished: string;
+  dateModified?: string;
+  image?: string;
+  category?: string;
+  keywords?: string[];
+}
+
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
 /**
  * Creates JSON-LD schema.org markup for insurance products
  */
@@ -133,6 +150,59 @@ export function generateLocalBusinessSchema(
       }
     }),
     ...(priceRange && { priceRange })
+  };
+
+  return JSON.stringify(schema);
+}
+
+/**
+ * Creates JSON-LD schema.org markup for articles
+ */
+export function generateArticleSchema(details: ArticleDetails): string {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: details.title,
+    description: details.description,
+    url: details.url,
+    author: {
+      '@type': 'Person',
+      name: details.author
+    },
+    datePublished: details.datePublished,
+    dateModified: details.dateModified || details.datePublished,
+    publisher: {
+      '@type': 'Organization',
+      name: 'QuoteLinker',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com'}/logo.svg`
+      }
+    },
+    ...(details.image && { image: details.image }),
+    ...(details.category && { articleSection: details.category }),
+    ...(details.keywords && { keywords: details.keywords.join(', ') })
+  };
+
+  return JSON.stringify(schema);
+}
+
+/**
+ * Creates JSON-LD schema.org markup for breadcrumbs
+ */
+export function generateBreadcrumbSchema(items: BreadcrumbItem[]): string {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@id': item.url,
+        name: item.name,
+        url: item.url
+      }
+    }))
   };
 
   return JSON.stringify(schema);

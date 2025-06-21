@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
-
 import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 export interface Article {
@@ -14,8 +13,25 @@ export interface Article {
   readingTime?: string;
   category?: string;
   content?: MDXRemoteSerializeResult | string;
-  keywords?: string[]; // Added keywords field for SEO
-  faq?: Array<{ question: string; answer: string }>; // Support for FAQ schema
+  keywords?: string[];
+  faq?: Array<{ question: string; answer: string }>;
+  // New fields for improved SEO
+  author?: string;
+  canonical?: string;
+  modifiedDate?: string;
+  prevPost?: { slug: string; title: string };
+  nextPost?: { slug: string; title: string };
+  jsonLd?: {
+    articleBody?: string;
+    wordCount?: number;
+    articleSection?: string;
+    thumbnailUrl?: string;
+  };
+}
+
+// Format date for the schema
+function formatSchemaDate(date: string): string {
+  return new Date(date).toISOString();
 }
 
 export function getArticles(): Article[] {
@@ -39,11 +55,30 @@ export function getArticles(): Article[] {
           coverImage: data.coverImage,
           readingTime: data.readingTime,
           category: data.category,
-          keywords: data.keywords, // Include keywords for SEO
+          keywords: data.keywords,
+          author: data.author || 'QuoteLinker Team',
+          modifiedDate: data.modifiedDate || data.date,
         };
       });
 
-    return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // Sort articles by date descending
+    const sortedArticles = articles.sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    // Add prev/next links
+    return sortedArticles.map((article, index) => ({
+      ...article,
+      prevPost: index > 0 ? {
+        slug: sortedArticles[index - 1].slug,
+        title: sortedArticles[index - 1].title
+      } : undefined,
+      nextPost: index < sortedArticles.length - 1 ? {
+        slug: sortedArticles[index + 1].slug,
+        title: sortedArticles[index + 1].title
+      } : undefined,
+    }));
+
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('Error loading articles:', error);
@@ -52,7 +87,6 @@ export function getArticles(): Article[] {
   }
 }
 
-// New function to get a single article by slug
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
     const articlesDirectory = path.join(process.cwd(), 'src/content/learn');
@@ -65,18 +99,26 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
 
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     
-    // Handle potential parsing errors in frontmatter
-    try {
-      const { data, content } = matter(fileContents);
-      
-      // Serialize the MDX content for next-mdx-remote
+    const { data, content } = matter(fileContents);
+    
+    try {    
+      // Serialize MDX content
       const mdxSource = await serialize(content, {
-        // Optionally add MDX plugins if needed
         mdxOptions: {
-          // development: process.env.NODE_ENV === 'development',
+          remarkPlugins: [],
+          rehypePlugins: [],
         },
         scope: data,
       });
+
+      // Calculate word count for schema
+      const wordCount = content.split(/\s+/).length;
+      
+      // Get all articles to determine prev/next
+      const allArticles = getArticles();
+      const currentIndex = allArticles.findIndex(a => a.slug === slug);
+      
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com';
       
       return {
         slug,
@@ -87,11 +129,29 @@ export async function getArticleBySlug(slug: string): Promise<Article | null> {
         readingTime: data.readingTime,
         category: data.category,
         keywords: data.keywords,
+        author: data.author || 'QuoteLinker Team',
+        modifiedDate: data.modifiedDate || data.date,
         content: mdxSource,
         faq: data.faq,
+        canonical: `${baseUrl}/learn/${slug}`,
+        prevPost: currentIndex > 0 ? {
+          slug: allArticles[currentIndex - 1].slug,
+          title: allArticles[currentIndex - 1].title
+        } : undefined,
+        nextPost: currentIndex < allArticles.length - 1 ? {
+          slug: allArticles[currentIndex + 1].slug,
+          title: allArticles[currentIndex + 1].title
+        } : undefined,
+        jsonLd: {
+          articleBody: content,
+          wordCount,
+          articleSection: data.category,
+          thumbnailUrl: data.coverImage && `${baseUrl}${data.coverImage}`
+        }
       };
+      
     } catch (parseError) {
-      console.error(`Error parsing frontmatter for ${slug}:`, parseError);
+      console.error(`Error parsing MDX for ${slug}:`, parseError);
       return null;
     }
   } catch (error) {

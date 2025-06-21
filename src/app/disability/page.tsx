@@ -1,7 +1,9 @@
-import ProductPage from '@/components/ProductPage';
-import type { InsuranceType } from '@/types/insurance';
 import { Metadata } from 'next';
-import Script from 'next/script';
+import BenefitsSection from '@/components/BenefitsSection';
+import FAQSection from '@/components/FAQSection';
+import { getProductContent } from '@/utils/insuranceCopy';
+import { QuoteFlow } from '@/components/QuoteFlow';
+import InsuranceProductSchema from '@/components/seo/InsuranceProductSchema';
 
 export const metadata: Metadata = {
   title: 'Disability Insurance Quotes | Protect Your Income | QuoteLinker',
@@ -21,35 +23,24 @@ export const metadata: Metadata = {
   },
 };
 
-function InsuranceProductSchema() {
-  return (
-    <Script
-      id="insurance-product-schema"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Service',
-          name: 'Disability Insurance',
-          description: 'Get competitive disability insurance quotes to protect your income.',
-          provider: {
-            '@type': 'Organization',
-            name: 'QuoteLinker',
-            url: 'https://www.quotelinker.com',
-          },
-          areaServed: 'US',
-          serviceType: 'Insurance',
-        }),
-      }}
-    />
-  );
-}
-
 export default function DisabilityInsurancePage() {
+  const content = getProductContent('DISABILITY');
+
   return (
     <>
-      <InsuranceProductSchema />
-      <ProductPage params={{ type: 'disability' }} />
+      <InsuranceProductSchema insuranceType="DISABILITY" />
+      <QuoteFlow 
+        type="DISABILITY"
+        title="Disability Insurance Quotes"
+        description="Protect your income with comprehensive disability coverage."
+        hero={{
+          heading: "Protect Your Income and Financial Security",
+          subheading: "Compare disability insurance quotes from top-rated carriers and secure your future.",
+          image: "/images/disability-insurance-hero.jpg"
+        }}
+      />
+      {content.benefits && <BenefitsSection benefits={content.benefits} />}
+      {content.faqs && <FAQSection faqs={content.faqs} />}
     </>
   );
-} 
+}

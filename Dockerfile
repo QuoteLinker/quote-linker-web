@@ -1,35 +1,52 @@
 # Dockerfile for a Next.js Application
 
 # === Builder Stage ===
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS deps
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package*.json ./
+# Install dependencies based on the preferred package manager
+COPY package.json package-lock.json ./
 RUN npm ci
 
-# Copy all files and build the application
-COPY . .
-ENV NEXT_TELEMETRY_DISABLED 1
-RUN npm run build
-
-# === Production Stage ===
-FROM node:20-alpine AS production
+# === Builder Stage ===
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Set environment to production
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy only necessary files from builder stage
-COPY --from=builder /app/.next ./.next
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build Next.js application
+RUN npm run build
+
+# === Production Stage ===
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Set environment to production
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Create a non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy only necessary files
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Set correct permissions
+USER nextjs
+
+# Set the PORT environment variable for Cloud Run
+ENV PORT 8080
 
 # Expose the port the app runs on
 EXPOSE $PORT
 
-# Start the application
-CMD ["npm", "run", "start"]
+# Start the server
+CMD ["node", "server.js"]

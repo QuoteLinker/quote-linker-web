@@ -434,7 +434,7 @@ export default function MultiStepQuoteForm({ productType }: MultiStepQuoteFormPr
           type={currentStep === steps.length - 1 ? 'submit' : 'button'}
           onClick={currentStep === steps.length - 1 ? undefined : nextStep}
           disabled={isLoading}
-          className="py-2.5 px-6 border border-transparent rounded-lg text-sm font-semibold text-white bg-electric-blue hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 transition-all duration-200 shadow-sm"
+          className="py-2.5 px-6 border border-transparent rounded-lg text-sm font-semibold text-white bg-primary-500 hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 disabled:opacity-50 transition-all duration-200 shadow-sm"
         >
           {currentStep === steps.length - 1 ? (isLoading ? 'Submitting...' : 'Get My Quotes') : 'Next →'}
         </button>

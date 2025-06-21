@@ -7,7 +7,10 @@ var puppeteer = require('puppeteer');
 var path = require('path');
 var fs = require('fs');
 
-// Product-specific content for OG images
+var MAX_RETRIES = 3;
+var RETRY_DELAY = 1000; // 1 second
+
+/** @type {{ [key: string]: { headline: string, subheadline: string, badgeText: string } }} */
 var PRODUCTS = {
   default: {
     headline: 'Your Link to Smarter Insurance',
@@ -47,9 +50,8 @@ var PRODUCTS = {
 };
 
 // Generate HTML template for each OG image
-var generateHtml = function(content) {
-  return (
-    '<!DOCTYPE html>' +
+function generateHtml(content) {
+  return '<!DOCTYPE html>' +
     '<html>' +
     '<head>' +
     '  <meta charset="utf-8">' +
@@ -60,7 +62,7 @@ var generateHtml = function(content) {
     '      margin: 0;' +
     '      padding: 0;' +
     '      background-color: #ffffff;' +
-    '      font-family: system-ui, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif;' +
+    '      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;' +
     '    }' +
     '    .container {' +
     '      display: flex;' +
@@ -148,9 +150,52 @@ var generateHtml = function(content) {
     '    <div class="badge">' + content.badgeText + '</div>' +
     '  </div>' +
     '</body>' +
-    '</html>'
-  );
-};
+    '</html>';
+}
+
+function sleep(ms) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, ms);
+  });
+}
+
+function generateOGImage(browser, key, content, imagesDir, retryCount) {
+  retryCount = retryCount || 0;
+  
+  return browser.newPage()
+    .then(function(page) {
+      return page.setViewport({
+        width: 1200,
+        height: 630,
+        deviceScaleFactor: 2
+      })
+      .then(function() {
+        var html = generateHtml(content);
+        return page.setContent(html, { waitUntil: 'networkidle0' });
+      })
+      .then(function() {
+        var imagePath = path.join(imagesDir, key + '-og-image.png');
+        return page.screenshot({
+          path: imagePath,
+          quality: 100
+        });
+      })
+      .then(function() {
+        console.log('Generated: ' + key + '-og-image.png');
+        return page.close();
+      })
+      .catch(function(error) {
+        if (retryCount < MAX_RETRIES) {
+          console.log('Retrying ' + key + ' (attempt ' + (retryCount + 1) + ')...');
+          return sleep(RETRY_DELAY)
+            .then(function() {
+              return generateOGImage(browser, key, content, imagesDir, retryCount + 1);
+            });
+        }
+        throw error;
+      });
+    });
+}
 
 function generateOGImages() {
   console.log('Starting OG image generation (simplified approach)...');
@@ -158,92 +203,51 @@ function generateOGImages() {
   var imagesDir = path.join(__dirname, '..', 'public', 'images');
   var browser;
 
-  fs.promises.mkdir(imagesDir, { recursive: true })
-    .catch(function(err) {
-      if (err.code !== 'EEXIST') {
-        console.error('Error creating directory: ' + err);
-        throw err; // Propagate error
-      }
-    })
+  return fs.promises.mkdir(imagesDir, { recursive: true })
     .then(function() {
       return puppeteer.launch({
         headless: "new",
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          '--disable-gpu'
+        ]
       });
     })
     .then(function(b) {
       browser = b;
-      var productKeys = Object.keys(PRODUCTS);
-      var promiseChain = Promise.resolve();
-
-      productKeys.forEach(function(key) {
-        promiseChain = promiseChain.then(function() {
-          var content = PRODUCTS[key];
-          console.log('Processing: ' + key);
-          var page;
-
-          return browser.newPage()
-            .then(function(p) {
-              page = p;
-              return page.setViewport({
-                width: 1200,
-                height: 630,
-                deviceScaleFactor: 2
-              });
-            })
-            .then(function() {
-              var html = generateHtml(content);
-              return page.setContent(html, { waitUntil: 'networkidle0' });
-            })
-            .then(function() {
-              var ogImagePath, twitterImagePath;
-              if (key === 'default') {
-                ogImagePath = path.join(__dirname, '..', 'public', 'og-image.png');
-                twitterImagePath = path.join(__dirname, '..', 'public', 'twitter-image.png');
-              } else {
-                ogImagePath = path.join(__dirname, '..', 'public', 'images', key + '-og-image.png');
-                twitterImagePath = path.join(__dirname, '..', 'public', 'images', key + '-twitter-image.png');
-              }
-              return page.screenshot({ path: ogImagePath, type: 'png' })
-                .then(function() {
-                  console.log('✓ Created OG image: ' + ogImagePath);
-                  return page.setViewport({ width: 1200, height: 628, deviceScaleFactor: 2 });
-                })
-                .then(function() {
-                  return page.screenshot({ path: twitterImagePath, type: 'png' });
-                })
-                .then(function() {
-                  console.log('✓ Created Twitter image: ' + twitterImagePath);
-                });
-            })
-            .then(function() {
-              return page.close();
-            })
-            .catch(function(err) {
-              console.error('Error processing ' + key + ':', err);
-              if (page) {
-                return page.close();
-              }
-            });
+      var entries = Object.entries(PRODUCTS);
+      
+      return entries.reduce(function(promise, entry) {
+        return promise.then(function() {
+          var key = entry[0];
+          var content = entry[1];
+          console.log('Processing:', key);
+          return generateOGImage(browser, key, content, imagesDir);
         });
-      });
-
-      return promiseChain;
-    })
-    .then(function() {
-      console.log('All OG images generated successfully!');
+      }, Promise.resolve());
     })
     .catch(function(error) {
-      console.error('Fatal error:', error);
+      console.error('Error generating OG images:', error);
+      throw error;
     })
     .finally(function() {
       if (browser) {
-        return browser.close().then(function() {
-          console.log('🎉 Image generation process completed');
-        });
+        return browser.close();
       }
     });
 }
 
 // Execute the script
-generateOGImages();
+generateOGImages()
+  .then(function() {
+    console.log('OG image generation completed successfully!');
+  })
+  .catch(function(error) {
+    console.error('Fatal error:', error);
+    process.exit(1);
+  });

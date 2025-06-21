@@ -18,13 +18,16 @@ var withMDX = nextMDX({
 });
 
 var nextConfig = {
-  // --- ADD THIS LINE FOR GOOGLE CLOUD RUN ---
   output: 'standalone',
-  // -----------------------------------------
-
-  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'], // Add 'md' and 'mdx'
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   reactStrictMode: true,
   swcMinify: true,
+  
+  // Optimize production builds
+  poweredByHeader: false,
+  productionBrowserSourceMaps: true,
+  
+  // Enable image optimization
   images: {
     domains: ['images.unsplash.com', 'www.quotelinker.com', 'assets.quotelinker.com'],
     formats: ['image/avif', 'image/webp'],

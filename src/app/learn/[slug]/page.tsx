@@ -3,10 +3,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getArticleBySlug, getArticles, Article } from '@/utils/getArticles';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 import Script from 'next/script';
 import ClientProviders from '@/components/ClientProviders';
 import { MdxClient } from '@/components/MdxClient';
+import { generateArticleSchema, generateBreadcrumbSchema } from '@/utils/schema';
 
 type Props = {
   params: { slug: string };
@@ -22,186 +23,161 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const article = await getArticleBySlug(params.slug);
-
+  const allArticles = await getArticles();
+  
   if (!article) {
     return { title: 'Article Not Found' };
   }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com';
+  const currentIndex = allArticles.findIndex(a => a.slug === params.slug);
+  const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
+  const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 
   return {
     title: article.title,
     description: article.description,
     keywords: article.keywords,
+    authors: [{ name: article.author || 'QuoteLinker Team' }],
     openGraph: {
       title: article.title,
       description: article.description,
       type: 'article',
-      url: `https://www.quotelinker.com/learn/${article.slug}`,
-      images: article.coverImage ? [{ url: article.coverImage }] : undefined,
+      url: `${baseUrl}/learn/${article.slug}`,
+      images: article.coverImage ? [
+        {
+          url: `${baseUrl}${article.coverImage}`,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        }
+      ] : undefined,
+      siteName: 'QuoteLinker',
+      publishedTime: article.date,
+      modifiedTime: article.modifiedDate,
+      authors: [article.author || 'QuoteLinker Team'],
+      section: article.category,
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.description,
-      images: article.coverImage ? [article.coverImage] : undefined,
+      images: article.coverImage ? [`${baseUrl}${article.coverImage}`] : undefined,
+      site: '@QuoteLinker',
+      creator: '@QuoteLinker',
+    },
+    alternates: {
+      canonical: article.canonical,
+      ...(prevArticle && { prev: `${baseUrl}/learn/${prevArticle.slug}` }),
+      ...(nextArticle && { next: `${baseUrl}/learn/${nextArticle.slug}` }),
     },
   };
 }
 
-// Helper function to determine related quote type based on slug or keywords
-function getRelatedQuoteType(slug: string, article: Article | null): string {
-  // Map slugs directly to quote types
-  const slugMappings: Record<string, string> = {
-    'auto': 'auto',
-    'home': 'home',
-    'term_life': 'life',
-    'whole_life': 'life',
-    'disability': 'disability',
-    'supplemental_health': 'health'
-  };
+// Helper function to generate article JSON-LD
+function getArticleJsonLd(article: Article) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com';
   
-  // Check if we have a direct slug mapping
-  if (slug in slugMappings) {
-    return slugMappings[slug];
-  }
-  
-  // Otherwise infer from keywords if possible
-  const keywords = article?.keywords || [];
-  const keywordsStr = Array.isArray(keywords) ? keywords.join(' ').toLowerCase() : '';
-  
-  if (slug.includes('auto') || keywordsStr.includes('auto')) {
-    return 'auto';
-  } else if (slug.includes('home') || keywordsStr.includes('home')) {
-    return 'home';
-  } else if (slug.includes('life') || keywordsStr.includes('life')) {
-    return 'life';
-  } else if (slug.includes('disability') || keywordsStr.includes('disability')) {
-    return 'disability';
-  } else if (slug.includes('health') || keywordsStr.includes('health')) {
-    return 'health';
-  }
-  
-  // Default to a general quote if we can't determine type
-  return '';
+  return generateArticleSchema({
+    title: article.title,
+    description: article.description,
+    url: `${baseUrl}/learn/${article.slug}`,
+    author: article.author || 'QuoteLinker Team',
+    datePublished: article.date,
+    dateModified: article.modifiedDate,
+    image: article.coverImage ? `${baseUrl}${article.coverImage}` : undefined,
+    category: article.category,
+    keywords: article.keywords,
+  });
 }
 
-// Helper function to get display name for the quote type
-function getQuoteTypeDisplayName(quoteType: string): string {
-  const displayNames: Record<string, string> = {
-    'auto': 'Auto Insurance',
-    'home': 'Home Insurance',
-    'life': 'Life Insurance',
-    'disability': 'Disability Insurance',
-    'health': 'Health Insurance'
-  };
+// Helper function to generate breadcrumb JSON-LD
+function getBreadcrumbJsonLd(article: Article) {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://quotelinker.com';
   
-  return displayNames[quoteType] || 'Insurance';
-}
-
-function getFAQJsonLd(article: any) {
-  if (!article?.faq) return null;
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": article.faq.map((item: any) => ({
-      "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": item.answer
-      }
-    }))
-  };
+  return generateBreadcrumbSchema([
+    { name: 'Home', url: baseUrl },
+    { name: 'Learn', url: `${baseUrl}/learn` },
+    { name: article.category, url: `${baseUrl}/learn/category/${article.category.toLowerCase()}` },
+    { name: article.title, url: `${baseUrl}/learn/${article.slug}` },
+  ]);
 }
 
 export default async function LearnArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
-
-  if (!article || !article.content) {
+  
+  if (!article) {
     notFound();
   }
 
-  // Now article is resolved
-  const quoteType = getRelatedQuoteType(params.slug, article);
-  const quoteTypeDisplay = getQuoteTypeDisplayName(quoteType);
-  const faqJsonLd = getFAQJsonLd(article);
-
+  const allArticles = await getArticles();
+  const currentIndex = allArticles.findIndex(a => a.slug === params.slug);
+  const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
+  const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
+  
   return (
-    <ClientProviders>
-      <div className="bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <article className="bg-white shadow-sm rounded-lg p-8 max-w-4xl mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{article.title}</h1>
-            {article.date && (
-              <p className="text-gray-500 text-sm mb-6">
-                Published on {new Date(article.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </p>
-            )}
-            {/* Main content */}
-            <div className="prose prose-lg max-w-none">
-              <MdxClient source={article.content} />
-            </div>
-            {/* Action section with quote CTA */}
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              {quoteType ? (
-                <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Ready to explore your options?</h2>
-                  <p className="text-gray-700 mb-4">
-                    Get personalized {quoteTypeDisplay.toLowerCase()} quotes from top-rated providers. Our licensed agents will help you find the perfect coverage for your needs and budget.
-                  </p>
-                  <Link
-                    href={`/quote${quoteType ? `?type=${quoteType}` : ''}`}
-                    className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-                    rel="nofollow"
-                  >
-                    Get Your Free {quoteTypeDisplay} Quote <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
-              ) : (
-                <div className="bg-gradient-to-r from-cyan-50 to-blue-50 p-6 rounded-lg border border-cyan-100">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">Have questions about insurance?</h2>
-                  <p className="text-gray-700 mb-4">
-                    Our team of licensed agents is ready to help you find the right coverage for your unique needs.
-                  </p>
-                  <Link
-                    href="/quote"
-                    className="inline-flex items-center px-5 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-                    rel="nofollow"
-                  >
-                    Get a Free Insurance Quote <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </div>
-              )}
-              <div className="mt-8 flex flex-col sm:flex-row sm:justify-between items-center">
-                <Link
-                  href="/learn"
-                  className="text-cyan-600 hover:text-cyan-800 mb-4 sm:mb-0"
-                  rel="prev"
-                >
-                  ← Back to Insurance Learning Center
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-cyan-600 hover:text-cyan-800"
-                >
-                  Questions? Contact our team →
-                </Link>
-              </div>
-            </div>
-          </article>
-          {/* Inject FAQ JSON-LD if present */}
-          {faqJsonLd && (
-            <Script
-              id="faq-jsonld"
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-            />
+    <>
+      <Script
+        id="article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: getArticleJsonLd(article) }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: getBreadcrumbJsonLd(article) }}
+      />
+      <article className="prose prose-blue max-w-none">
+        <nav className="text-sm mb-4 text-gray-600" aria-label="Breadcrumb">
+          <ol className="list-none p-0 inline-flex">
+            <li className="flex items-center">
+              <Link href="/" className="hover:text-accent-500">Home</Link>
+              <span className="mx-2">/</span>
+            </li>
+            <li className="flex items-center">
+              <Link href="/learn" className="hover:text-accent-500">Learn</Link>
+              <span className="mx-2">/</span>
+            </li>
+            <li className="flex items-center">
+              <Link href={`/learn/category/${article.category.toLowerCase()}`} className="hover:text-accent-500">
+                {article.category}
+              </Link>
+              <span className="mx-2">/</span>
+            </li>
+            <li className="text-gray-800">{article.title}</li>
+          </ol>
+        </nav>
+        
+        <MdxClient source={article.content} />
+
+        <nav className="mt-8 flex justify-between items-center border-t border-gray-200 pt-4">
+          {prevArticle ? (
+            <Link 
+              href={`/learn/${prevArticle.slug}`}
+              className="group flex items-center text-accent-500 hover:text-accent-600"
+            >
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              <span>
+                <span className="block text-sm text-gray-600">Previous</span>
+                {prevArticle.title}
+              </span>
+            </Link>
+          ) : <div />}
+          
+          {nextArticle && (
+            <Link 
+              href={`/learn/${nextArticle.slug}`}
+              className="group flex items-center text-accent-500 hover:text-accent-600 ml-auto"
+            >
+              <span>
+                <span className="block text-sm text-gray-600">Next</span>
+                {nextArticle.title}
+              </span>
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
           )}
-        </div>
-      </div>
-    </ClientProviders>
+        </nav>
+      </article>
+    </>
   );
 }

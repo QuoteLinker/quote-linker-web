@@ -36,7 +36,7 @@ export default function AgentReactivationPage() {
         </div>
         <button
           type="submit"
-          className="bg-electric-blue text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#00D4E5] transition"
+          className="bg-primary-500 text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-[#00D4E5] transition"
           disabled={!line || !message}
         >
           Launch Campaign
